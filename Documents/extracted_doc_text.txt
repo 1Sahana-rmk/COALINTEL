@@ -1,0 +1,665 @@
+
+RESEARCH CUM SUMMARY
+AI-Powered Geological, Mining and Other Reporting Solutionfor CMPDI / CIL Subsidiaries
+SIH 2026 • Problem Statement SIH26023 • Software • Smart Automation
+PPT / Prototype Handoff Document
+
+Purpose of this document: This is the single source of truth for the team member designing the presentation and for the developers implementing the 8-day prototype. It explains the problem, proposed product, differentiators, architecture, technical stack, AI pipeline, feasibility, risks, demo flow, measurable evaluation plan, and research references.
+
+1. Executive Summary
+We propose a secure, evidence-grounded AI reporting and knowledge platform for CMPDI/CIL subsidiaries. The platform converts heterogeneous operational records—scanned PDFs, digital PDFs, Word files, spreadsheets, images and historical archives—into searchable structured knowledge, then uses retrieval, validation and controlled generation to answer questions and accelerate report preparation.
+The key design principle is not “a chatbot that writes reports.” It is an auditable reporting copilot: every extracted figure and generated statement should retain provenance to the source document, page, table/cell or image region wherever technically possible. The system should distinguish extracted facts from AI-generated narrative and should flag low-confidence or conflicting values for human review.
+The prototype should demonstrate three PS-aligned capabilities: (1) automated report generation, (2) topic/word-cloud and trend identification, and (3) an AI query-and-response interface over the organization's documents. The same ingestion layer powers all three.
+This approach is realistic for a student prototype because it can be built using mature OCR/document parsers, embeddings, a vector database, PostgreSQL metadata, an LLM API/local model, FastAPI and a React/Next.js interface. We do not need to train a foundation model from scratch.
+Problem Statement Snapshot
+Field
+Value
+PS ID
+SIH26023
+Title
+AI-Powered Geological, Mining and other Reporting Solution for CMPDI/CIL subsidiaries
+Organization
+Ministry of Coal
+Department
+Coal India Limited
+Category
+Software
+Theme
+Smart Automation
+Core pain
+Manual compilation from scanned PDFs, digital documents, spreadsheets, images and historical archives
+Required outcomes
+Automated report generation, topic identification/word cloud, AI query-response, validation, traceability, scalable workflow
+Target users
+CMPDI/CIL analysts, reporting teams, domain experts, administrators and decision-makers
+
+2. Deep Understanding of the Problem
+The PS describes a document-heavy government/enterprise reporting environment. The difficult part is not simply finding text. Important information can be buried in scanned pages, tables, charts, historical documents and spreadsheets. A useful system therefore needs a multimodal document pipeline plus a trustworthy retrieval and reporting layer.
+Why the existing workflow is difficult
+Repeatedly opening many documents and manually locating relevant figures.
+Copying values from tables or scanned documents into working reports.
+Reconciling the same metric when it appears in multiple reports or time periods.
+Depending on individual staff knowledge to know which archive contains the right evidence.
+Slow response to high-priority administrative or parliamentary questions.
+Risk of transcription mistakes and inconsistent definitions across years/subsidiaries.
+Poor discoverability of historical knowledge because many documents are not semantically searchable.
+Difficulty proving exactly where a reported number came from.
+Evidence that the document ecosystem is substantial
+The Ministry of Coal publicly maintains annual-report archives across many years and also publishes parliamentary-question replies and other transparency records. CMPDI likewise maintains annual reports. This supports the PS premise that a large historical document corpus can be a meaningful input to a reporting/knowledge system. [R1][R2][R3]
+The final prototype should not claim access to confidential CIL data. For the hackathon, use public reports, synthetic records, or organizer-provided sample data and explicitly label the demo dataset.
+3. Proposed Solution — Product Concept
+Working name: COALINTEL REPORTING COPILOT (the final product name can be changed).
+One-line pitch: “Upload or connect mining documents once; COALINTEL turns them into traceable knowledge, answers evidence-backed questions, detects trends, and generates review-ready reports.”
+Core modules
+Module
+Purpose
+1. Document Ingestion Hub
+Upload PDF/DOCX/XLSX/images; batch ingestion; document classification; duplicate detection; processing status.
+2. OCR + Layout Extraction
+Read scanned pages, preserve headings, tables, page numbers and coordinates; convert content into structured intermediate representation.
+3. Data Normalization & Validation
+Normalize units, dates, mine/subsidiary names and numeric fields; validate expected ranges and detect conflicting values.
+4. Knowledge Index
+Store document metadata and chunks; embeddings in a vector DB; optional entity/relationship graph for cross-document reasoning.
+5. Evidence-Grounded Query Assistant
+Natural-language questions retrieve evidence first, then generate an answer with citations and confidence/coverage indicators.
+6. Report Builder
+User chooses report type, time period and sources; system creates structured draft sections, tables and executive summary; human approves before export.
+7. Topic & Trend Intelligence
+Word cloud, topic clusters, recurring issues, year-wise trends and document-level themes.
+8. Audit & Review Layer
+Source traceability, extraction confidence, answer citations, reviewer approval, version history and logs.
+9. Dashboard
+Document counts, processing status, query history, report status, extracted metrics, trends and review queue.
+
+What the user experiences
+Upload a folder of reports.
+System OCRs and parses them automatically.
+Dashboard shows document status and extraction quality.
+User asks: “Compare production of X between 2023–24 and 2024–25 and show the source.”
+Retriever finds relevant pages/tables.
+Validation layer checks units and conflicting figures.
+LLM produces a concise answer with document/page citations.
+User clicks “Generate Report,” selects period + report template.
+System produces a review-ready DOCX/PDF draft.
+Human reviewer approves/edits; final version and audit trail are stored.
+4. Innovation / USP Strategy
+The baseline capabilities in the PS are increasingly common in commercial Document AI and RAG products. Azure Document Intelligence, Google Document AI, AWS Textract, UiPath Document Understanding and ABBYY already provide OCR/layout/table extraction or intelligent document processing. NVIDIA also provides enterprise multimodal retrieval components. Therefore, our USP should not be “we use OCR + AI.” The differentiation should be in the domain workflow, traceability, validation and reporting intelligence.
+USP
+What we add
+Why it matters
+Evidence-first answers
+Every answer carries source document + page/table reference and an evidence snippet.
+Reduces unsupported AI answers; improves trust.
+Figure validation engine
+Cross-check extracted numeric values across documents, units, periods and subsidiaries; flag conflicts.
+Targets the PS's data-validation and consistency requirement.
+Report lineage
+Each report section links back to the evidence used to generate it.
+Creates an auditable reporting chain.
+Mining-domain ontology
+Standard entities: mine, subsidiary, seam, production, dispatch, grade, overburden, project, year, unit, location, etc.
+Makes retrieval and analytics domain-aware instead of generic.
+Hybrid structured + semantic search
+SQL filters for exact facts + vector retrieval for semantic context + optional graph traversal for relationships.
+Better for numeric and contextual questions than vector search alone.
+Human-in-the-loop review
+Low-confidence extraction, conflicts and unsupported claims enter a review queue.
+Makes automation safer for official reporting.
+Historical trend intelligence
+Compare years, detect recurring topics/issues and generate time-aware summaries.
+Directly supports historical insights and decision support.
+Template-aware report generation
+Generate into predefined report sections instead of free-form prose.
+More usable for institutional workflows.
+Demo-ready local/private mode
+Prototype can run with local files and a local vector store, with optional cloud AI.
+Useful for sensitive government data and hackathon constraints.
+
+USP that should be highlighted in the PPT
+“Not just Chat with PDF — Evidence-to-Report automation.”
+“Every number has a trail.”
+“AI drafts; validation + human approval decide.”
+“One knowledge layer powers search, analytics and reporting.”
+5. Existing Models / Products and Competitive Landscape
+There are strong existing technologies in this space. Our strategy is to compose them into a CMPDI/CIL-specific workflow rather than attempting to recreate mature OCR or foundation models.
+Existing technology / product
+What it already does
+Our position
+Azure AI Document Intelligence
+OCR, layout, tables, structure, key-value extraction; supports document-to-RAG workflows.
+Reference architecture; optional API choice.
+Google Document AI
+OCR and layout parsing; structured representation of paragraphs, tables and visual elements.
+Alternative extraction stack; useful benchmark/reference.
+Amazon Textract
+OCR plus table/form extraction.
+Alternative managed extraction service.
+UiPath Document Understanding
+OCR engines, extraction, ML/generative extraction and workflow automation.
+Shows maturity of enterprise IDP; we differentiate with domain-specific evidence/reporting.
+ABBYY Vantage / IDP
+Document capture, OCR/ICR, classification, extraction, validation and human-in-loop.
+Commercial benchmark; our prototype focuses on open/accessible components and mining workflow.
+NVIDIA NeMo Retriever
+Multimodal extraction, embedding, reranking and RAG-oriented ingestion.
+Reference for scalable multimodal RAG.
+Microsoft GraphRAG
+Knowledge-graph-based retrieval for private data and cross-document reasoning.
+Optional advanced layer for entities/relationships.
+LlamaIndex
+Framework for indexing, retrieval and RAG applications.
+Possible orchestration framework for prototype.
+
+The important conclusion: existing tools validate the technical feasibility of the building blocks. The innovation opportunity is integrating them into a domain-specific, traceable, validation-first reporting workflow for mining/government documents.
+6. Proposed System Architecture
+Recommended architecture for the prototype:
+USER / ADMIN / ANALYST → Web UI → FastAPI Backend → Authentication & RBAC → Application Services → {Document Ingestion, Search/RAG, Analytics, Report Generation} → PostgreSQL + Vector DB + Object Storage → AI/OCR services.
+A more detailed pipeline:
+Documents → File Validation → OCR/Layout Parser → Document Classification → Structure Extraction → Table/Number Extraction → Normalization → Quality/Validation Checks → Chunking + Metadata → Embeddings → Vector Index → Query/Retrieval → Reranking → Evidence Pack → LLM → Structured Answer / Report Draft → Citation/Validation Gate → Human Review → Export & Audit Log.
+Architecture components
+Layer
+Prototype choice
+Responsibility
+Frontend
+Next.js/React + Tailwind CSS
+Upload, search/chat, dashboard, report builder, review screens.
+API
+FastAPI + Pydantic
+REST APIs, validation, auth hooks, orchestration.
+Database
+PostgreSQL
+Users, documents, jobs, extracted metrics, report metadata, audit records.
+Vector store
+pgvector or Chroma
+Semantic retrieval of document chunks.
+Object storage
+Local filesystem for MVP; MinIO optional
+Original files, page images, generated reports.
+OCR/Layout
+Tesseract + PyMuPDF/pdfplumber for low-cost MVP; cloud Document AI optional
+Text, layout and table extraction.
+Embeddings
+Sentence Transformers / a hosted embedding model
+Convert chunks to vectors.
+Reranker
+Cross-encoder or hosted reranking model
+Improve top-k evidence ordering.
+LLM
+API model or local instruct model depending on compute
+Answer synthesis and report drafting.
+Analytics
+Python + Pandas
+Metrics, trends, comparisons and topic statistics.
+Export
+python-docx / reportlab
+Generate DOCX/PDF reports.
+Deployment
+Docker Compose
+Repeatable local deployment for demo.
+
+Suggested architecture diagram for PPT
+Use a single clean horizontal/vertical architecture diagram with 6 boxes:
+1) DATA SOURCES → 2) DOCUMENT AI PIPELINE → 3) KNOWLEDGE LAYER → 4) AI REASONING → 5) VALIDATION & HUMAN REVIEW → 6) OUTPUTS
+Under DATA SOURCES: PDF / Scan / DOCX / XLSX / Image. Under DOCUMENT AI: OCR / Layout / Tables / Metadata. Under KNOWLEDGE: PostgreSQL / Vector DB / Object Store / optional Graph. Under AI: Retrieval / Reranking / LLM. Under VALIDATION: citations / numeric checks / confidence / approval. Under OUTPUTS: Query Answer / Report / Word Cloud / Dashboard.
+7. Data & Knowledge Model
+Core entities
+Entity
+Important fields
+Document
+id, filename, source, department, subsidiary, document_type, date, year, checksum, language, status
+Page
+document_id, page_number, image_path, OCR_text, quality_score
+Chunk
+document_id, page_id, section, text, embedding, token_count
+Metric
+name, value, unit, period, mine/subsidiary, source_page, extraction_confidence
+Entity
+entity_type, canonical_name, aliases, source
+Relation
+source_entity, relation_type, target_entity, evidence
+Report
+template, period, sections, status, created_by, approved_by, version
+Citation
+report/query id, document_id, page, chunk, extracted_value
+AuditEvent
+user, action, object, timestamp, result, metadata
+
+Mining-oriented ontology
+Start with a compact ontology rather than attempting to model all mining knowledge. Recommended entity/value vocabulary: Mine, Subsidiary, Project, Coalfield, Seam, Location, Reporting Period, Production, Dispatch, Offtake, Grade, Ash, Moisture, Overburden, Manpower, Equipment, Capex, Project Status, Exploration, Drilling, Geological Resource, Reserve, Safety, Environment, Target, Actual, Variance.
+Normalization rules should map synonyms to canonical terms—for example, “production,” “coal production,” and a project-specific equivalent can be mapped only when the context and unit match. Never silently merge ambiguous terms.
+8. AI / ML Technical Approach
+A. Document understanding
+Scanned documents require OCR; digital PDFs should preserve text and layout where possible. Tables must remain tables rather than being flattened into plain text. Modern Document AI systems explicitly preserve layout, tables and sections because structure improves downstream retrieval and RAG quality. [R4][R5]
+B. Chunking
+Prefer semantic/section-aware chunks over fixed character windows.
+Keep table chunks together with table title, headers, units and source page.
+Attach metadata: document, year, subsidiary, document type, page, section and confidence.
+Create smaller evidence chunks for precise retrieval and larger context windows for report synthesis.
+C. Retrieval
+Use hybrid retrieval: exact metadata/keyword filtering + vector similarity. For numeric questions, retrieve candidate evidence and then apply deterministic filters. A reranker can reorder retrieved chunks before generation.
+D. Grounded generation
+The LLM receives only the selected evidence pack plus a strict response schema. It should be instructed not to invent values. If evidence is missing or conflicting, the answer should say so and surface the conflict.
+E. Structured output
+For report generation, use a structured intermediate schema such as JSON: report_title, executive_summary, sections[], claims[], tables[], citations[], warnings[]. Structured model output is preferable to asking an LLM to directly produce a final document because the backend can validate the schema before rendering. Structured Outputs are an established approach for constraining model responses to developer-defined schemas. [R10]
+Example query pipeline
+Question: “What was production for Mine A in FY2024-25, and how did it change from FY2023-24?”
+Parse intent: metric=production; entity=Mine A; periods=FY2024-25/FY2023-24; operation=compare.
+Retrieve documents using metadata filters and semantic retrieval.
+Extract candidate numeric values and units.
+Normalize units and verify period/entity match.
+Detect conflicts across sources.
+Build evidence pack containing values + page citations.
+LLM generates a concise comparison only from evidence.
+Return answer + citations + confidence/warnings.
+9. Automated Report Generation Design
+The report generator should not be a free-form chatbot. It should be template-driven.
+Stage
+Output
+Template selection
+Report type, period, subsidiary, sections
+Evidence collection
+Relevant documents, pages, metrics, tables
+Validation
+Missing fields, conflicting figures, unit mismatch
+Draft generation
+Executive summary + section narratives + tables
+Citation injection
+Source/page/cell references attached to claims
+Quality gate
+Unsupported claim check + numeric consistency check
+Human review
+Approve/edit/reject sections
+Export
+DOCX/PDF + machine-readable JSON
+Audit
+Store report version and evidence set
+
+Suggested demo report types
+Monthly/annual production summary
+Mine/project performance comparison
+Parliamentary-question response draft
+Historical trend report
+Geological/mining project status summary
+Executive briefing from a selected document set
+10. Topic Identification, Word Cloud & Insights
+The PS explicitly requests automated word cloud and topic identification. Implement this as a second analytics view, not as decoration.
+Clean OCR text and remove stopwords/domain stop terms.
+Extract TF-IDF keywords for interpretable top terms.
+Generate topic clusters using embeddings + clustering.
+Label clusters using representative keywords or an LLM.
+Show year-wise topic frequency to reveal emerging/declining themes.
+Link every topic back to source documents so users can inspect evidence.
+A useful dashboard can show: top topics, topic trend by year, most referenced entities, recurring issues, document counts, and a click-through list of supporting documents.
+11. Feasibility Analysis
+Dimension
+Assessment
+Prototype strategy
+Technical
+High
+Use mature OCR, PDF parsing, vector retrieval and LLM APIs/models; no foundation-model training.
+Data
+Medium
+Use public Ministry/CMPDI reports or synthetic data for demo; clearly separate demo data from real confidential data.
+Compute
+High for MVP
+CPU-first OCR + small embedding model + hosted LLM; optional local LLM if hardware permits.
+Integration
+Medium
+Expose clean REST APIs; real CIL integration can be future phase.
+Security
+Medium/High
+RBAC, encryption, audit logs, file isolation, secrets management and human approval.
+Accuracy
+Medium
+Measure extraction accuracy, retrieval recall, citation coverage and numeric consistency.
+8-day delivery
+Feasible if scoped
+Build a vertical slice first; advanced graph analytics and production deployment are stretch goals.
+
+What NOT to build in 8 days
+Do not train a custom foundation model.
+Do not build a full enterprise workflow engine.
+Do not promise production-grade government integration.
+Do not make graph RAG mandatory if time is short.
+Do not attempt every possible mining report type.
+Do not claim measured time/accuracy improvements without a benchmark.
+12. Challenges, Risks & Mitigations
+Risk
+Impact
+Mitigation
+OCR errors on poor scans
+Wrong facts
+Image preprocessing, confidence thresholds, manual review for low-confidence extraction.
+Table extraction errors
+Wrong numeric reports
+Preserve table structure; validate row/column/unit consistency; allow source preview.
+LLM hallucination
+Incorrect official response
+RAG-only evidence, citation requirement, structured output, claim validation, human approval.
+Conflicting source values
+Wrong decision
+Conflict detector; show both values and provenance; never silently choose.
+Large document corpus
+Slow retrieval
+Batch ingestion, metadata filters, chunking, embeddings, caching and async jobs.
+Sensitive data
+Privacy/security exposure
+RBAC, encryption, local/private deployment option, no unnecessary external transmission.
+8-day schedule
+Incomplete demo
+Prioritize ingestion → retrieval → query → report as the critical path.
+Student-team complexity
+Integration bugs
+Use modular services, Docker Compose, API contracts and small milestones.
+
+13. Security & Governance
+Role-based access: Admin, Analyst, Reviewer, Viewer.
+Document-level access control where different subsidiaries/users must be isolated.
+Hash uploaded documents for integrity and duplicate detection.
+Encrypt data at rest and in transit in a production deployment.
+Never store API keys in source code; use environment variables/secrets.
+Maintain audit logs for upload, extraction, query, report generation and approval.
+Keep original documents immutable; store derived data separately.
+Provide source citations and extraction confidence for traceability.
+Use data retention rules and deletion workflows.
+Treat AI output as a draft unless explicitly reviewed/approved.
+14. Backend API Sketch
+Endpoint
+Purpose
+POST /documents/upload
+Upload one or more documents
+GET /documents
+List/filter documents
+GET /documents/{id}
+Document metadata and processing state
+POST /documents/{id}/process
+Start/retry processing
+GET /documents/{id}/pages/{n}
+View page OCR/layout evidence
+POST /query
+Ask evidence-grounded question
+GET /query/{id}/evidence
+Inspect retrieved evidence
+POST /reports/generate
+Generate report draft from template + filters
+GET /reports/{id}
+Report status/details
+POST /reports/{id}/approve
+Reviewer approval
+GET /analytics/topics
+Topic/keyword analytics
+GET /analytics/trends
+Time-series insights
+GET /audit
+Audit log for authorized users
+
+15. Frontend / UI-UX Specification
+Screen
+Main UI
+Login
+Role-aware login; simple government-enterprise style.
+Dashboard
+Documents, processing queue, recent reports, alerts, top topics.
+Document Upload
+Drag/drop, batch upload, type/status, validation messages.
+Document Viewer
+Original page + extracted text/table + source metadata.
+AI Query
+Chat-like interface with evidence cards and citations.
+Report Builder
+Select template, period, subsidiary, documents; preview draft.
+Review Queue
+Conflicts, low-confidence fields, unsupported claims.
+Analytics
+Topics, word cloud, trends, entity counts.
+Report History
+Versions, reviewer, approval status, export.
+
+UI principle: keep it simple and professional. The most important differentiator is traceability, so citations and evidence previews should be visible rather than hidden behind a generic chatbot.
+16. 8-Day Implementation Plan
+Day
+Deliverable
+Definition of done
+Day 1
+Documentation + architecture + repo setup
+PRD/TRD/security/user flow/API contract/data model and this summary finalized.
+Day 2
+Frontend vertical shell
+Login/dashboard/upload/query/report screens connected to mocked APIs.
+Day 3
+Backend + database
+FastAPI, PostgreSQL, file storage, document/job tables and upload APIs.
+Day 4
+Ingestion pipeline
+PDF/DOCX/XLSX/image parsing, OCR, page/chunk metadata and vector indexing.
+Day 5
+RAG query assistant
+Hybrid retrieval, reranking if available, evidence pack, grounded answers + citations.
+Day 6
+Report + analytics
+Template report generation, word cloud/topics, basic trends and validation.
+Day 7
+Integration
+Frontend → backend → AI/RAG → report export, auth, error handling.
+Day 8
+Testing + demo hardening
+Golden test questions, accuracy metrics, screenshots, demo dataset, PPT inputs and fallback demo.
+
+Critical-path MVP
+If time becomes tight, the absolute MVP is: upload 5–20 documents → OCR/parse → index → ask a question → show cited evidence → generate a short report → export DOCX. Everything else is secondary.
+17. Evaluation & Success Metrics
+Metric
+How to measure
+Target for prototype
+OCR extraction quality
+Sample pages manually checked; character/field accuracy.
+Report actual measured result; do not invent.
+Table extraction accuracy
+Compare extracted cells against ground truth.
+Report per-table accuracy.
+Retrieval Recall@K
+Whether gold evidence appears in top K.
+Target ≥80% on curated demo questions.
+Citation coverage
+Claims with valid source evidence / total claims.
+Target ≥95% on demo reports.
+Numeric consistency
+Generated numbers matching validated evidence.
+Target 100% on curated test set.
+Answer groundedness
+Human review of claims vs evidence.
+Target ≥90% on curated test set.
+Report completeness
+Required template fields populated correctly.
+Target ≥90% on demo templates.
+Processing time
+End-to-end ingestion/query/report timings.
+Measure and report; no unsupported claims.
+
+18. Working Prototype / Demo Scenario
+Recommended 3–5 minute demo:
+1. Upload three public mining/coal reports (include at least one scanned page and one table).
+2. Show ingestion status changing from Uploaded → OCR → Indexed → Ready.
+3. Open a document and show extracted page/table structure.
+4. Ask a factual question that requires comparing two years.
+5. Show answer with source document/page citations.
+6. Ask a question where two documents disagree; show the conflict warning.
+7. Open Analytics and show top topics + year trend.
+8. Select a report template and generate a report draft.
+9. Show report sections with evidence references.
+10. Reviewer approves and exports DOCX/PDF.
+Fallback demo
+If live OCR/LLM APIs fail during judging, keep a preprocessed demo corpus and cached embeddings/results in the repository. The UI should still demonstrate the same user journey. Clearly label cached results as demo data.
+19. Exact PPT Content Mapping
+PPT requirement
+What to show from this document
+1. Proposed Solution
+Problem → Evidence-to-Report Copilot → 3 core outputs.
+Detailed explanation
+Document ingestion → OCR/layout → knowledge layer → RAG → validation → report.
+How it addresses problem
+Manual search/copy/reconcile → automated extraction/search/validation/reporting.
+Innovation & uniqueness
+Evidence-first, figure validation, lineage, mining ontology, hybrid retrieval, human approval.
+2. Technologies
+React/Next.js, FastAPI, PostgreSQL, pgvector/Chroma, OCR/parser, embeddings, LLM, Docker.
+Methodology / flow chart
+Documents → OCR → normalize → index → retrieve → validate → generate → review → export.
+3. Feasibility
+Mature components, no foundation training, CPU-first MVP, modular APIs.
+Challenges/risks
+OCR, tables, hallucination, conflicts, security, time; show mitigations.
+4. Impact
+Faster information access, reduced manual effort, fewer transcription errors, historical insight, traceability.
+5. References
+Official SIH/Ministry/CMPDI sources + technical references listed below.
+
+20. Architecture Diagram Content — Ready for the PPT Designer
+Diagram title: “Evidence-to-Report AI Architecture”
+DATA SOURCES: Scanned PDF | Digital PDF | DOCX | XLSX | Images | Historical Archive
+↓
+DOCUMENT AI: File validation | OCR | Layout analysis | Table extraction | Metadata extraction
+↓
+KNOWLEDGE LAYER: Clean text | Metrics | Metadata | PostgreSQL | Vector DB | Object store | Optional knowledge graph
+↓
+RETRIEVAL & REASONING: Hybrid search | Semantic retrieval | Reranking | Evidence pack | LLM
+↓
+TRUST LAYER: Numeric validation | Conflict detection | Citation check | Confidence | Human review | Audit log
+↓
+OUTPUTS: AI Query Response | Automated Report | Word Cloud / Topics | Trend Dashboard | DOCX/PDF
+Architecture visual rules
+Use 6–7 large boxes, not dozens of microservices.
+Show arrows for data flow.
+Highlight the Trust Layer as the differentiator.
+Use one small database cluster under Knowledge Layer.
+Do not draw a complex Kubernetes/cloud architecture for the SIH prototype.
+Keep AI as a component of the pipeline, not the entire product.
+21. Recommended Technology Stack
+Area
+Recommended
+Alternative
+Language
+Python
+Node.js for API if team prefers
+Frontend
+Next.js + React + Tailwind
+React + Vite
+Backend
+FastAPI + Pydantic
+Django REST
+DB
+PostgreSQL + pgvector
+PostgreSQL + Chroma
+PDF text
+PyMuPDF
+pdfplumber
+OCR
+Tesseract for MVP
+Azure/Google Document AI
+DOCX
+python-docx
+LibreOffice conversion pipeline
+XLSX
+openpyxl / pandas
+Python-only parsing
+Embeddings
+Sentence Transformers
+Hosted embeddings
+Reranking
+Cross-encoder
+Hosted reranker
+LLM
+Hosted instruction model / API
+Local instruct model
+Topic analysis
+scikit-learn + BERTopic optional
+TF-IDF + clustering
+Charts
+Plotly / Recharts
+Matplotlib for backend
+Auth
+JWT + RBAC
+OAuth/SSO later
+Deployment
+Docker Compose
+Cloud deployment later
+
+22. Research Conclusions
+1. The PS is technically credible because the industry already has mature document AI primitives for OCR, layout, table extraction, retrieval and RAG. [R4–R9]
+2. A generic “chat with documents” implementation will not be sufficiently differentiated. Major platforms already offer document chat/RAG patterns. The product must add mining-domain structure, validation and report lineage. [R4][R5][R6][R7][R8]
+3. Numeric accuracy and provenance are more important for this use case than fluent prose. The architecture should therefore place deterministic validation between retrieval and final report output.
+4. GraphRAG is valuable as a future enhancement for cross-document entity relationships, but it should not block the 8-day MVP. Microsoft describes GraphRAG as a structured approach using a knowledge graph and community hierarchy to improve reasoning over private data. [R11]
+5. The strongest hackathon story is “from unstructured government documents to auditable decision-ready reports,” not “AI chatbot for coal documents.”
+23. Future Scope
+Subsidiary-wise multi-tenant deployment.
+Direct connectors to approved enterprise repositories.
+Advanced graph-based mining knowledge layer.
+Domain-specific extraction models for geological/mining forms.
+Automated parliamentary-question response workflow with reviewer approval.
+Multilingual document and query support.
+Voice interface for field/office users.
+Forecasting and anomaly detection for production/operations data.
+Agentic workflow that plans multi-document research tasks while keeping evidence constraints.
+Private/on-premise inference for sensitive deployments.
+24. References & Research Links
+Ref
+URL
+[R1] Ministry of Coal — Annual Reports
+https://coal.gov.in/public-information/reports/annual-reports
+[R2] Ministry of Coal — Proactive Disclosures / Parliamentary Question links
+https://www.coal.gov.in/index.php/rti/proactive-disclosures-rti-act-ministry-of-coal
+[R3] CMPDI — Annual Reports
+https://www.cmpdi.co.in/en/investor/annual-reports
+[R4] Microsoft Azure Document Intelligence — Layout model
+https://learn.microsoft.com/en-us/azure/ai-services/document-intelligence/prebuilt/layout
+[R5] Microsoft — RAG with Azure Document Intelligence
+https://learn.microsoft.com/en-us/azure/ai-services/document-intelligence/concept-retrieval-augmented-generation
+[R6] Google Cloud Document AI — Layout Parser
+https://docs.cloud.google.com/document-ai/docs/layout-parse-chunk
+[R7] AWS Textract — Tables
+https://docs.aws.amazon.com/textract/latest/dg/how-it-works-tables.html
+[R8] NVIDIA NeMo Retriever
+https://docs.nvidia.com/nemo/retriever/
+[R9] ABBYY — Intelligent Document Processing
+https://www.abbyy.com/ai-document-processing/
+[R10] OpenAI — Structured Outputs
+https://openai.com/index/introducing-structured-outputs-in-the-api/
+[R11] Microsoft GraphRAG
+https://microsoft.github.io/graphrag/
+[R12] LlamaIndex — RAG introduction
+https://github.com/run-llama/llama_index/blob/main/docs/src/content/docs/framework/understanding/rag/index.mdx
+[R13] UiPath Document Understanding — OCR
+https://docs.uipath.com/document-understanding/automation-cloud/latest/user-guide/ocr
+[R14] Claude PDF support documentation
+https://docs.claude.com/en/docs/build-with-claude/pdf-support
+
+Source notes
+The problem statement details in this document are based on the SIH26023 text supplied by the team and cross-checked against a current SIH 2026 listing. Official Ministry of Coal and CMPDI pages were used to verify the existence of relevant report archives. Technical capability claims are based on the cited vendor/project documentation.
+Important: commercial product capabilities change over time. The team should re-check licensing, API pricing, model availability and deployment restrictions immediately before implementation.
+25. Final Product Definition — One Page Handoff
+Item
+Final definition
+Product
+COALINTEL REPORTING COPILOT
+Problem
+Manual, fragmented and error-prone mining/government reporting from heterogeneous documents.
+Core input
+Scanned/digital PDFs, DOCX, XLSX, images, historical archives.
+Core engine
+OCR/layout + structured extraction + hybrid RAG + validation + LLM.
+Core output
+Evidence-backed answers, automated report drafts, topic analytics, trends.
+Primary USP
+Evidence-to-Report automation with numeric validation and report lineage.
+Trust principle
+AI drafts; evidence + deterministic checks + human review govern official output.
+MVP
+Upload → process → search → cited answer → generate report → review → export.
+PPT architecture
+Data Sources → Document AI → Knowledge Layer → AI Reasoning → Trust Layer → Outputs.
+8-day success condition
+One polished vertical slice that works end-to-end on a curated public/demo corpus.
+
+END OF RESEARCH CUM SUMMARY
+Prepared as a project/PPT handoff document for SIH 2026 Problem Statement SIH26023.

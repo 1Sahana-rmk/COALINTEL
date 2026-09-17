@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=10" />
+	<link rel="profile" href="https://gmpg.org/xfn/11" />
+	<link rel="pingback" href="https://bcclweb.in/xmlrpc.php" />
+	<title>Annual Report &#8211; BCCL</title>
+<meta name='robots' content='max-image-preview:large' />
+<link rel="alternate" href="https://bcclweb.in/?page_id=25564" hreflang="en" />
+<link rel="alternate" href="https://bcclweb.in/?page_id=25573&#038;lang=hi" hreflang="hi" />
+<link rel="alternate" type="application/rss+xml" title="BCCL &raquo; Feed" href="https://bcclweb.in/?feed=rss2" />
+<link rel="alternate" type="application/rss+xml" title="BCCL &raquo; Comments Feed" href="https://bcclweb.in/?feed=comments-rss2" />
+<script type="text/javascript">
+window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/14.0.0\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/14.0.0\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/bcclweb.in\/wp-includes\/js\/wp-emoji-release.min.js?ver=6.3"}};
+/*! This file is auto-generated */
+!function(i,n){var o,s,e;function c(e){try{var t={supportTests:e,timestamp:(new Date).valueOf()};sessionStorage.setItem(o,JSON.stringify(t))}catch(e){}}function p(e,t,n){e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(t,0,0);var t=new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data),r=(e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(n,0,0),new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data));return t.every(function(e,t){return e===r[t]})}function u(e,t,n){switch(t){case"flag":return n(e,"\ud83c\udff3\ufe0f\u200d\u26a7\ufe0f","\ud83c\udff3\ufe0f\u200b\u26a7\ufe0f")?!1:!n(e,"\ud83c\uddfa\ud83c\uddf3","\ud83c\uddfa\u200b\ud83c\uddf3")&&!n(e,"\ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc65\udb40\udc6e\udb40\udc67\udb40\udc7f","\ud83c\udff4\u200b\udb40\udc67\u200b\udb40\udc62\u200b\udb40\udc65\u200b\udb40\udc6e\u200b\udb40\udc67\u200b\udb40\udc7f");case"emoji":return!n(e,"\ud83e\udef1\ud83c\udffb\u200d\ud83e\udef2\ud83c\udfff","\ud83e\udef1\ud83c\udffb\u200b\ud83e\udef2\ud83c\udfff")}return!1}function f(e,t,n){var r="undefined"!=typeof WorkerGlobalScope&&self instanceof WorkerGlobalScope?new OffscreenCanvas(300,150):i.createElement("canvas"),a=r.getContext("2d",{willReadFrequently:!0}),o=(a.textBaseline="top",a.font="600 32px Arial",{});return e.forEach(function(e){o[e]=t(a,e,n)}),o}function t(e){var t=i.createElement("script");t.src=e,t.defer=!0,i.head.appendChild(t)}"undefined"!=typeof Promise&&(o="wpEmojiSettingsSupports",s=["flag","emoji"],n.supports={everything:!0,everythingExceptFlag:!0},e=new Promise(function(e){i.addEventListener("DOMContentLoaded",e,{once:!0})}),new Promise(function(t){var n=function(){try{var e=JSON.parse(sessionStorage.getItem(o));if("object"==typeof e&&"number"==typeof e.timestamp&&(new Date).valueOf()<e.timestamp+604800&&"object"==typeof e.supportTests)return e.supportTests}catch(e){}return null}();if(!n){if("undefined"!=typeof Worker&&"undefined"!=typeof OffscreenCanvas&&"undefined"!=typeof URL&&URL.createObjectURL&&"undefined"!=typeof Blob)try{var e="postMessage("+f.toString()+"("+[JSON.stringify(s),u.toString(),p.toString()].join(",")+"));",r=new Blob([e],{type:"text/javascript"}),a=new Worker(URL.createObjectURL(r),{name:"wpTestEmojiSupports"});return void(a.onmessage=function(e){c(n=e.data),a.terminate(),t(n)})}catch(e){}c(n=f(s,u,p))}t(n)}).then(function(e){for(var t in e)n.supports[t]=e[t],n.supports.everything=n.supports.everything&&n.supports[t],"flag"!==t&&(n.supports.everythingExceptFlag=n.supports.everythingExceptFlag&&n.supports[t]);n.supports.everythingExceptFlag=n.supports.everythingExceptFlag&&!n.supports.flag,n.DOMReady=!1,n.readyCallback=function(){n.DOMReady=!0}}).then(function(){return e}).then(function(){var e;n.supports.everything||(n.readyCallback(),(e=n.source||{}).concatemoji?t(e.concatemoji):e.wpemoji&&e.twemoji&&(t(e.twemoji),t(e.wpemoji)))}))}((window,document),window._wpemojiSettings);
+</script>
+<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 0.07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+	<link rel='stylesheet' id='wp-block-library-css' href='https://bcclweb.in/wp-includes/css/dist/block-library/style.min.css?ver=6.3' type='text/css' media='all' />
+<style id='classic-theme-styles-inline-css' type='text/css'>
+/*! This file is auto-generated */
+.wp-block-button__link{color:#fff;background-color:#32373c;border-radius:9999px;box-shadow:none;text-decoration:none;padding:calc(.667em + 2px) calc(1.333em + 2px);font-size:1.125em}.wp-block-file__button{background:#32373c;color:#fff;text-decoration:none}
+</style>
+<style id='global-styles-inline-css' type='text/css'>
+body{--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgba(6,147,227,1) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgba(252,185,0,1) 0%,rgba(255,105,0,1) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgba(255,105,0,1) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgba(255, 255, 255, 1), 6px 6px rgba(0, 0, 0, 1);--wp--preset--shadow--crisp: 6px 6px 0px rgba(0, 0, 0, 1);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flow > .alignleft{float: left;margin-inline-start: 0;margin-inline-end: 2em;}body .is-layout-flow > .alignright{float: right;margin-inline-start: 2em;margin-inline-end: 0;}body .is-layout-flow > .aligncenter{margin-left: auto !important;margin-right: auto !important;}body .is-layout-constrained > .alignleft{float: left;margin-inline-start: 0;margin-inline-end: 2em;}body .is-layout-constrained > .alignright{float: right;margin-inline-start: 2em;margin-inline-end: 0;}body .is-layout-constrained > .aligncenter{margin-left: auto !important;margin-right: auto !important;}body .is-layout-constrained > :where(:not(.alignleft):not(.alignright):not(.alignfull)){max-width: var(--wp--style--global--content-size);margin-left: auto !important;margin-right: auto !important;}body .is-layout-constrained > .alignwide{max-width: var(--wp--style--global--wide-size);}body .is-layout-flex{display: flex;}body .is-layout-flex{flex-wrap: wrap;align-items: center;}body .is-layout-flex > *{margin: 0;}body .is-layout-grid{display: grid;}body .is-layout-grid > *{margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+.wp-block-navigation a:where(:not(.wp-element-button)){color: inherit;}
+:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}
+:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}
+.wp-block-pullquote{font-size: 1.5em;line-height: 1.6;}
+</style>
+<link rel='stylesheet' id='vantage-style-css' href='https://bcclweb.in/wp-content/themes/vantage/style.css?ver=1.15.4' type='text/css' media='all' />
+<link rel='stylesheet' id='font-awesome-css' href='https://bcclweb.in/wp-content/plugins/elementor_INFECTED/assets/lib/font-awesome/css/font-awesome.min.css?ver=4.7.0' type='text/css' media='all' />
+<link rel='stylesheet' id='siteorigin-mobilenav-css' href='https://bcclweb.in/wp-content/themes/vantage/inc/mobilenav/css/mobilenav.css?ver=1.15.4' type='text/css' media='all' />
+<link rel='stylesheet' id='tablepress-default-css' href='https://bcclweb.in/wp-content/plugins/tablepress/css/default.min.css?ver=1.12' type='text/css' media='all' />
+<link rel='stylesheet' id='elementor-icons-css' href='https://bcclweb.in/wp-content/plugins/elementor_INFECTED/assets/lib/eicons/css/elementor-icons.min.css?ver=5.21.0' type='text/css' media='all' />
+<link rel='stylesheet' id='elementor-frontend-css' href='https://bcclweb.in/wp-content/plugins/elementor_INFECTED/assets/css/frontend.min.css?ver=3.15.2' type='text/css' media='all' />
+<link rel='stylesheet' id='swiper-css' href='https://bcclweb.in/wp-content/plugins/elementor_INFECTED/assets/lib/swiper/css/swiper.min.css?ver=5.3.6' type='text/css' media='all' />
+<link rel='stylesheet' id='elementor-post-19875-css' href='https://bcclweb.in/files/elementor/css/post-19875.css?ver=1758178880' type='text/css' media='all' />
+<link rel='stylesheet' id='elementor-global-css' href='https://bcclweb.in/files/elementor/css/global.css?ver=1758178880' type='text/css' media='all' />
+<link rel='stylesheet' id='elementor-post-25564-css' href='https://bcclweb.in/files/elementor/css/post-25564.css?ver=1778646541' type='text/css' media='all' />
+<link rel='stylesheet' id='eael-general-css' href='https://bcclweb.in/wp-content/plugins/essential-addons-for-elementor-lite/assets/front-end/css/view/general.min.css?ver=5.8.6' type='text/css' media='all' />
+<link rel='stylesheet' id='google-fonts-1-css' href='https://fonts.googleapis.com/css?family=Roboto%3A100%2C100italic%2C200%2C200italic%2C300%2C300italic%2C400%2C400italic%2C500%2C500italic%2C600%2C600italic%2C700%2C700italic%2C800%2C800italic%2C900%2C900italic%7CRoboto+Slab%3A100%2C100italic%2C200%2C200italic%2C300%2C300italic%2C400%2C400italic%2C500%2C500italic%2C600%2C600italic%2C700%2C700italic%2C800%2C800italic%2C900%2C900italic%7CSansita%3A100%2C100italic%2C200%2C200italic%2C300%2C300italic%2C400%2C400italic%2C500%2C500italic%2C600%2C600italic%2C700%2C700italic%2C800%2C800italic%2C900%2C900italic&#038;display=auto&#038;ver=6.3' type='text/css' media='all' />
+<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin><script type='text/javascript' src='https://bcclweb.in/wp-includes/js/jquery/jquery.min.js?ver=3.7.0' id='jquery-core-js'></script>
+<script type='text/javascript' src='https://bcclweb.in/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.4.1' id='jquery-migrate-js'></script>
+<script type='text/javascript' src='https://bcclweb.in/wp-content/themes/vantage/js/jquery.flexslider.min.js?ver=2.1' id='jquery-flexslider-js'></script>
+<script type='text/javascript' src='https://bcclweb.in/wp-content/themes/vantage/js/jquery.touchSwipe.min.js?ver=1.6.6' id='jquery-touchswipe-js'></script>
+<script type='text/javascript' src='https://bcclweb.in/wp-content/themes/vantage/js/jquery.theme-main.min.js?ver=1.15.4' id='vantage-main-js'></script>
+<script type='text/javascript' src='https://bcclweb.in/wp-content/themes/vantage/js/jquery.fitvids.min.js?ver=1.0' id='jquery-fitvids-js'></script>
+<!--[if lt IE 9]>
+<script type='text/javascript' src='https://bcclweb.in/wp-content/themes/vantage/js/html5.min.js?ver=3.7.3' id='vantage-html5-js'></script>
+<![endif]-->
+<!--[if (gte IE 6)&(lte IE 8)]>
+<script type='text/javascript' src='https://bcclweb.in/wp-content/themes/vantage/js/selectivizr.min.js?ver=1.0.3b' id='vantage-selectivizr-js'></script>
+<![endif]-->
+<script type='text/javascript' id='siteorigin-mobilenav-js-extra'>
+/* <![CDATA[ */
+var mobileNav = {"search":"","text":{"navigate":"Menu","back":"Back","close":"Close"},"nextIconUrl":"https:\/\/bcclweb.in\/wp-content\/themes\/vantage\/inc\/mobilenav\/images\/next.png","mobileMenuClose":"<i class=\"fa fa-times\"><\/i>"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://bcclweb.in/wp-content/themes/vantage/inc/mobilenav/js/mobilenav.min.js?ver=1.15.4' id='siteorigin-mobilenav-js'></script>
+<link rel="https://api.w.org/" href="https://bcclweb.in/index.php?rest_route=/" /><link rel="alternate" type="application/json" href="https://bcclweb.in/index.php?rest_route=/wp/v2/pages/25564" /><link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://bcclweb.in/xmlrpc.php?rsd" />
+<meta name="generator" content="WordPress 6.3" />
+<link rel="canonical" href="https://bcclweb.in/?page_id=25564" />
+<link rel='shortlink' href='https://bcclweb.in/?p=25564' />
+<link rel="alternate" type="application/json+oembed" href="https://bcclweb.in/index.php?rest_route=%2Foembed%2F1.0%2Fembed&#038;url=https%3A%2F%2Fbcclweb.in%2F%3Fpage_id%3D25564" />
+<link rel="alternate" type="text/xml+oembed" href="https://bcclweb.in/index.php?rest_route=%2Foembed%2F1.0%2Fembed&#038;url=https%3A%2F%2Fbcclweb.in%2F%3Fpage_id%3D25564&#038;format=xml" />
+<style type='text/css'> .ae_data .elementor-editor-element-setting {
+            display:none !important;
+            }
+            </style><meta name="viewport" content="width=device-width, initial-scale=1" />		<style type="text/css">
+			.so-mobilenav-mobile + * { display: none; }
+			@media screen and (max-width: 480px) { .so-mobilenav-mobile + * { display: block; position:relative;left:-40px;} .so-mobilenav-standard + * { display: none; } .site-navigation #search-icon { display: none; } #masthead.masthead-logo-in-menu .logo > img {
+    min-height: 33px;
+    width: auto;
+    height: 50px;
+    max-width: 100%; }
+		</style>
+	<meta name="generator" content="Elementor 3.15.2; features: e_dom_optimization, e_optimized_assets_loading, additional_custom_breakpoints; settings: css_print_method-external, google_font-enabled, font_display-auto">
+	<style type="text/css" media="screen">
+		#footer-widgets .widget { width: 100%; }
+		#masthead-widgets .widget { width: 100%; }
+	</style>
+	<style type="text/css" id="vantage-footer-widgets">#footer-widgets aside { width : 100%; }</style> <style type="text/css" id="customizer-css">#masthead .hgroup h1, #masthead.masthead-logo-in-menu .logo > h1 { font-size: 21.6px } .main-navigation ul li a { padding-top: 10px; padding-bottom: 10px } .main-navigation ul li a, #masthead.masthead-logo-in-menu .logo { padding-left: 15px; padding-right: 15px } #header-sidebar .widget_nav_menu ul.menu > li > ul.sub-menu { border-top-color: #1b212d } a.button, button, html input[type="button"], input[type="reset"], input[type="submit"], .post-navigation a, #image-navigation a, article.post .more-link, article.page .more-link, .paging-navigation a, .woocommerce #page-wrapper .button, .woocommerce a.button, .woocommerce .checkout-button, .woocommerce input.button, #infinite-handle span button { text-shadow: none } a.button, button, html input[type="button"], input[type="reset"], input[type="submit"], .post-navigation a, #image-navigation a, article.post .more-link, article.page .more-link, .paging-navigation a, .woocommerce #page-wrapper .button, .woocommerce a.button, .woocommerce .checkout-button, .woocommerce input.button, .woocommerce #respond input#submit.alt, .woocommerce a.button.alt, .woocommerce button.button.alt, .woocommerce input.button.alt, #infinite-handle span { -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none } #footer-widgets .widget { color: #d6d6d6 } #colophon .widget_nav_menu .menu-item a { border-color: #d6d6d6 } #footer-widgets .widget a, #footer-widgets .widget a:visited { color: #f2f2f2 } </style><link rel="icon" href="https://bcclweb.in/files/2020/11/cropped-logo-32x32.png" sizes="32x32" />
+<link rel="icon" href="https://bcclweb.in/files/2020/11/cropped-logo-192x192.png" sizes="192x192" />
+<link rel="apple-touch-icon" href="https://bcclweb.in/files/2020/11/cropped-logo-180x180.png" />
+<meta name="msapplication-TileImage" content="https://bcclweb.in/files/2020/11/cropped-logo-270x270.png" />
+</head>
+
+<body class="page-template-default page page-id-25564 wp-custom-logo responsive layout-full no-js no-sidebar page-layout-default sidebar-position-left mobilenav elementor-default elementor-kit-19875 elementor-page elementor-page-25564">
+
+
+<div id="page-wrapper">
+
+	<a class="skip-link screen-reader-text" href="#content">Skip to content</a>
+
+	
+	
+		
+<header id="masthead" class="site-header masthead-logo-in-menu  unconstrained-logo" role="banner">
+
+	
+<nav role="navigation" class="site-navigation main-navigation primary use-sticky-menu mobile-navigation">
+
+	<div class="full-container">
+					<div class="logo-in-menu-wrapper">
+				<a href="https://bcclweb.in/" title="BCCL" rel="home" class="logo"><img src="https://bcclweb.in/files/2025/06/BCCL_LOGO-6.jpeg"  class="logo-no-height-constrain"  width="255"  height="85"  alt="BCCL Logo"  /></a>
+									<p class="site-description">Bharat Coking Coal Limited</p>
+							</div>
+				
+					<div id="so-mobilenav-standard-1" data-id="1" class="so-mobilenav-standard"></div><div class="menu-main-container"><ul id="menu-main" class="menu"><li id="menu-item-3675" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-3675"><a href="https://www.bcclweb.in/"><span class="icon"></span>Home</a></li>
+<li id="menu-item-4033" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-4033"><a href="#"><span class="icon"></span>Company</a>
+<ul class="sub-menu">
+	<li id="menu-item-3689" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-3689"><a href="https://bcclweb.in/?page_id=3681">About BCCL</a></li>
+	<li id="menu-item-3917" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-3917"><a href="https://bcclweb.in/?page_id=3893">Board of Directors</a></li>
+	<li id="menu-item-4038" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4038"><a href="https://bcclweb.in/?page_id=3932">Organization Chart</a></li>
+	<li id="menu-item-4037" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4037"><a href="https://bcclweb.in/?page_id=3942">Delegation of Power</a></li>
+	<li id="menu-item-8397" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-8397"><a href="https://bcclweb.in/?page_id=3951">Physical Performance</a></li>
+	<li id="menu-item-25585" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-25585"><a href="https://www.bcclweb.in/?page_id=25564&#038;lang=en"><span class="icon"></span>Annual Report</a></li>
+	<li id="menu-item-8496" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-8496"><a href="https://bcclweb.in/?page_id=8406">Coal Reserve</a></li>
+	<li id="menu-item-4036" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4036"><a href="https://bcclweb.in/?page_id=3961">BCCL Departments</a></li>
+	<li id="menu-item-31655" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-31655"><a href="https://bcclweb.in/?page_id=6102"><span class="icon"></span>Areas</a></li>
+	<li id="menu-item-17367" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-17367"><a href="https://bcclweb.in/?page_id=3967">Washery</a></li>
+	<li id="menu-item-4034" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4034"><a href="https://bcclweb.in/?page_id=3981">Our Ex-CMDs</a></li>
+	<li id="menu-item-4074" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4074"><a href="https://bcclweb.in/?page_id=4067">How to Reach Us</a></li>
+</ul>
+</li>
+<li id="menu-item-5904" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-5904"><a href="#"><span class="icon"></span>Tender</a>
+<ul class="sub-menu">
+	<li id="menu-item-4000" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4000"><a href="https://bcclweb.in/tender-download.php"><span class="icon"></span>Current Tender</a></li>
+	<li id="menu-item-4078" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4078"><a href="http://www.bcclweb.in/general-notification.php"><span class="icon"></span>General Notices</a></li>
+	<li id="menu-item-11314" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-11314"><a href="http://www.bcclweb.in/tender-finalized.php"><span class="icon"></span>Finalized Tenders</a></li>
+	<li id="menu-item-18451" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-18451"><a href="https://bcclweb.in/hqfinalised/MM_WO.php"><span class="icon"></span>Finalized Orders of MM department (HQ)</a></li>
+	<li id="menu-item-4081" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4081"><a href="http://www.bcclweb.in/general_notices.htm"><span class="icon"></span>General Terms &#038; Conditon</a></li>
+	<li id="menu-item-4082" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4082"><a href="https://coalindiatenders.nic.in/nicgep/app"><span class="icon"></span>Tenders at NIC Portal</a></li>
+	<li id="menu-item-4083" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4083"><a href="https://coalindiatenders.nic.in/nicgep/app"><span class="icon"></span>E-Tender</a></li>
+	<li id="menu-item-4084" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4084"><a href="https://coalindiatenders.nic.in/nicgep/app?page=FrontEndLatestActiveTendersOrgwise&#038;service=page&#038;org=Bharat%20Coking%20Coal%20Limited"><span class="icon"></span>Tender on e- procurement</a></li>
+	<li id="menu-item-9590" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-9590"><a href="https://bcclweb.in/?page_id=9584">Tender(Archives)</a></li>
+</ul>
+</li>
+<li id="menu-item-21918" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-21918"><a href="#"><span class="icon"></span>Vigilance</a>
+<ul class="sub-menu">
+	<li id="menu-item-26047" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-26047"><a href="https://bcclweb.in/Vigilance/chetna%20final%209-12-25.pdf"><span class="icon"></span>CHETNA-2025</a></li>
+	<li id="menu-item-21919" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-21919"><a href="https://www.bcclweb.in/?page_id=23822&#038;lang=en"><span class="icon"></span>Lodge a Complaint</a></li>
+	<li id="menu-item-21925" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-21925"><a href="https://bcclweb.in/?page_id=21920">Compendium of Circulars</a></li>
+	<li id="menu-item-21926" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-21926"><a href="https://www.bcclweb.in/Vigilence%20pdf/Vigilance%20Manual%202021-2_1.pdf"><span class="icon"></span>Vigilance Manual</a></li>
+	<li id="menu-item-21928" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-21928"><a href="https://bcclweb.in/?page_id=21901">VIGILANCE- An Overview</a></li>
+	<li id="menu-item-21930" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-21930"><a href="https://bcclweb.in/?page_id=5096">Integrity Pact Programme</a></li>
+	<li id="menu-item-21931" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-21931"><a href="https://bcclweb.in/?page_id=5126">Vigilance Awareness Week</a></li>
+	<li id="menu-item-21932" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-21932"><a href="https://bcclweb.in/?page_id=21903">CVO Profile</a></li>
+	<li id="menu-item-21938" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-21938"><a href="https://bcclweb.in/?page_id=21905">Vigilance Executive Details</a></li>
+	<li id="menu-item-21939" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-21939"><a href="https://bcclweb.in/?page_id=5117">Useful Links</a></li>
+	<li id="menu-item-26701" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-26701"><a href="https://bcclweb.in/monthlyTenderDetails/"><span class="icon"></span>Tender Details For ATR Complaince</a></li>
+</ul>
+</li>
+<li id="menu-item-28251" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-28251"><a href="https://www.bcclweb.in/?page_id=27967&#038;lang=en"><span class="icon"></span>Investor Relations</a></li>
+<li id="menu-item-4096" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-4096"><a href="#"><span class="icon"></span>Info Bank</a>
+<ul class="sub-menu">
+	<li id="menu-item-11779" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-11779"><a href="https://bcclweb.in/Quarter"><span class="icon"></span>Online Quarter Application</a></li>
+	<li id="menu-item-4106" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4106"><a href="https://bcclweb.in/?page_id=4097">Careers in BCCL</a></li>
+	<li id="menu-item-4112" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4112"><a href="https://bcclweb.in/?page_id=4107">Notices</a></li>
+	<li id="menu-item-14052" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-14052"><a href="https://bcclweb.in/?page_id=14028">Circulars</a></li>
+	<li id="menu-item-26520" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-26520"><a href="https://www.bcclweb.in/?page_id=26513&#038;lang=en"><span class="icon"></span>Policies</a></li>
+	<li id="menu-item-4118" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4118"><a href="https://bcclweb.in/?page_id=4113">Download Forms</a></li>
+	<li id="menu-item-18798" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-18798"><a href="http://112.133.208.91/FMS/"><span class="icon"></span>UTKARSH</a></li>
+	<li id="menu-item-4124" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4124"><a href="https://bcclweb.in/?page_id=4119">News, Events &#038; Media</a></li>
+	<li id="menu-item-30462" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-30462"><a href="https://bcclweb.in/Grievance_jmp/"><span class="icon"></span>Grievance Redressal of Karmatand Township</a></li>
+</ul>
+</li>
+<li id="menu-item-18647" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-18647"><a href="https://bcclweb.in/?page_id=6432">Contact us</a></li>
+<li id="menu-item-30448" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-30448"><a href="https://bcclweb.in/?page_id=12673&#038;lang=hi"><span class="icon"></span>हिन्दी</a></li>
+</ul></div><div id="so-mobilenav-mobile-1" data-id="1" class="so-mobilenav-mobile"></div><div class="menu-mobilenav-container"><ul id="mobile-nav-item-wrap-1" class="menu"><li><a href="#" class="mobilenav-main-link" data-id="1"><span class="mobile-nav-icon"></span>Menu</a></li></ul></div>			</div>
+</nav><!-- .site-navigation .main-navigation -->
+
+</header><!-- #masthead .site-header -->
+
+	
+	
+	
+	
+	<div id="main" class="site-main">
+		<div class="full-container">
+			
+<div id="primary" class="content-area">
+	<div id="content" class="site-content" role="main">
+
+		
+			
+<article id="post-25564" class="post-25564 page type-page status-publish post">
+
+	<div class="entry-main">
+
+		
+					<header class="entry-header">
+													<h1 class="entry-title">Annual Report</h1>
+							</header><!-- .entry-header -->
+		
+		<div class="entry-content">
+					<div data-elementor-type="wp-page" data-elementor-id="25564" class="elementor elementor-25564">
+									<section class="elementor-section elementor-top-section elementor-element elementor-element-40a49e4 elementor-section-full_width elementor-section-height-default elementor-section-height-default" data-id="40a49e4" data-element_type="section">
+						<div class="elementor-container elementor-column-gap-default">
+					<div class="elementor-column elementor-col-100 elementor-top-column elementor-element elementor-element-5f90893" data-id="5f90893" data-element_type="column">
+			<div class="elementor-widget-wrap elementor-element-populated">
+								<div class="elementor-element elementor-element-5243894 elementor-widget elementor-widget-image" data-id="5243894" data-element_type="widget" data-widget_type="image.default">
+				<div class="elementor-widget-container">
+															<img decoding="async" fetchpriority="high" width="1223" height="262" src="https://bcclweb.in/files/2020/12/fin.jpg" class="attachment-full size-full wp-image-5520" alt="" srcset="https://bcclweb.in/files/2020/12/fin.jpg 1223w, https://bcclweb.in/files/2020/12/fin-300x64.jpg 300w, https://bcclweb.in/files/2020/12/fin-1024x219.jpg 1024w, https://bcclweb.in/files/2020/12/fin-768x165.jpg 768w, https://bcclweb.in/files/2020/12/fin-228x49.jpg 228w" sizes="(max-width: 1223px) 100vw, 1223px" />															</div>
+				</div>
+					</div>
+		</div>
+							</div>
+		</section>
+				<section class="elementor-section elementor-top-section elementor-element elementor-element-116cf28 elementor-section-boxed elementor-section-height-default elementor-section-height-default" data-id="116cf28" data-element_type="section">
+						<div class="elementor-container elementor-column-gap-default">
+					<div class="elementor-column elementor-col-100 elementor-top-column elementor-element elementor-element-9764dc4" data-id="9764dc4" data-element_type="column">
+			<div class="elementor-widget-wrap elementor-element-populated">
+								<div class="elementor-element elementor-element-c8fefd6 elementor-widget elementor-widget-heading" data-id="c8fefd6" data-element_type="widget" data-widget_type="heading.default">
+				<div class="elementor-widget-container">
+			<h2 class="elementor-heading-title elementor-size-xl">Annual Report</h2>		</div>
+				</div>
+					</div>
+		</div>
+							</div>
+		</section>
+				<section class="elementor-section elementor-top-section elementor-element elementor-element-ec7880f elementor-section-boxed elementor-section-height-default elementor-section-height-default" data-id="ec7880f" data-element_type="section">
+						<div class="elementor-container elementor-column-gap-default">
+					<div class="elementor-column elementor-col-100 elementor-top-column elementor-element elementor-element-f97cb01" data-id="f97cb01" data-element_type="column">
+			<div class="elementor-widget-wrap elementor-element-populated">
+								<div class="elementor-element elementor-element-18a895c elementor-widget elementor-widget-text-editor" data-id="18a895c" data-element_type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+							<h5><span style="color: #000000;"><a style="color: #000000;" href="/files/2025/08/ANNUAL_REPORT_2024-25.pdf" target="_blank" rel="noopener"><i class="fa fa-file-pdf-o" style="color: brown; font-size: 20pt;" aria-hidden="true"> </i> Annual Report &amp; Accounts of BCCL for the financial year 2024-25</a></span><span style="color: #000000;"><img decoding="async" src="http://www.bcclweb.in/wp-content/themes/vantage/new.gif" alt="" /></span></h5><h5><span style="color: #000000;"><a style="color: #000000;" href="/files/2024/08/BCCL_ANNUAL_REPORT_2023-24_060824.pdf" target="_blank" rel="noopener"><i class="fa fa-file-pdf-o" style="color: brown; font-size: 20pt;" aria-hidden="true"> </i> Annual Report &amp; Accounts of BCCL for the financial year 2023-24</a></span></h5><h5><span style="color: #000000;"><a style="color: #000000;" href="/files/2023/07/ANNUAL_REPORT-31.07.2023.pdf" target="_blank" rel="noopener"><i class="fa fa-file-pdf-o" style="color: brown; font-size: 20pt;" aria-hidden="true"> </i> Annual Report &amp; Accounts of BCCL for the financial year 2022-23</a></span></h5><h5><span style="color: #000000;"><a style="color: #000000;" href="/files/2022/08/Annual_Report_Accounts_2021-22_300722_ (English Version).pdf" target="_blank" rel="noopener"><i class="fa fa-file-pdf-o" style="color: brown; font-size: 20pt;" aria-hidden="true"> </i> Annual Report &amp; Accounts of BCCL for the financial year 2021-22 </a></span></h5><h5><span style="color: #000000;"><a style="color: #000000;" href="/files/2021/09/Annual_Report_2020-21 (English Version).pdf" target="_blank" rel="noopener"><i class="fa fa-file-pdf-o" style="color: brown; font-size: 20pt;" aria-hidden="true"> </i> Annual Report &amp; Accounts for the Financial Year 2020-21 </a></span></h5><h5><span style="color: #333333;"><a style="color: #333333;" title="Annual Report and Accounts for the Financial Year 2019-20 (English Version)" href="/files/2020/08/Annual%20Report%20and%20Accounts_19-20_English.pdf" target="_blank" rel="noopener"> <i class="fa fa-file-pdf-o" style="color: brown; font-size: 20pt;" aria-hidden="true"> </i> Annual Report and Accounts for the Financial Year 2019-20 </a></span></h5><h5><span style="color: #333333;"><a style="color: #333333;" title="Annual Report and Accounts for the Financial Year 2018-19 (English Version)" href="/files/2019/10/Annual%20Report%20and%20Accounts%20of%20BCCL%20for%20F.Y.%202018-19%20(English%20Version).pdf" target="_blank" rel="noopener"> <i class="fa fa-file-pdf-o" style="color: brown; font-size: 20pt;" aria-hidden="true"> </i> Annual Report and Accounts for the Financial Year 2018-19 </a></span></h5><h5><span style="color: #333333;"><a style="color: #333333;" title="Annual Report and Annual Accounts for the year 2017-2018 (English Version)" href="/files/2018/08/BCCL_FINAL_Anual_report17-18.pdf" target="_blank" rel="noopener"> <i class="fa fa-file-pdf-o" style="color: brown; font-size: 20pt;" aria-hidden="true"> </i> Annual Report and Annual Accounts for the year 2017-2018 </a></span></h5><h5><span style="color: #333333;"><a style="color: #333333;" title="Annual Report and Annual Accounts for the year 2016-1" href="/files/2010/12/report16-17.pdf" target="_blank" rel="noopener"> <i class="fa fa-file-pdf-o" style="color: brown; font-size: 20pt;" aria-hidden="true"> </i> Annual Report and Annual Accounts for the year 2016-1</a>7</span></h5><h5><span style="color: #333333;"><a style="color: #333333;" title="Annual Report and Annual Accounts for the year 2015-16" href="/files/2010/12/report15-16.pdf" target="_blank" rel="noopener"> <i class="fa fa-file-pdf-o" style="color: brown; font-size: 20pt;" aria-hidden="true"> </i> Annual Report and Annual Accounts for the year 2015-16</a></span></h5><h5><span style="color: #333333;"><a style="color: #333333;" title="Annual Report and Annual Accounts for the year 2014-15" href="/files/2010/12/report14-15.pdf" target="_blank" rel="noopener"> <i class="fa fa-file-pdf-o" style="color: brown; font-size: 20pt;" aria-hidden="true"> </i> Annual Report and Annual Accounts for the year 2014-15</a></span></h5><h5><span style="color: #333333;"><a style="color: #333333;" title="Annual Report and Accounts for the year 2013-14 (English)" href="http://www.bcclweb.in/files/2014/08/report13-14.pdf"> <i class="fa fa-file-pdf-o" style="color: brown; font-size: 20pt;" aria-hidden="true"> </i> Annual Report and Accounts for the year 2013-14 </a></span></h5><h5><span style="color: #333333;"><a style="color: #333333;" title="Annual Report and Annual Accounts for the year 2012-13" href="/files/2010/12/report12-13.pdf" target="_blank" rel="noopener"> <i class="fa fa-file-pdf-o" style="color: brown; font-size: 20pt;" aria-hidden="true"> </i> Annual Report and Annual Accounts for the year 2012-13</a></span></h5><h5><span style="color: #333333;"><a style="color: #333333;" title="Annual Report and Accounts for the year 2011-12 (English)" href="http://www.bcclweb.in/files/2010/12/report11-12.pdf" target="_blank" rel="noopener"> <i class="fa fa-file-pdf-o" style="color: brown; font-size: 20pt;" aria-hidden="true"> </i> Annual Report and Accounts for the year 2011-12 </a></span></h5><h5><span style="color: #333333;"><a style="color: #333333;" title="Annual Report and Accounts for the year 2010-11" href="/files/2010/12/report10-11.pdf" target="_blank" rel="noopener"> <i class="fa fa-file-pdf-o" style="color: brown; font-size: 20pt;" aria-hidden="true"> </i> Annual Report and Accounts for the year 2010-11</a></span></h5><h5><span style="color: #333333;"><a class="broken_link" style="color: #333333;" title="Annual Report 2008-09" href="/bcclmay10/AnuualRpt_032009.pdf" target="_blank" rel="noopener"> <i class="fa fa-file-pdf-o" style="color: brown; font-size: 20pt;" aria-hidden="true"> </i> Annual Report 2008-09</a></span></h5><h5><span style="color: #333333;"><a class="broken_link" style="color: #333333;" title="Annual Report 2007-08" href="/bcclmay10/AnnualReport0708.pdf" target="_blank" rel="noopener"> <i class="fa fa-file-pdf-o" style="color: brown; font-size: 20pt;" aria-hidden="true"> </i> Annual Report 2007-08</a></span></h5><h5> </h5><h5> </h5>						</div>
+				</div>
+					</div>
+		</div>
+							</div>
+		</section>
+							</div>
+							</div><!-- .entry-content -->
+
+		
+	</div>
+
+</article><!-- #post-25564 -->
+
+			
+		
+	</div><!-- #content .site-content -->
+</div><!-- #primary .content-area -->
+
+
+<div id="secondary" class="widget-area" role="complementary">
+			</div><!-- #secondary .widget-area -->
+					</div><!-- .full-container -->
+	</div><!-- #main .site-main -->
+	
+		<div data-elementor-type="wp-post" data-elementor-id="4189" class="elementor elementor-4189">
+									<section class="elementor-section elementor-top-section elementor-element elementor-element-eea8ccb elementor-section-boxed elementor-section-height-default elementor-section-height-default" data-id="eea8ccb" data-element_type="section">
+						<div class="elementor-container elementor-column-gap-default">
+					<div class="elementor-column elementor-col-33 elementor-top-column elementor-element elementor-element-170ab26" data-id="170ab26" data-element_type="column">
+			<div class="elementor-widget-wrap elementor-element-populated">
+								<div class="elementor-element elementor-element-bafe5d1 elementor-widget elementor-widget-heading" data-id="bafe5d1" data-element_type="widget" data-widget_type="heading.default">
+				<div class="elementor-widget-container">
+			<h3 class="elementor-heading-title elementor-size-medium">Quick Links</h3>		</div>
+				</div>
+				<div class="elementor-element elementor-element-a8cf88c elementor-widget elementor-widget-html" data-id="a8cf88c" data-element_type="widget" data-widget_type="html.default">
+				<div class="elementor-widget-container">
+			<hr style=" border: 0; height: 3px; background-image: linear-gradient(to right, rgba(0, 59, 91, 0), rgba(0, 59, 91, 0.75), rgba(0, 59, 91, 0));"/>		</div>
+				</div>
+				<section class="elementor-section elementor-inner-section elementor-element elementor-element-6e8fc14 elementor-section-boxed elementor-section-height-default elementor-section-height-default" data-id="6e8fc14" data-element_type="section">
+						<div class="elementor-container elementor-column-gap-no">
+					<div class="elementor-column elementor-col-50 elementor-inner-column elementor-element elementor-element-2d737bf" data-id="2d737bf" data-element_type="column">
+			<div class="elementor-widget-wrap elementor-element-populated">
+								<div class="elementor-element elementor-element-71661a9 elementor-widget elementor-widget-text-editor" data-id="71661a9" data-element_type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+							<ul><li style="text-align: left;"><h6><span style="text-decoration: underline; color: #ffffff;"><a style="text-decoration: underline; color: #ffffff;" href="https://www.coalindia.in/index.html" target="_blank" rel="noopener">Coal India Limited</a></span></h6></li><li style="text-align: left;"><h6><span style="text-decoration: underline; color: #ffffff;"><i class=""></i><a style="text-decoration: underline; color: #ffffff;" href="http://www.centralcoalfields.in/" target="_blank" rel="noopener">Central Coalfields Limited</a></span></h6></li><li style="text-align: left;"><h6><span style="text-decoration: underline; color: #ffffff;"><i class=""></i><a style="text-decoration: underline; color: #ffffff;" href="https://www.easterncoal.nic.in/" target="_blank" rel="noopener">Eastern Coalfields Limited</a><i class=""></i></span></h6></li><li><h6 style="text-align: left;"><span style="text-decoration: underline; color: #ffffff;"><a style="text-decoration: underline; color: #ffffff;" href="http://www.mahanadicoal.in/Welcome.php" target="_blank" rel="noopener">Mahanadi Coalfields Limited</a></span></h6></li><li><h6><span style="text-decoration: underline; color: #ffffff;"><a style="text-decoration: underline; color: #ffffff;" href="http://nclcil.in/" target="_blank" rel="noopener">Northern Coalfields Limited</a></span></h6></li></ul>						</div>
+				</div>
+					</div>
+		</div>
+				<div class="elementor-column elementor-col-50 elementor-inner-column elementor-element elementor-element-13a21aa" data-id="13a21aa" data-element_type="column">
+			<div class="elementor-widget-wrap elementor-element-populated">
+								<div class="elementor-element elementor-element-6121d73 elementor-widget elementor-widget-text-editor" data-id="6121d73" data-element_type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+							<ul><li><span style="text-decoration: underline; color: #ffffff;"><a style="text-decoration: underline; color: #ffffff;" href="http://www.secl-cil.in/" target="_blank" rel="noopener">South Eastern Coalfields Limited</a></span></li><li style="text-align: left;"><span style="color: #ffffff;"><i class=""></i><span style="text-decoration: underline;"><a style="text-decoration: underline; color: #ffffff;" href="http://westerncoal.in/" target="_blank" rel="noopener">Western Coalfields Limited</a></span></span></li><li><span style="text-decoration: underline; color: #ffffff;"><a style="text-decoration: underline; color: #ffffff;" href="https://www.cmpdi.co.in/en" target="_blank" rel="noopener">Central Mine Planning and Design Institute Limited</a></span></li></ul>						</div>
+				</div>
+					</div>
+		</div>
+							</div>
+		</section>
+					</div>
+		</div>
+				<div class="elementor-column elementor-col-33 elementor-top-column elementor-element elementor-element-904890d" data-id="904890d" data-element_type="column">
+			<div class="elementor-widget-wrap elementor-element-populated">
+								<div class="elementor-element elementor-element-60bbb09 elementor-widget elementor-widget-heading" data-id="60bbb09" data-element_type="widget" data-widget_type="heading.default">
+				<div class="elementor-widget-container">
+			<h3 class="elementor-heading-title elementor-size-medium">links</h3>		</div>
+				</div>
+				<div class="elementor-element elementor-element-ccf77b3 elementor-widget elementor-widget-html" data-id="ccf77b3" data-element_type="widget" data-widget_type="html.default">
+				<div class="elementor-widget-container">
+			<hr style=" border: 0; height: 3px; background-image: linear-gradient(to right, rgba(0, 59, 91, 0), rgba(0, 59, 91, 0.75), rgba(0, 59, 91, 0));"/>		</div>
+				</div>
+				<div class="elementor-element elementor-element-20a7659 elementor-widget elementor-widget-text-editor" data-id="20a7659" data-element_type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+							<h6 style="text-align: center;"><span style="color: #ffffff;"><a style="color: #ffffff;" href="https://cybercrime.gov.in/" target="_blank" rel="noopener">Cyber Jaagrookta (Awareness) Diwas </a></span></h6>
+<h6 style="text-align: center;"><span style="color: #ffffff;"><a style="color: #ffffff;" href="https://pledge.cvc.nic.in/" target="_blank" rel="noopener">e-Pledge</a></span></h6>
+<h6 style="text-align: center;"><span style="color: #ffffff;"><a style="color: #ffffff;" href="https://www.bcclweb.in/?page_id=4133&#038;lang=en" target="_blank" rel="noopener">Public Grievances</a></span></h6>
+<h6 style="text-align: center;"><span style="color: #ffffff;"><i class=""></i><a style="color: #ffffff;" href="https://bcclweb.in/files/2011/11/MOU2012-13.pdf" target="_blank" rel="noopener">MOU</a></span></h6>
+<h6 style="text-align: center;"><span style="color: #ffffff;"><a style="color: #ffffff;" href="https://earth.google.com/web/search/koyla+bhawan+bccl/@23.8052189,86.4635523,243.8315701a,956.79555476d,35y,0h,0t,0r/data=CigiJgokCUayHoxLljZAEUe0M3uCkjZAGbBMH4tNHVZAITCq8TVFHFZA" target="_blank" rel="noopener">Locate Us (Google Earth)</a></span></h6>						</div>
+				</div>
+					</div>
+		</div>
+				<div class="elementor-column elementor-col-33 elementor-top-column elementor-element elementor-element-a5effe4" data-id="a5effe4" data-element_type="column">
+			<div class="elementor-widget-wrap elementor-element-populated">
+								<div class="elementor-element elementor-element-9117a95 elementor-widget elementor-widget-heading" data-id="9117a95" data-element_type="widget" data-widget_type="heading.default">
+				<div class="elementor-widget-container">
+			<h3 class="elementor-heading-title elementor-size-medium">Bharat Coking Coal Limited
+</h3>		</div>
+				</div>
+				<div class="elementor-element elementor-element-f8e2d82 elementor-widget elementor-widget-html" data-id="f8e2d82" data-element_type="widget" data-widget_type="html.default">
+				<div class="elementor-widget-container">
+			<hr style=" border: 0; height: 3px; background-image: linear-gradient(to right, rgba(0, 59, 91, 0), rgba(0, 59, 91, 0.75), rgba(0, 59, 91, 0));"/>		</div>
+				</div>
+				<div class="elementor-element elementor-element-a87459f elementor-widget elementor-widget-text-editor" data-id="a87459f" data-element_type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+							<h6 style="text-align: center;"><span style="color: #ffffff;">(A Mini Ratna Company)</span>
+<span style="color: #ffffff;">Registered Office: Koyla Bhawan,</span>
+<span style="color: #ffffff;">Koyla Nagar,</span>
+<span style="color: #ffffff;">Dhanbad-826005</span>
+
+
+<span style="color: #ffffff;">CIN-L10101JH1972GOI000918</span></h6>						</div>
+				</div>
+				<div class="elementor-element elementor-element-f6f7480 elementor-widget elementor-widget-text-editor" data-id="f6f7480" data-element_type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+							<h3><strong>              <span style="color: #3366ff;"><em>Last Updated: 12/05/2026</em></span></strong></h3>						</div>
+				</div>
+					</div>
+		</div>
+							</div>
+		</section>
+				<section class="elementor-section elementor-top-section elementor-element elementor-element-8cc2e93 elementor-section-boxed elementor-section-height-default elementor-section-height-default" data-id="8cc2e93" data-element_type="section">
+						<div class="elementor-container elementor-column-gap-default">
+					<div class="elementor-column elementor-col-16 elementor-top-column elementor-element elementor-element-f9c1ebc" data-id="f9c1ebc" data-element_type="column">
+			<div class="elementor-widget-wrap elementor-element-populated">
+								<div class="elementor-element elementor-element-5255519 elementor-widget elementor-widget-image" data-id="5255519" data-element_type="widget" data-widget_type="image.default">
+				<div class="elementor-widget-container">
+																<a href="https://www.coal.nic.in/" target="_blank">
+							<img width="158" height="61" src="https://bcclweb.in/files/2020/12/moc.jpg" class="attachment-large size-large wp-image-28606" alt="" loading="lazy" />								</a>
+															</div>
+				</div>
+					</div>
+		</div>
+				<div class="elementor-column elementor-col-16 elementor-top-column elementor-element elementor-element-0a6e439" data-id="0a6e439" data-element_type="column">
+			<div class="elementor-widget-wrap elementor-element-populated">
+								<div class="elementor-element elementor-element-fa46a53 elementor-widget elementor-widget-image" data-id="fa46a53" data-element_type="widget" data-widget_type="image.default">
+				<div class="elementor-widget-container">
+																<a href="https://www.makeinindia.com/" target="_blank">
+							<img width="158" height="57" src="https://bcclweb.in/files/2020/12/mii.jpg" class="attachment-large size-large wp-image-28605" alt="" loading="lazy" />								</a>
+															</div>
+				</div>
+					</div>
+		</div>
+				<div class="elementor-column elementor-col-16 elementor-top-column elementor-element elementor-element-ad7729c" data-id="ad7729c" data-element_type="column">
+			<div class="elementor-widget-wrap elementor-element-populated">
+								<div class="elementor-element elementor-element-2c4d59b elementor-widget elementor-widget-image" data-id="2c4d59b" data-element_type="widget" data-widget_type="image.default">
+				<div class="elementor-widget-container">
+																<a href="https://www.digitalindia.gov.in/" target="_blank">
+							<img width="96" height="40" src="https://bcclweb.in/files/2020/12/digital-india.png" class="attachment-large size-large wp-image-4222" alt="" loading="lazy" />								</a>
+															</div>
+				</div>
+					</div>
+		</div>
+				<div class="elementor-column elementor-col-16 elementor-top-column elementor-element elementor-element-270218d" data-id="270218d" data-element_type="column">
+			<div class="elementor-widget-wrap elementor-element-populated">
+								<div class="elementor-element elementor-element-b705bfb elementor-widget elementor-widget-image" data-id="b705bfb" data-element_type="widget" data-widget_type="image.default">
+				<div class="elementor-widget-container">
+																<a href="https://www.mygov.in/" target="_blank">
+							<img width="67" height="40" src="https://bcclweb.in/files/2020/12/my-gov.png" class="attachment-large size-large wp-image-4227" alt="" loading="lazy" />								</a>
+															</div>
+				</div>
+					</div>
+		</div>
+				<div class="elementor-column elementor-col-16 elementor-top-column elementor-element elementor-element-8c763d5" data-id="8c763d5" data-element_type="column">
+			<div class="elementor-widget-wrap elementor-element-populated">
+								<div class="elementor-element elementor-element-7915735 elementor-widget elementor-widget-image" data-id="7915735" data-element_type="widget" data-widget_type="image.default">
+				<div class="elementor-widget-container">
+																<a href="https://www.indiascienceandtechnology.gov.in/" target="_blank">
+							<img width="109" height="55" src="https://bcclweb.in/files/2020/12/indiascience.png" class="attachment-large size-large wp-image-10212" alt="" loading="lazy" />								</a>
+															</div>
+				</div>
+					</div>
+		</div>
+				<div class="elementor-column elementor-col-16 elementor-top-column elementor-element elementor-element-361ef42" data-id="361ef42" data-element_type="column">
+			<div class="elementor-widget-wrap elementor-element-populated">
+								<div class="elementor-element elementor-element-460ff5f elementor-widget elementor-widget-image" data-id="460ff5f" data-element_type="widget" data-widget_type="image.default">
+				<div class="elementor-widget-container">
+																<a href="https://www.pmindia.gov.in/" target="_blank">
+							<img width="85" height="40" src="https://bcclweb.in/files/2020/12/pm-india.png" class="attachment-large size-large wp-image-4230" alt="" loading="lazy" />								</a>
+															</div>
+				</div>
+					</div>
+		</div>
+							</div>
+		</section>
+				<section class="elementor-section elementor-top-section elementor-element elementor-element-61440fa elementor-section-full_width elementor-section-height-default elementor-section-height-default" data-id="61440fa" data-element_type="section">
+						<div class="elementor-container elementor-column-gap-default">
+					<div class="elementor-column elementor-col-100 elementor-top-column elementor-element elementor-element-6423165" data-id="6423165" data-element_type="column">
+			<div class="elementor-widget-wrap elementor-element-populated">
+								<div class="elementor-element elementor-element-b19de2e elementor-widget elementor-widget-html" data-id="b19de2e" data-element_type="widget" data-widget_type="html.default">
+				<div class="elementor-widget-container">
+			<hr style=" border: 0; height: 3px; background-image: linear-gradient(to right, rgba(0, 59, 91, 0), rgba(0, 59, 91, 0.75), rgba(0, 59, 91, 0));"/>		</div>
+				</div>
+				<div class="elementor-element elementor-element-4efa3a9 elementor-widget elementor-widget-text-editor" data-id="4efa3a9" data-element_type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+							<p style="text-align: center;"><span style="color: #f2e4e4;">Information is being made available at this site, purely as a measure of public facilitation. While every effort has been made to ensure that the information hosted on this website is accurate ,&#8221;BCCL, Dhanbad&#8221; do not hold themselves liable for any consequences, legal or otherwise, arising out of any of such information.</span></p>
+<p style="text-align: center;"><span style="text-decoration: underline;">Copyright © BCCL 2020. All Rights Reserved. Site Designed &amp; Developed by System Department,BCCL. <a title="Disclaimer" href="http://www.bcclweb.in/?page_id=5915">Disclaimer</a> | <a title="Privacy" href="http://www.bcclweb.in/?page_id=5930">Privacy</a></span></p>						</div>
+				</div>
+					</div>
+		</div>
+							</div>
+		</section>
+							</div>
+		
+
+	
+
+<a href="#" id="scroll-to-top" class="scroll-to-top" title="Back To Top"><span class="vantage-icon-arrow-up"></span></a><link rel='stylesheet' id='elementor-post-4189-css' href='https://bcclweb.in/files/elementor/css/post-4189.css?ver=1778569608' type='text/css' media='all' />
+<script type='text/javascript' id='eael-general-js-extra'>
+/* <![CDATA[ */
+var localize = {"ajaxurl":"https:\/\/bcclweb.in\/wp-admin\/admin-ajax.php","nonce":"e21045fb8d","i18n":{"added":"Added ","compare":"Compare","loading":"Loading..."},"eael_translate_text":{"required_text":"is a required field","invalid_text":"Invalid","billing_text":"Billing","shipping_text":"Shipping","fg_mfp_counter_text":"of"},"page_permalink":"https:\/\/bcclweb.in\/?page_id=25564","cart_redirectition":"","cart_page_url":"","el_breakpoints":{"mobile":{"label":"Mobile Portrait","value":767,"default_value":767,"direction":"max","is_enabled":true},"mobile_extra":{"label":"Mobile Landscape","value":880,"default_value":880,"direction":"max","is_enabled":false},"tablet":{"label":"Tablet Portrait","value":1024,"default_value":1024,"direction":"max","is_enabled":true},"tablet_extra":{"label":"Tablet Landscape","value":1200,"default_value":1200,"direction":"max","is_enabled":false},"laptop":{"label":"Laptop","value":1366,"default_value":1366,"direction":"max","is_enabled":false},"widescreen":{"label":"Widescreen","value":2400,"default_value":2400,"direction":"min","is_enabled":false}}};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://bcclweb.in/wp-content/plugins/essential-addons-for-elementor-lite/assets/front-end/js/view/general.min.js?ver=5.8.6' id='eael-general-js'></script>
+<script type='text/javascript' src='https://bcclweb.in/wp-content/plugins/elementor_INFECTED/assets/js/webpack.runtime.min.js?ver=3.15.2' id='elementor-webpack-runtime-js'></script>
+<script type='text/javascript' src='https://bcclweb.in/wp-content/plugins/elementor_INFECTED/assets/js/frontend-modules.min.js?ver=3.15.2' id='elementor-frontend-modules-js'></script>
+<script type='text/javascript' src='https://bcclweb.in/wp-content/plugins/elementor_INFECTED/assets/lib/waypoints/waypoints.min.js?ver=4.0.2' id='elementor-waypoints-js'></script>
+<script type='text/javascript' src='https://bcclweb.in/wp-includes/js/jquery/ui/core.min.js?ver=1.13.2' id='jquery-ui-core-js'></script>
+<script id="elementor-frontend-js-before" type="text/javascript">
+var elementorFrontendConfig = {"environmentMode":{"edit":false,"wpPreview":false,"isScriptDebug":false},"i18n":{"shareOnFacebook":"Share on Facebook","shareOnTwitter":"Share on Twitter","pinIt":"Pin it","download":"Download","downloadImage":"Download image","fullscreen":"Fullscreen","zoom":"Zoom","share":"Share","playVideo":"Play Video","previous":"Previous","next":"Next","close":"Close","a11yCarouselWrapperAriaLabel":"Carousel | Horizontal scrolling: Arrow Left & Right","a11yCarouselPrevSlideMessage":"Previous slide","a11yCarouselNextSlideMessage":"Next slide","a11yCarouselFirstSlideMessage":"This is the first slide","a11yCarouselLastSlideMessage":"This is the last slide","a11yCarouselPaginationBulletMessage":"Go to slide"},"is_rtl":false,"breakpoints":{"xs":0,"sm":480,"md":768,"lg":1025,"xl":1440,"xxl":1600},"responsive":{"breakpoints":{"mobile":{"label":"Mobile Portrait","value":767,"default_value":767,"direction":"max","is_enabled":true},"mobile_extra":{"label":"Mobile Landscape","value":880,"default_value":880,"direction":"max","is_enabled":false},"tablet":{"label":"Tablet Portrait","value":1024,"default_value":1024,"direction":"max","is_enabled":true},"tablet_extra":{"label":"Tablet Landscape","value":1200,"default_value":1200,"direction":"max","is_enabled":false},"laptop":{"label":"Laptop","value":1366,"default_value":1366,"direction":"max","is_enabled":false},"widescreen":{"label":"Widescreen","value":2400,"default_value":2400,"direction":"min","is_enabled":false}}},"version":"3.15.2","is_static":false,"experimentalFeatures":{"e_dom_optimization":true,"e_optimized_assets_loading":true,"additional_custom_breakpoints":true,"landing-pages":true},"urls":{"assets":"https:\/\/bcclweb.in\/wp-content\/plugins\/elementor_INFECTED\/assets\/"},"swiperClass":"swiper-container","settings":{"page":[],"editorPreferences":[]},"kit":{"active_breakpoints":["viewport_mobile","viewport_tablet"],"global_image_lightbox":"yes","lightbox_enable_counter":"yes","lightbox_enable_fullscreen":"yes","lightbox_enable_zoom":"yes","lightbox_enable_share":"yes","lightbox_title_src":"title","lightbox_description_src":"description"},"post":{"id":25564,"title":"Annual%20Report%20%E2%80%93%20BCCL","excerpt":"","featuredImage":false}};
+</script>
+<script type='text/javascript' src='https://bcclweb.in/wp-content/plugins/elementor_INFECTED/assets/js/frontend.min.js?ver=3.15.2' id='elementor-frontend-js'></script>
+
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a34aa21f7fa532c1',t:'MTc4ODMzMjM4MA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v3d52b47920f24c319d37e2661827c42b1787588026925" integrity="sha512-d9sL6GJLXn6fInD1+TVXhTcQOsmxeHfmHAvwGDIxp5TO+uo1fiWW7mHomMj4MLRlCsJDTqXzWLHJFFlPCEIj/A==" data-cf-beacon='{"version":"2024.11.0","token":"aca65f924a6d4f60b6fd3d8b94d90b9f","r":1}' crossorigin="anonymous"></script>
+</body>
+</html>

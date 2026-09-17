@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" prefix="content: http://purl.org/rss/1.0/modules/content/  dc: http://purl.org/dc/terms/  foaf: http://xmlns.com/foaf/0.1/  og: http://ogp.me/ns#  rdfs: http://www.w3.org/2000/01/rdf-schema#  schema: http://schema.org/  sioc: http://rdfs.org/sioc/ns#  sioct: http://rdfs.org/sioc/types#  skos: http://www.w3.org/2004/02/skos/core#  xsd: http://www.w3.org/2001/XMLSchema# ">
+  <head>
+ <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PNE78LYRCW"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PNE78LYRCW');
+</script>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="shortcut icon" href="/themes/custom/moc/favicon.ico" type="image/vnd.microsoft.icon" />
+<link rel="alternate" hreflang="en" href="http://www.coal.gov.in/major-statistics/production-and-supplies" />
+<link rel="alternate" hreflang="hi" href="http://www.coal.gov.in/hi/major-statistics/production-and-supplies" />
+<link rel="canonical" href="/major-statistics/production-and-supplies" />
+<link rel="shortlink" href="/taxonomy/term/953" />
+
+	<meta name="keyword" content="Ministry of Coal, Official Website of Ministry of Coal, Government of India, Coal Mining, Coal Auction, Coal Linkages, Nominated Authority, Coal Projects, Coal Safety, Captive Mining Blocks, Coal Reserves, Coal Grades, Coal Budget" > 
+	<meta name="description" content="This is the official website of Coal Ministry, Government of India. You can find information related Tenders, Notices, latest updates pertaining to Ministry of Coal, Government of India. " >
+	<meta name="title" content="Ministry of Coal, Government of India" >  <title>Production and Supplies |Ministry of Coal</title>    
+  
+    <style media="all">
+@import url("/core/assets/vendor/normalize-css/normalize.css?tkoner");
+@import url("/core/misc/normalize-fixes.css?tkoner");
+@import url("/core/themes/stable/css/system/components/ajax-progress.module.css?tkoner");
+@import url("/core/themes/stable/css/system/components/align.module.css?tkoner");
+@import url("/core/themes/stable/css/system/components/autocomplete-loading.module.css?tkoner");
+@import url("/core/themes/stable/css/system/components/fieldgroup.module.css?tkoner");
+@import url("/core/themes/stable/css/system/components/container-inline.module.css?tkoner");
+@import url("/core/themes/stable/css/system/components/clearfix.module.css?tkoner");
+@import url("/core/themes/stable/css/system/components/details.module.css?tkoner");
+@import url("/core/themes/stable/css/system/components/hidden.module.css?tkoner");
+@import url("/core/themes/stable/css/system/components/item-list.module.css?tkoner");
+@import url("/core/themes/stable/css/system/components/js.module.css?tkoner");
+@import url("/core/themes/stable/css/system/components/nowrap.module.css?tkoner");
+@import url("/core/themes/stable/css/system/components/position-container.module.css?tkoner");
+@import url("/core/themes/stable/css/system/components/progress.module.css?tkoner");
+@import url("/core/themes/stable/css/system/components/reset-appearance.module.css?tkoner");
+@import url("/core/themes/stable/css/system/components/resize.module.css?tkoner");
+@import url("/core/themes/stable/css/system/components/sticky-header.module.css?tkoner");
+@import url("/core/themes/stable/css/system/components/system-status-counter.css?tkoner");
+@import url("/core/themes/stable/css/system/components/system-status-report-counters.css?tkoner");
+@import url("/core/themes/stable/css/system/components/system-status-report-general-info.css?tkoner");
+@import url("/core/themes/stable/css/system/components/tabledrag.module.css?tkoner");
+@import url("/core/themes/stable/css/system/components/tablesort.module.css?tkoner");
+@import url("/core/themes/stable/css/system/components/tree-child.module.css?tkoner");
+@import url("/core/assets/vendor/jquery.ui/themes/base/core.css?tkoner");
+@import url("/core/assets/vendor/jquery.ui/themes/base/button.css?tkoner");
+@import url("/core/assets/vendor/jquery.ui/themes/base/resizable.css?tkoner");
+@import url("/core/assets/vendor/jquery.ui/themes/base/dialog.css?tkoner");
+@import url("/core/themes/stable/css/views/views.module.css?tkoner");
+@import url("/modules/contrib/lang_dropdown/css/lang_dropdown.css?tkoner");
+@import url("/core/assets/vendor/jquery.ui/themes/base/theme.css?tkoner");
+</style>
+<style media="all">
+@import url("/core/modules/layout_discovery/layouts/onecol/onecol.css?tkoner");
+</style>
+<style media="all">
+@import url("/core/themes/classy/css/components/dialog.css?tkoner");
+@import url("/core/themes/classy/css/components/action-links.css?tkoner");
+@import url("/core/themes/classy/css/components/breadcrumb.css?tkoner");
+@import url("/core/themes/classy/css/components/button.css?tkoner");
+@import url("/core/themes/classy/css/components/collapse-processed.css?tkoner");
+@import url("/core/themes/classy/css/components/container-inline.css?tkoner");
+@import url("/core/themes/classy/css/components/details.css?tkoner");
+@import url("/core/themes/classy/css/components/exposed-filters.css?tkoner");
+@import url("/core/themes/classy/css/components/field.css?tkoner");
+@import url("/core/themes/classy/css/components/form.css?tkoner");
+@import url("/core/themes/classy/css/components/icons.css?tkoner");
+@import url("/core/themes/classy/css/components/inline-form.css?tkoner");
+@import url("/core/themes/classy/css/components/item-list.css?tkoner");
+@import url("/core/themes/classy/css/components/link.css?tkoner");
+@import url("/core/themes/classy/css/components/links.css?tkoner");
+@import url("/core/themes/classy/css/components/menu.css?tkoner");
+@import url("/core/themes/classy/css/components/more-link.css?tkoner");
+@import url("/core/themes/classy/css/components/pager.css?tkoner");
+@import url("/core/themes/classy/css/components/tabledrag.css?tkoner");
+@import url("/core/themes/classy/css/components/tableselect.css?tkoner");
+@import url("/core/themes/classy/css/components/tablesort.css?tkoner");
+@import url("/core/themes/classy/css/components/tabs.css?tkoner");
+@import url("/core/themes/classy/css/components/textarea.css?tkoner");
+@import url("/core/themes/classy/css/components/ui-dialog.css?tkoner");
+@import url("/core/themes/classy/css/components/messages.css?tkoner");
+@import url("/themes/custom/moc/assets/css/base.css?tkoner");
+@import url("/themes/custom/moc/assets/css/base-responsive.css?tkoner");
+@import url("/themes/custom/moc/assets/css/grid.css?tkoner");
+@import url("/themes/custom/moc/assets/css/font.css?tkoner");
+@import url("/themes/custom/moc/assets/css/font-awesome.min.css?tkoner");
+@import url("/themes/custom/moc/assets/css/flexslider.css?tkoner");
+</style>
+<style media="all">
+@import url("/themes/custom/moc/assets/css/megamenu.css?tkoner");
+@import url("/themes/custom/moc/assets/css/print.css?tkoner");
+@import url("/themes/custom/moc/theme/css/site.css?tkoner");
+@import url("/themes/custom/moc/theme/css/site-responsive.css?tkoner");
+@import url("/themes/custom/moc/theme/css/ma5gallery.css?tkoner");
+@import url("/themes/custom/moc/theme/css/print.css?tkoner");
+</style>
+
+    
+<!--[if lte IE 8]>
+<script src="/core/assets/vendor/html5shiv/html5shiv.min.js?v=3.7.3"></script>
+<![endif]-->
+
+  </head>
+  <body class="path-taxonomy">  <div class="dialog-off-canvas-main-canvas" data-off-canvas-main-canvas><div id="fb-root"></div><header role="banner">
+         <div class="region region-header-top">
+               <noscript class="no_scr">"JavaScript is a standard programming language that is included to provide interactive features, Kindly enable Javascript in your browser. For details visit help page"
+               </noscript>
+               <div class="wrapper common-wrapper">
+                  <div class="container common-container four_content top-header">
+                     <div class="common-left clearfix">
+                        <ul>
+                           <li class="gov-india">
+						        <span class="responsive_go_hindi" lang="hi">
+						           <a  title="भारत सरकार,External Link that opens in a new window" >भारत सरकार</a>
+								 </span>                           
+							</li>
+                           <li class="ministry"><span class="li_eng responsive_go_eng">
+						       <a title="Government of India,External Link that opens in a new window" >Government Of India</a>
+							   </span>
+						   </li>
+                        </ul>
+                     </div>
+                     <div class="common-right clearfix">
+                        <ul id="header-nav">
+                           <li><a href="https://coal.gov.in/help" aria-label="Screen Reader Access"  style="color:#000;width:auto; height:auto;">Screen Reader Access</a></li>
+			     <li><a href="#skipCont" aria-label="Skip Main Content" title="go to the main content" style="color:#000;width:auto; height:auto;">Skip Main Content</a></li>							<li class="ico-site-search cf">
+								<a title="Search on website" id="toggleSearch" href="javascript:void(0);" aria-label="Search on website" aria-expanded="false">
+								   <img src="/themes/custom/moc/assets/images/ico-site-search.png" class="top" alt="Search on website">
+								   </a>
+								   <div id="searchMenu" style="display:none;">
+								 <div class="search-drop both-search"><div class="search-block-form search_box block block-search container-inline" data-drupal-selector="search-block-form" id="block-moc-searchform" role="search"><form action="/search/node" method="get" id="search-block-form" accept-charset="UTF-8"><div class="js-form-item form-item js-form-type-search form-type-search js-form-item-keys form-item-keys form-no-label"><label for="edit-keys" class="visually-hidden">Search</label><input title="Enter the terms you wish to search for." data-drupal-selector="edit-keys" type="text" id="edit-keys" name="keys" value="" size="15" maxlength="128" class="form-search search-text" placeholder="Search" autocomplete="off" ></div>
+<div data-drupal-selector="edit-actions" class="form-actions js-form-wrapper form-wrapper" id="edit-actions"><input id="search-submit" data-drupal-selector="edit-submit" type="submit" value="Search" class="button js-form-submit form-submit search_submit" ></div>
+
+</form>
+</div>
+
+								 </div>
+								 </div>
+							</li>				            <li class="ico-accessibility cf">
+                              <a href="javascript:void(0);" id="toggleAccessibility"  aria-expanded="false" role="button" aria-label="Accessibility Dropdown">
+                              <img class="top" src="/themes/custom/moc/assets/images/ico-accessibility.png" aria-hidden="true"  alt="Accessibility Dropdown" >
+                              </a>
+                              <ul id="accessibilityMenu" style="display:none;">
+                                 <li> <a onClick="set_font_size(&#39;increase&#39;)"  href="javascript:void(0);" aria-label="Increase Font Size" >A<sup>+</sup></a> </li>
+                                 <li> <a onClick="set_font_size()"  href="javascript:void(0);" aria-label="Reset Font Size" >A<sup>&nbsp;</sup></a> </li>
+                                 <li> <a onClick="set_font_size(&#39;decrease&#39;)"  href="javascript:void(0);" aria-label="Decrease Font Size" >A<sup>-</sup></a> </li>
+                                 <li> <a href="javascript:void(0);" class="high-contrast dark"  aria-label="High Contrast" >A</a> </li>
+                                 <li> <a href="javascript:void(0);" class="high-contrast light"  style="display: none;" aria-label="Normal Contrast" >A</a> </li>
+                              </ul>
+                           </li>
+                           <li class="ico-social cf">
+                              <a href="javascript:void(0);" id="toggleSocial" aria-label="Social Media" aria-expanded="false" role="button">
+                              <img class="top" src="/themes/custom/moc/assets/images/ico-social.png" aria-hidden="true" alt="Social Medias" ></a>
+                              <ul id="socialMenu" style="display:none;">
+                                 <li><a target="_blank" href="https://www.facebook.com/CoalMinistry/" aria-label="Facebook opens a new window">
+								      <img  src="/themes/custom/moc/assets/images/ico-facebook.png" aria-hidden="true" alt="Facebook link"><span class="sr-only">Facebook</span></a></li>
+
+
+
+                                 <li><a target="_blank" href="https://www.instagram.com/ministryofcoal" aria-label="Instagram opens a new window">
+								     <img  src="/themes/custom/moc/assets/images/logo-insta.png" aria-hidden="true" alt="Instagram Page"></a></li>
+
+                                 <li><a target="_blank" href="https://twitter.com/coalministry" aria-label="Twitter opens a new window">
+								     <img  src="/themes/custom/moc/assets/images/ico-twitter.png" aria-hidden="true" alt="Twitter link"><span class="sr-only">Twitter</span></a></li>
+									 
+									 <li><a target="_blank" href="https://in.linkedin.com/company/ministry-of-coal-official" aria-label="linkedin opens a new window">
+								     <img  src="/themes/custom/moc/assets/images/linkedin.png" aria-hidden="true" alt="Linkedin link"><span class="sr-only">linkedin</span></a></li>
+									 
+									 <!--<li><a target="_blank" href="https://www.kooapp.com/profile/ministryofcoal" aria-label="Koo opens a new window" >
+								     <img  src="/themes/custom/moc/assets/images/Koo_logo.png" aria-hidden="true" alt="Koo link"><span class="sr-only">Koo</span></a></li>-->
+									 
+									 <li><a target="_blank" href="https://www.threads.net/@ministryofcoal" aria-label="Threads opens a new window">
+								     <img  src="/themes/custom/moc/assets/images/thread.png" aria-hidden="true" alt="Threads link"><span class="sr-only">threads</span></a></li>
+									 
+                                 <li><a target="_blank" href="https://www.youtube.com/@Coal_Ministry" aria-label="Youtube opens a new window">
+								     <img  src="/themes/custom/moc/assets/images/ico-youtube.png" aria-hidden="true" alt="youtube Page"></a></li>
+                              </ul>
+                           </li>
+                           <li class="ico-sitemap cf">						       <a href="/sitemap" aria-label="Sitemap">                              <img class="top" src="/themes/custom/moc/assets/images/ico-sitemap.png" alt="Sitemap" aria-hidden="true"></a>
+                           </li>
+						   <!-- Language section -->								<li class="hindi cmf_lan d-hide"><div id="block-moc-languagedropdownswitcher" class="block block-lang-dropdown block-language-dropdown-blocklanguage-interface"><form class="lang-dropdown-form lang_dropdown_form language_interface" id="lang_dropdown_form_lang_dropdown_form6a97c206b26c41.15651505" data-drupal-selector="lang-dropdown-form" action="/major-statistics/production-and-supplies" method="post" accept-charset="UTF-8"><div class="js-form-item form-item js-form-type-select form-type-select js-form-item-lang-dropdown-select form-item-lang-dropdown-select form-no-label"><label for="lang-dropdown-select-lang_dropdown_form6a97c206b26c41.15651505" class="visually-hidden">Select your language</label><select style="width:70px" class="lang-dropdown-select-element form-select" aria-label="Select Language" data-drupal-selector="lang-dropdown-select-lang-dropdown-form6a97c206b26c4115651505" id="lang-dropdown-select-lang_dropdown_form6a97c206b26c41.15651505" name="lang_dropdown_select"><option value="en" selected="selected">English</option><option value="hi">Hindi</option></select></div>
+<input data-drupal-selector="edit-en" type="hidden" name="en" value="/" ><input data-drupal-selector="edit-hi" type="hidden" name="hi" value="/hi" ><noscript><div><input data-drupal-selector="edit-submit" type="submit" id="edit-submit--2" name="op" value="Go" class="button js-form-submit form-submit search_submit" ></div></noscript><input data-drupal-selector="form-juxlgb0peyseyjpe46nlnpamigvmturgi0wrhwk5zxe" type="hidden" name="form_build_id" value="form-juxlgB0peYseYjpE46NLNpAmiGVMtuRGI0WRhWK5ZxE" ><input data-drupal-selector="edit-lang-dropdown-form" type="hidden" name="form_id" value="lang_dropdown_form" >
+</form>
+</div>
+
+								</li>                           <li class="hindi cmf_lan m-hide">
+                              <a href="javascript:;" style="display: none;" aria-label="Select Language"></a> 
+                              <ul>
+                                 <li><a target="_blank" href="" lang="hi" style="display: none;" class="alink" title="Click here for हिन्दी version." aria-label="Choose Hindi Language"><span class="sr-only" aria-hidden="true">हिन्दी</span></a></li>
+                              </ul>
+                           </li>
+                        </ul>
+                     </div>
+                  </div>
+               </div>
+                
+            <!--<p id="scroll" class="fa fa-arrow-circle-up" style="display: none; font-size:12px;"  role="button" tabindex="0" aria-label="Back to top"><span></span></p>-->
+         </div>
+         <!--Top-Header Section end-->
+         <section class="wrapper header-wrapper">
+            <div  class="container common-container four_content  header-container">
+               <div class="logo">
+                  <a href="/" title="Home" rel="home" aria-current="page" class="header__logo" id="logo">
+				  
+                  <img class="national_emblem" src="/themes/custom/moc/assets/images/emblem-dark.png" aria-hidden="true" alt="national emblem" >
+                  <em>कोयला मंत्रालय 
+                  <span>Ministry of Coal</span>
+                  </em>
+                  </a>
+               </div>
+               <div class="header-right clearfix">
+                  <div class="right-content clearfix">
+				     <ul class="bg-graphics">
+                     <li class="float-element">
+                        <a class="sw-logo" target="_blank" href="https://coal.pmgatishakti.gov.in/CMSS/login/"  aria-label="Coal Mine Surveillance and Management System External Link that opens in a new window" >
+						<img src="/themes/custom/moc/assets/images/cmsms.png" aria-hidden="true" alt="Coal Mine Surveillance and Management System"></a>
+                     </li>
+					 
+                     <li class="float-element">
+                        <a class="sw-logo" target="_blank" href="https://pmgatishakti.gov.in/pmgatishakti/login" aria-label="pmgatishakti External Link that opens in a new window">
+						<img src="/themes/custom/moc/assets/images/pmgatisakti.png" aria-hidden="true" alt="Coal Block Information Portal ( CBIP )( Under PM Gatishakti)"></a>
+                     </li>
+					 <li class="float-element">
+                        <a class="sw-logo" target="_blank" href="https://www.mstcecommerce.com/auctionhome/coalblock/index.jsp" aria-label="Coal Auction External Link that opens in a new window">
+						<img src="/themes/custom/moc/assets/images/coalblock1.jpeg" aria-hidden="true" alt="Coal Auction"></a>
+                     </li>
+                         <li class="float-element">
+                        <a class="sw-logo1" target="_blank" href="https://swachhbharatmission.ddws.gov.in/"  aria-label="Swachh Bharat External Link that opens in a new window">
+						<img src="/themes/custom/moc/assets/images/swach-bharat.png" aria-hidden="true" alt="Swachh Bharat"></a>
+                     </li>
+                    </ul>
+                  </div>
+               </div>
+            </div>
+         </section>
+		 
+		  <section class="wrapper megamenu-wraper">
+            <div class="container common-container four_content">  <section class="region region-primary-menu" id="cmf-site-menu"><p class="showhide"><a class="menu-toggle" href="javascript:void(0)" aria-label="search"><em></em><em></em><em></em></a></p>
+<nav class="main-menu clearfix" id="main_menu" role="navigation" aria-labelledby="block-moc-main-menu-menu">
+	<span class="visually-hidden" id="block-moc-main-menu-menu">Main navigation</span>      <ul class="nav-menu">      <li class="nav-item">    <a href="/" aria-current="page">Home <i class="fa fas fa-home" aria-hidden="true"></i></a></li>      <li class="nav-item expanded"><a href="/about-us" data-drupal-link-system-path="node/464">About Us</a>	  <div class="sub-nav">
+      <ul class="sub-nav-group">      <li>    <a href="/about-us/about-ministry" aria-current="page">About Ministry</a></li>      <li><a href="/about-us/vision" data-drupal-link-system-path="node/7605">Vision</a></li>      <li><a href="/about-us/mission" data-drupal-link-system-path="node/4250">Mission</a></li>      <li><a href="/about-us/history-background" data-drupal-link-system-path="node/78">History/Background</a></li>      <li><a href="/about-us/functions-and-responsibilities" data-drupal-link-system-path="node/79">Functions and Responsibilities</a></li>      <li><a href="/about-us/meet-minister" data-drupal-link-system-path="about-us/meet-minister">Ministers Profile</a></li>      <li><a href="/about-us/details-senior-officials" data-drupal-link-system-path="node/4349">Senior Officials Details</a></li>      <li><a href="/about-us/organization-chart" data-drupal-link-system-path="about-us/organization-chart">Organization Chart</a></li>      <li><a href="/about-us/agencies-under-ministry" data-drupal-link-system-path="node/80">Agencies under Ministry</a></li>      <li><a href="/about-us/whos-who" data-drupal-link-system-path="about-us/whos-who">Who&#039;s Who</a></li>      <li><a href="/about-us/standard-notes" data-drupal-link-system-path="node/4909">Standard Notes</a></li>	  </ul>
+	</div></li>      <li class="nav-item expanded active"><a href="/major-statistics-page" data-drupal-link-system-path="node/4943">Major Statistics</a>	  <div class="sub-nav">
+      <ul class="sub-nav-group">      <li>    <a href="/major-statistics/coal-indian-energy-choice" aria-current="page">Coal – Indian Energy Choice</a></li>      <li><a href="/public-information/monthly-statistics-at-glance" data-drupal-link-system-path="public-information/monthly-statistics-at-glance">Monthly Statistics at a Glance</a></li>      <li class="active"><a href="/major-statistics/production-and-supplies" data-drupal-link-system-path="taxonomy/term/953" class="is-active">Production and Supplies</a></li>      <li><a href="/public-information/statistical-report" data-drupal-link-system-path="public-information/statistical-report">Statistical Report</a></li>      <li><a href="/major-statistics/quarterly-booklet" data-drupal-link-system-path="node/6409">Quarterly Report</a></li>      <li><a href="/major-statistics/coal-demand-projections" data-drupal-link-system-path="node/4949">Estimated Coal Projection</a></li>      <li><a href="/major-statistics/obr" data-drupal-link-system-path="node/4143">Over burden Removal (OBR)</a></li>      <li><a href="/major-statistics/output-per-man-shift" data-drupal-link-system-path="node/4155">Output per Man Shift (OMS)</a></li>      <li><a href="/major-statistics/import-and-export" data-drupal-link-system-path="node/4156">Import and Export</a></li>      <li><a href="/major-statistics/generation-of-thermal-power-from-raw-coal" data-drupal-link-system-path="node/4157">Generation of Thermal Power from Raw Coal</a></li>      <li><a href="/major-statistics/coal-reserves" data-drupal-link-system-path="taxonomy/term/955">Coal &amp; Lignite Resource</a></li>      <li><a href="/major-statistics/coal-grades" data-drupal-link-system-path="taxonomy/term/956">Coal Grades</a></li>      <li><a href="/major-statistics/mission-coking-coal" data-drupal-link-system-path="node/4352">Mission Coking Coal</a></li>      <li><a href="/major-statistics/grading-coal" data-drupal-link-system-path="node/5012">Grading of Coal</a></li>      <li><a href="/major-statistics/coal-evacuation-plan" data-drupal-link-system-path="node/5019">Coal Evacuation Plan</a></li>      <li><a href="/major-statistics/rsr-report" title="RSR Report" data-drupal-link-system-path="node/5965">RSR Report</a></li>      <li><a href="/major-statistics/coal-statistics" data-drupal-link-system-path="node/5982">Coal Statistics </a></li>      <li><a href="/major-statistics/Clearances" data-drupal-link-system-path="node/6723">Clearances (EC/FC/WLC/GWC)</a></li>	  </ul>
+	</div></li>      <li class="nav-item"><a href="/organisations" data-drupal-link-system-path="node/6396">Organisations</a></li>      <li class="nav-item expanded"><a href="/sustainable-development-cell" data-drupal-link-system-path="node/3756">Sustainability </a>	  <div class="sub-nav">
+      <ul class="sub-nav-group">      <li>    <a href="/sustainable-development-cell/about-sdc" aria-current="page">About SDC</a></li>      <li><a href="/sustainable-development-cell/mine-water-utilization" data-drupal-link-system-path="node/3761">Mine Water Utilization</a></li>      <li><a href="/sustainable-development-cell/vriksharopan-abhiyan-new" data-drupal-link-system-path="node/6683">Vriksharopan Abhiyan</a></li>      <li><a href="/sustainable-development-cell/greening-initiatives" data-drupal-link-system-path="node/3762">Greening Initiatives</a></li>      <li><a href="/sustainable-development-cell/promoting-renewable" data-drupal-link-system-path="node/3763">Promoting Renewable - Moving towards net zero carbon</a></li>      <li><a href="/sustainable-development-cell/eco-tourism-in-mining-area" data-drupal-link-system-path="node/3764">Eco - Tourism in mining area</a></li>      <li><a href="/sustainable-development-cell/air-quality-management" data-drupal-link-system-path="node/3765">Air Quality Management</a></li>      <li><a href="/sustainable-development-cell/gainful-utilization" data-drupal-link-system-path="node/5520">Gainful Utilization of Overburden</a></li>      <li><a href="/sustainable-development-cell/energy-efficiency" data-drupal-link-system-path="node/5521">Energy Efficiency Measures</a></li>      <li><a href="/sustainable-development-cell/report" data-drupal-link-system-path="node/6539">Guidelines &amp; Report</a></li>	  </ul>
+	</div></li>      <li class="nav-item expanded"><a href="/nominated-authority" data-drupal-link-system-path="node/3841">Nominated Authority</a>	  <div class="sub-nav">
+      <ul class="sub-nav-group">      <li>    <a href="/nominated-authority/about-na" aria-current="page">About NA</a></li>      <li><a href="/nominated-authority/auction-allotment" data-drupal-link-system-path="nominated-authority/auction-allotment">Auction/Allotment</a></li>      <li><a href="/nominated-authority/allocation-tranche-wise" data-drupal-link-system-path="node/5706">Allocation Tranche-Wise</a></li>      <li><a href="/nominated-authority/sanction-order-notice" data-drupal-link-system-path="nominated-authority/sanction-order-notice">Compensation Orders</a></li>      <li><a href="/nominated-authority/termination-order" data-drupal-link-system-path="nominated-authority/termination-order">Termination Order</a></li>      <li><a href="/nominated-authority/review-meeting-scrutiny-committee" data-drupal-link-system-path="nominated-authority/review-meeting-scrutiny-committee">Scrutiny Committee</a></li>      <li><a href="/nominated-authority/production-reviews" data-drupal-link-system-path="node/5708">Production Reviews</a></li>      <li><a href="/nominated-authority/operationalisation-reviews" data-drupal-link-system-path="node/5710">Operationalisation  Reviews</a></li>      <li><a href="/nominated-authority/single-window-system" data-drupal-link-system-path="nominated-authority/single-window-system">Single Window System</a></li>      <li><a href="/nominated-authority/national-coal-index" data-drupal-link-system-path="nominated-authority/national-coal-index">National Coal Index</a></li>      <li><a href="/nominated-authority/national-lignite" data-drupal-link-system-path="node/5711">National Lignite Index</a></li>      <li><a href="/nominated-authority/coal-block-information" data-drupal-link-system-path="node/5797">Coal Block Information</a></li>      <li><a href="/nominated-authority/vacancy" data-drupal-link-system-path="nominated-authority/vacancy">Vacancy</a></li>      <li><a href="/nominated-authority/tender-na" data-drupal-link-system-path="nominated-authority/tender-na">Tender</a></li>      <li><a href="/technical-help-desk" data-drupal-link-system-path="node/7339">Technical Help Desk </a></li>      <li><a href="/nominated-authority/energy-cell" data-drupal-link-system-path="node/6188">Energy Cell</a></li>	  </ul>
+	</div></li>      <li class="nav-item expanded"><a href="/public-information" data-drupal-link-system-path="node/94">Public Information</a>	  <div class="sub-nav">
+      <ul class="sub-nav-group">      <li>    <a href="/public-information/monthly-summary-cabinets" aria-current="page">Monthly Summary for Cabinet</a></li>      <li class="expanded"><a href="/public-information/minutes-metings" data-drupal-link-system-path="public-information/minutes-metings">Minutes of Meetings</a>	  <div class="sub-sub-nav">
+      <ul class="sub-sub-nav-group">      <li>    <a href="/public-information/standing-linkage-committee1" aria-current="page">Standing Linkage Committee (LT)</a></li>	  </ul>
+	</div></li>      <li class="expanded"><a href="/public-information/reports" data-drupal-link-system-path="public-information/reports">Reports</a>	  <div class="sub-sub-nav">
+      <ul class="sub-sub-nav-group">      <li>    <a href="/public-information/reports/annual-reports" aria-current="page">Annual Reports</a></li>      <li><a href="/public-information/reports/budget-reports" data-drupal-link-system-path="taxonomy/term/1043">Budget Reports</a></li>      <li><a href="/public-information/critical-and-Super-critical-coal-stocks" data-drupal-link-system-path="node/4501">Critical and Super Critical Coal Stocks</a></li>      <li><a href="/public-information/reports/other-reports" data-drupal-link-system-path="taxonomy/term/1044">Other Reports</a></li>	  </ul>
+	</div></li>      <li><a href="/public-information/public-grievance-cell" data-drupal-link-system-path="node/136">Public Grievance Cell</a></li>      <li><a href="/public-information/success-storie" data-drupal-link-system-path="public-information/success-storie">Success Stories</a></li>      <li><a href="/public-information/mine-summary" data-drupal-link-system-path="public-information/mine-summary">Mines summary</a></li>      <li><a href="/public-information/advertisements" data-drupal-link-system-path="public-information/advertisements">Advertisements</a></li>      <li><a href="/public-information/citizen-charters" data-drupal-link-system-path="public-information/citizen-charters">Citizen Charter</a></li>      <li><a href="/public-information/action-plan" data-drupal-link-system-path="node/5674">Action Plan</a></li>      <li><a href="/public-information/grant-in-aid" data-drupal-link-system-path="public-information/grant-in-aid">Grant-in-Aid</a></li>      <li><a href="/public-information/monthly-report-cabinet" data-drupal-link-system-path="public-information/monthly-report-cabinet">Monthly Reports for Cabinet</a></li>      <li><a href="/public-information/paper-laid-table" data-drupal-link-system-path="public-information/paper-laid-table">Paper Laid on the Table</a></li>      <li><a href="/public-information/sop" data-drupal-link-system-path="node/6609">Standard Operating Procedure</a></li>	  </ul>
+	</div></li>      <li class="nav-item expanded"><a href="/rti" data-drupal-link-system-path="rti">RTI</a>	  <div class="sub-nav">
+      <ul class="sub-nav-group">      <li>    <a href="https://rti.gov.in/" aria-current="page">Right To Information Portal</a></li>      <li><a href="/rti/pio-details-of-ministry-coal" data-drupal-link-system-path="rti/pio-details-of-ministry-coal">PIO Details of Ministry of Coal</a></li>      <li><a href="/rti/proactive-disclosures-rti-act-ministry-of-coal" data-drupal-link-system-path="node/4258">Proactive disclosures on RTI Act from Ministry of Coal</a></li>	  </ul>
+	</div></li>      <li class="nav-item collapsed"><a href="/tenders" data-drupal-link-system-path="tenders">Tenders</a></li>      <li class="nav-item expanded"><a href="/media" data-drupal-link-system-path="media">Media</a>	  <div class="sub-nav">
+      <ul class="sub-nav-group">      <li>    <a href="https://www.pib.gov.in/allRel.aspx?reg=48&amp;lang=1" aria-current="page">Press Releases (PIB)</a></li>      <li><a href="/media/press-release" data-drupal-link-system-path="media/press-release">Press Releases  (MOC)</a></li>      <li><a href="/media/photo-gallery" data-drupal-link-system-path="media/photo-gallery">Photo Gallery</a></li>	  </ul>
+	</div></li>      <li class="nav-item expanded"><a href="/parliament-qa" data-drupal-link-system-path="node/353">Parliament Q&amp;A</a>	  <div class="sub-nav">
+      <ul class="sub-nav-group">      <li>    <a href="https://sansad.in/ls/questions/questions-and-answers" aria-current="page">Lok Sabha</a></li>      <li><a href="https://sansad.in/rs/questions/questions-and-answers" target="_blank" title="External website that opens in new window">Rajya Sabha</a></li>	  </ul>
+	</div></li>      <li class="nav-item expanded"><a href="/contact-us" data-drupal-link-system-path="node/9">Contact Us</a>	  <div class="sub-nav">
+      <ul class="sub-nav-group">      <li>    <a href="/contact-us" aria-current="page">Contact Us </a></li>	  </ul>
+	</div></li>      <li class="nav-item"><a href="/acts-rules-policies" data-drupal-link-system-path="acts-rules-policies">Acts &amp; Policies</a></li>      <li class="nav-item"><a href="/major-statistics/national-coal-gasification-mission" data-drupal-link-system-path="node/4484">Coal Gasification</a></li>      <li class="nav-item expanded"><a href="/about-safety-coal-mines" data-drupal-link-system-path="node/5523">Safety in Coal Mines</a>	  <div class="sub-nav">
+      <ul class="sub-nav-group">      <li>    <a href="/major-statistics/safety-coal-mines" aria-current="page">About Safety</a></li>      <li><a href="/safety-coal-mines/safety-staistics" data-drupal-link-system-path="node/5513">Safety Staistics</a></li>      <li><a href="/safety-coal-mines/accident-portal" data-drupal-link-system-path="node/5514">Accident Portal</a></li>      <li><a href="/safety-coal-mines/safety-initiatives" data-drupal-link-system-path="node/5515">Safety Initiatives</a></li>	  </ul>
+	</div></li>      <li class="nav-item"><a href="/techno-roadmap-coal-sector" data-drupal-link-system-path="node/4935">Technology Roadmap</a></li>      <li class="nav-item"><a href="/achievements-flipbook" data-drupal-link-system-path="node/5579">Achievements Flipbook</a></li>      <li class="nav-item expanded"><a href="/CSR" data-drupal-link-system-path="node/6352">CSR</a>	  <div class="sub-nav">
+      <ul class="sub-nav-group">      <li>    <a href="/CSR/about-csr" aria-current="page">About CSR</a></li>      <li><a href="/CSR/guidelines" data-drupal-link-system-path="node/6374">Guidelines</a></li>      <li><a href="https://coal.gov.in/sites/default/files/2024-03/15-03-2024csr.pdf" target="_blank">Photo Gallery</a></li>	  </ul>
+	</div></li>      <li class="nav-item"><a href="/central-sector-schemes" data-drupal-link-system-path="node/5534">Central Sector Schemes</a></li>      <li class="nav-item"><a href="/chintan-shivir" data-drupal-link-system-path="node/3746">Chintan Shivir</a></li>      <li class="nav-item"><a href="/procurement-projection" data-drupal-link-system-path="node/4374">Procurement Projection</a></li>      </ul></nav>
+<nav class="main-menu clearfix" id="overflow_menu" role="navigation" aria-label="Secondary Menu">
+	<ul class="nav-menu clearfix"></ul>
+</nav>
+  </section>
+            </div>
+        </section>
+		 </header>   <div role="main">
+  <section class="wrapper banner-wrapper" >
+         <div id="flexSlider" class="flexslider">
+            <div class="inner-banner"><img src="/themes/custom/moc/theme/images/banner/inner-banner.jpg" aria-hidden="true" alt="Ministry of coal"></div>
+         </div>
+  </section>
+  <div class="wrapper" id="skipCont"></div>
+  <div id="fontSize">  
+  <section  class="wrapper body-wrapper">
+    <div class="bg-wrapper inner-wrapper">  <section class="region region-breadcrumb"><div id="block-moc-breadcrumbs" class="block block-system block-system-breadcrumb-block">  <div class="breadcam-bg breadcam" role="navigation" aria-labelledby="system-breadcrumb">
+    <span id="system-breadcrumb" class="visually-hidden">Breadcrumb</span>
+    <div class="container common-container four_content">
+      <ul xmlns:v="http://rdf.data-vocabulary.org/#">          <li          >              <a href="/">Home</a>          </li>          <li          >              <a href="/major-statistics-page">Major statistics</a>          </li>          <li              aria-current="page"          >Production and Supplies          </li>      </ul>
+    </div>
+  </div></div>
+
+  </section>  <section class="region region-highlighted">
+
+  </section>
+	</div>
+  </section>
+  <section id="page-head" class="wrapper headings-wrapper"  role="region">
+      <div class="container common-container four_content ">
+	       
+ <div class="container common-container four_content"></div>            
+    </div>
+  </section>
+  <section id="paragraph" class="wrapper paragraph-wrapper" >
+      <div class="container common-container">
+                <div id="main-content" tabindex="-1"></div>                <div  class="layout-content">  <section class="region region-content"><div id="block-moc-page-title" class="block block-core block-page-title-block">
+</div>
+<div id="block-moc-content" class="block block-system block-system-main-block">  <div class="layout layout--onecol">
+    <div class="layout__region layout__region--content"><div class="block-region-content"><div class="views-element-container block block-views block-views-blockmajor-statistics-block-1">    <h1>Production and Supplies</h1><div><div class="view view-major-statistics view-id-major_statistics view-display-id-block_1 js-view-dom-id-cc2e165603a528f2e9bbb1f627b4ab42cd0675760494635d276e005fe7bae45a">    <div class="view-content">  <div class="views-row"><img src="/sites/default/files/2019-08/pr17.jpg" width="288" height="192" alt="Production And Supplies" typeof="foaf:Image" >
+<p><a aira-label="Download PDF file on REFORMS ACHIEVEMENTS OF MINISTRY OF COAL SINCE 2014 open in new tab" href="/sites/default/files/2022-06/14-06-2022a-wn.pdf" style="text-decoration:none;color:#000;" target="_blanck">REFORMS &amp; ACHIEVEMENTS OF MINISTRY OF COAL SINCE 2014</a></p>
+
+<h2>COAL PRODUCTION</h2>
+
+<p style="text-align: justify; ">Through sustained programme of investment and greater thrust on application of modern technologies, it has been possible to raise the All India production of coal at <strong>997</strong><b>.83</b> million tonnes in <b>2023-24</b>. The all India Production of coal during <b>2024-25 </b>was <strong>1047.523</strong><b> MT</b>  with a positive growth of <strong>4.98%</strong><b>.</b></p>
+
+<p style="text-align: justify; ">Coal India Limited (CIL) and its subsidiaries accounted for <b>773.81</b> <strong>MT</strong> during <b>2023-24</b> as compared to a production of <strong>703</strong><b>.20</b> <strong>MT</strong> in <b>2022-23</b> showing a positive growth of <strong>10.04%</strong><b>.</b> Coal production of CIL during <b>2024-25</b> was <strong>781.056 MT</strong> with a positive growth of <strong>0.94</strong><b>%.</b></p>
+
+<p style="text-align: justify; ">Singareni Collieries Company Limited (SCCL) is the main source for supply of coal to the southern region. The company produced <strong>70.02</strong> million tonnes of coal during <strong>2023-24</strong> as against <strong>67.14 MT</strong> during the same period of previous year. SCCL production of coal during <strong>2024-25</strong> was <strong>69.01 MT</strong> with a positive growth of <strong>2.8%</strong>. Small quantities of coal are also produced by TISCO, IISCO, DVC and others.</p>
+
+<p>2025-2026</p>
+
+<h3>COAL PRODUCTION AND OFFTAKE APR-NOV- 2025-26 (IN MT)</h3>
+
+<table border="1" cellpadding="1" cellspacing="1">
+	<tbody>
+		<tr>
+			<th rowspan="2">Company</th>
+			<th colspan="4" style="text-align:center">Production*</th>
+			<th colspan="4" style="text-align:center">Offtake/Dispatch*</th>
+		</tr>
+		<tr><!--<th scope="col">Company</th>-->
+			<th scope="col">Target</th>
+			<th scope="col">Ach. (Prov)</th>
+			<th scope="col">Actual During Cores<br />
+			period of previous year</th>
+			<th scope="col">Growth (%)</th>
+			<th scope="col">Target</th>
+			<th scope="col">Ach. (Prov.)</th>
+			<th scope="col">Actual During Cores<br />
+			period of previous year</th>
+			<th scope="col">Growth (%)</th>
+		</tr>
+		<tr>
+			<th scope="row">CIL</th>
+			<td>875.00</td>
+			<td>453.54</td>
+			<td>470.98</td>
+			<td>-3.71</td>
+			<td>900.00</td>
+			<td>479.73</td>
+			<td>493.11</td>
+			<td>-2.71</td>
+		</tr>
+		<tr>
+			<th scope="row">SCCL</th>
+			<td>72.00</td>
+			<td>37.98</td>
+			<td>40.15</td>
+			<td>-5.42</td>
+			<td>72.00</td>
+			<td>38.50</td>
+			<td>40.40</td>
+			<td>-4.69</td>
+		</tr>
+		<tr>
+			<th scope="row">Captive &amp; Others</th>
+			<td>210.00</td>
+			<td>127.908</td>
+			<td>117.231</td>
+			<td>9.11</td>
+			<td>210.00</td>
+			<td>133.5405</td>
+			<td>125.261</td>
+			<td>6.61</td>
+		</tr>
+		<tr style="background-color: #c3d9ff;">
+			<th scope="row">Total</th>
+			<td>1157.00</td>
+			<td>619.40</td>
+			<td>628.37</td>
+			<td>-1.43</td>
+			<td>1182.00</td>
+			<td>651.78</td>
+			<td>658.77</td>
+			<td>-1.06</td>
+		</tr>
+		<tr>
+			<td colspan="9">*Production/Despatch (Apr-25 to Nov-25)<br />
+			Source: DDG Office ,Ministry of Coal </td>
+		</tr>
+		<!--<tr>
+			<td colspan="9">Note: Production and Offtake of CIL is including Gare Palma IV/1 and IV 2&amp;3 and production of captive is excluding these blocks.</td>
+		</tr>-->
+	</tbody>
+</table>
+
+<h2>COAL DISTRIBUTION AND MARKETING</h2>
+
+<p>The Marketing Division of CIL coordinates marketing activities for all its subsidiaries. CIL has set up Regional Sales Offices and Sub-Sales Offices at selected places in the country to cater to the needs of the consuming sectors in various regions.</p>
+
+<h2>IMPORT OF COAL</h2>
+
+<p>As per the present Import policy, coal can be freely imported (under Open General Licence) by the consumers themselves considering their needs based on their commercial consideration.</p>
+
+<p>Coking Coal is being imported by Steel sector mainly to bridge the gap between the requirement and indigenous availability and to improve the quality. Other sectors like Power sector, cement etc. and coal traders are importing non-coking coal.</p>
+
+<p>Details of import of coal and products i.e. coke during the last four years including the current year is as under:</p>
+
+<p style="text-align:right"><strong>(Million tonnes)</strong></p>
+
+<table border="1" caption="coke during the last six years" cellpadding="1" cellspacing="1" summary="Details of import of coal and products i.e. coke during the last four years including the current year is as under">
+	<thead>
+		<tr>
+			<th scope="col">Coal</th>
+			<th scope="col">2021-22</th>
+			<th scope="col">2022-23</th>
+			<th scope="col">2023-24</th>
+			<th scope="col">2024-25</th>
+			<th scope="col">2025-26</th>
+			<th scope="col">2026-27*</th>
+		</tr>
+	</thead>
+	<!--<tfoot>
+<tr>
+<td  colspan="7"></td>
+
+</tr>
+</tfoot>-->
+	<tbody>
+		<tr>
+			<td>Coking Coal</td>
+			<td>57.16</td>
+			<td>56.05</td>
+			<td>58.81</td>
+			<td>57.58</td>
+			<td>66.33</td>
+			<td>16.88</td>
+		</tr>
+		<tr>
+			<td>Non-Coking Coal</td>
+			<td>151.77</td>
+			<td>181.62</td>
+			<td>205.72</td>
+			<td>186.05</td>
+			<td>180.04</td>
+			<td>45.01</td>
+		</tr>
+		<tr style="background-color: #c3d9ff;">
+			<td>Total Coal Import</td>
+			<td>208.93</td>
+			<td>237.67</td>
+			<td>264.53</td>
+			<td>243.63</td>
+			<td>246.37</td>
+			<td>61.89</td>
+		</tr>
+		<tr>
+			<td>Coke</td>
+			<td>2.48</td>
+			<td>3.63</td>
+			<td>3.96</td>
+			<td>4.88</td>
+			<td>2.12</td>
+		</tr>
+		<tr>
+			<td colspan="7"><strong>*Import upto Apr-26-june-26  (Source:-DDG Office)* - Provisional</strong></td>
+		</tr>
+	</tbody>
+</table>
+
+<ul>
+	<li><u><a aria-label="Download pdf Coal Production and Offtake data (last 10 years). open in new tab" href="http://coal.gov.in/sites/default/files/2021-01/productiondata_tenyear.pdf" style="text-decoration:none;color:#000;" target="_blank"><strong>Coal Production and Offtake data (last 10 years).</strong></a></u></li>
+	<li><u><a aria-label="Download pdf Despatch of coking and non-coking coal (last 10 years). open in new tab" href="http://coal.gov.in/sites/default/files/2021-01/Despatches-coking-non-coking.pdf" style="text-decoration:none;color:#000;" target="_blank"><strong>Despatch of coking and non-coking coal (last 10 years).</strong></a></u></li>
+	<li><u><a aria-label="Download pdf Despatch of Raw coal and lignite (last 10 years). open in new tab" href="http://coal.gov.in/sites/default/files/2021-01/Despatches-of-Raw-Lignite-Coal.pdf" style="text-decoration:none;color:#000;" target="_blank"><strong>Despatch of Raw coal and lignite (last 10 years).</strong></a></u></li>
+	<li><u><a aria-label="Download pdf Production of coking and non-coking coal (last 10 years). open in new tab" href="http://coal.gov.in/sites/default/files/2021-01/Production-of-Coking-Non-Coking.pdf" style="text-decoration:none;color:#000;" target="_blank"><strong>Production of coking and non-coking coal (last 10 years).</strong></a></u></li>
+	<li><u><a aria-label="Download pdf Production of Raw coal and liginte (last 10 years). open in new tab" href="http://coal.gov.in/sites/default/files/2021-01/Production-of-Raw-Lignite-coal.pdf" style="text-decoration:none;color:#000;" target="_blank"><strong>Production of Raw coal and liginte (last 10 years).</strong></a></u></li>
+	<li><u><a aria-label="Download pdf Coking Coal washery performance during last Five years open in new tab" href="http://coal.gov.in/sites/default/files/2021-01/Coking-Coa-three-years.pdf" style="text-decoration:none;color:#000;" target="_blank"><strong>Coking Coal washery performance during last Five years</strong></a></u></li>
+	<li><u><a aria-label="Download pdf Production of Raw Coal from Opencast &amp; Under-ground mines during last ten years open in new tab" href="http://coal.gov.in/sites/default/files/2021-01/Production-Opencast-and-Under-ground-mines-durin-last-ten-years.pdf" style="text-decoration:none;color:#000;" target="_blank"><strong>Production of Raw Coal from Opencast &amp; Under-ground mines during last ten years</strong></a></u></li>
+</ul>
+</div>
+    </div></div>
+</div>
+</div>
+</div>
+    </div>
+  </div></div>
+
+  </section>
+                </div>       </div>
+  </section>
+  </div>
+ <section class="wrapper carousel-wrapper" aria-label="Footer Links" role="button">
+         <h2 style="display: none;">Carousel</h2>
+         <div class="container common-container four_content carousel-container">
+            <div id="flexCarousel" class="flexslider carousel">  <section class="region region-featured"><div class="views-element-container block block-views block-views-blockbanner-block-1" id="block-moc-views-block-banner-block-1"><div><div class="view view-banner view-id-banner view-display-id-block_1 js-view-dom-id-c97ae7818b8dcf255e7cdfef0657941f3091c20eabfa653006d7463af20cb78b">    <div class="view-content"><div>
+  <ul class="slides">      <li><a href=" " target="_blank" title="Nasha Mukt Bharat Abhiyaan,External link that opens in new tab"><img src="/sites/default/files/2025-11/nasamukti.jpg" width="200" height="101" alt="Nasha Mukt Bharat Abhiyaan" typeof="Image">
+</a></li>      <li><a href="https://shebox.wcd.gov.in/ " target="_blank" title="SHe-box,External link that opens in new tab"><img src="/sites/default/files/2025-07/she-box.png" width="200" height="101" alt="SHe-box" typeof="Image">
+</a></li>      <li><a href="https://www.indiacode.nic.in/ " target="_blank" title="India Code,External link that opens in new tab"><img src="/sites/default/files/2021-03/india-code1.jpeg" width="180" height="91" alt="India Code" typeof="Image">
+</a></li>      <li><a href="https://pgportal.gov.in/ " target="_blank" title="CPGRAMS,External link that opens in new tab"><img src="/sites/default/files/2021-03/2021-03-08.png" width="193" height="100" alt="Centralized Public Grievance Redress And Monitoring System" typeof="Image">
+</a></li>      <li><a href="https://services.india.gov.in/ " target="_blank" title="National Government Services Portal of India,External link that opens in new tab"><img src="/sites/default/files/2019-10/ngsp_logo.jpg" width="161" height="47" alt="National Government Services Portal of India" typeof="Image">
+</a></li>      <li><a href="https://www.nvsp.in " target="_blank" title="Voters Online Services,External link that opens in new tab"><img src="/sites/default/files/2019-10/nvsp3.png" width="161" height="47" alt="Voters Online Services" typeof="Image">
+</a></li>      <li><a href="https://evisitors.nic.in/public/Home.aspx " target="_blank" title="MyVisit,External link that opens in new tab"><img src="/sites/default/files/2019-10/myvisit.png" width="161" height="47" alt="MyVisit" typeof="Image">
+</a></li>      <li><a href="https://www.mygov.in " target="_blank" title="MyGov,External link that opens in new tab"><img src="/sites/default/files/2019-04/mygov.png" width="200" height="100" alt="MyGov" typeof="Image">
+</a></li>      <li><a href="http://www.makeinindia.com/home " target="_blank" title="Make In India,External link that opens in new tab"><img src="/sites/default/files/2019-04/makeinindia.png" width="200" height="100" alt="Make In India" typeof="Image">
+</a></li>      <li><a href="https://pmnrf.gov.in " target="_blank" title="Prime Minister&#039;s National Relief Fund,External link that opens in new tab"><img src="/sites/default/files/2019-04/pmnrf.png" width="200" height="100" alt="Prime Minister&#039;s National Relief Fund" typeof="Image">
+</a></li>      <li><a href="http://incredibleindia.org/ " target="_blank" title="Incredible India,External link that opens in new tab"><img src="/sites/default/files/2019-04/incredible-india.png" width="200" height="100" alt="Incredible India" typeof="Image">
+</a></li>      <li><a href="https://www.digitalindiaportal.co.in/ " target="_blank" title="Digital India,External link that opens in new tab"><img src="/sites/default/files/2019-04/digital_india.png" width="200" height="100" alt="Digital India" typeof="Image">
+</a></li>      <li><a href="https://www.india.gov.in " target="_blank" title="National Portal of India,External link that opens in new tab"><img src="/sites/default/files/2019-04/india-gov.png" width="200" height="150" alt="National Portal of India" typeof="Image">
+</a></li>      <li><a href="https://data.gov.in/ " target="_blank" title="Data portal,External link that opens in new tab"><img src="/sites/default/files/2019-04/data-gov.png" width="200" height="100" alt="Data portal" typeof="Image">
+</a></li>
+  </ul></div>
+    </div></div>
+</div>
+</div>
+
+  </section>
+            </div>
+         </div>
+      </section>
+	  </div>
+<footer class="wrapper footer-wrapper">
+         <div class="footer-top-wrapper">            <div class="container common-container four_content footer-top-container">  <section class="region region-footer-menu"><nav role="navigation" aria-labelledby="block-moc-footer-menu" id="block-moc-footer" class="block block-menu navigation menu--footer">
+  <span class="visually-hidden" id="block-moc-footer-menu">Footer menu</span>      <ul class="menu">      <li class="menu-item"><a href="/website-policy" data-drupal-link-system-path="node/4">Website Policy</a>      </li>      <li class="menu-item"><a href="/help" data-drupal-link-system-path="node/1">Help</a>      </li>      <li class="menu-item"><a href="/contact-us" data-drupal-link-system-path="node/9">Contact Us</a>      </li>      <li class="menu-item"><a href="/terms-and-conditions" data-drupal-link-system-path="node/6">Terms and Conditions</a>      </li>      <li class="menu-item"><a href="/feedback" data-drupal-link-system-path="webform/feedback">Feedback</a>      </li>      <li class="menu-item"><a href="/web-information-manager" data-drupal-link-system-path="node/5">Web Information Manager</a>      </li>      <li class="menu-item"><a href="/disclaimer" data-drupal-link-system-path="node/409">Disclaimer</a>      </li>    </ul></nav>
+<div id="block-visitors" class="block block-visitors block-visitors-block"><div class="item-list"><ul><li>Total Visitors: <em class="placeholder">31999693</em></li><li>Since: <em class="placeholder">07/22/2021 - 14:47</em></li></ul></div></div>
+
+  </section>
+            </div>         </div>
+         <div class="footer-bottom-wrapper">
+            <div class="container common-container four_content footer-bottom-container">
+               <div class="footer-content clearfix">
+			      <div class="logo-cmf" style="padding:0px 0 0 0;"> <a target="_blank" href="https://coal.gov.in/sites/default/files/2019-09/rti_point21.pdf" aria-label="STQC Certificate" title=""><img  src="/themes/custom/moc/assets/images/stqc_icon.png" aria-hidden="true" alt="stqc logo"></a></div>
+                  <div class="copyright-content">Website Content Owned by <strong>Ministry of Coal, Government Of India</strong> <span>Designed, Developed and Hosted by <a target="_blank" title="NIC, External Link that opens in a new window" href="http://www.nic.in/"><strong>National Informatics Centre ( NIC )</strong></a></span><span>Last Updated: <strong>02 Sep 2026</strong></span>  </div>
+                  <!--<div class="logo-cmf"> <a target="_blank" href="http://cmf.gov.in/" aria-label="Visit CMF Website">
+				  <img aria-hidden="true" alt="CMF" src="/themes/custom/moc/assets/images/cmf-logo.png"></a> </div>-->
+               </div>
+            </div>
+         </div>
+<button class="back-to-top" aria-label="Back to Top">
+  <span class="d-none">Back to Top</span>
+  <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+    <path fill-rule="evenodd" d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5z"></path>
+  </svg>
+</button>
+      </footer>  
+  </div>
+    <script type="application/json" data-drupal-selector="drupal-settings-json">{"path":{"baseUrl":"\/","scriptPath":null,"pathPrefix":"","currentPath":"taxonomy\/term\/953","currentPathIsAdmin":false,"isFront":false,"currentLanguage":"en"},"pluralDelimiter":"\u0003","external_link_popup":{"whitelist":"","width":"25%","popups":[{"id":"default","name":"Default","status":true,"weight":10,"close":true,"title":"coal.gov.in say","body":"\u003Cp\u003EExternal Link will\u00a0open\u00a0in a new window.\u003C\/p\u003E\n","labelyes":"OK","labelno":"Cancel","domains":"*","target":"_self"}]},"password_encrypt":{"passkey":"0c39c7fc0b973804"},"lang_dropdown":{"lang-dropdown-form":{"key":"lang_dropdown_form6a97c206b26c41.15651505"}},"ajaxTrustedUrl":{"form_action_p_pvdeGsVG5zNF_XLGPTvYSKCf43t8qZYSwcfZl2uzM":true,"\/search\/node":true},"user":{"uid":0,"permissionsHash":"11b7ae28c44486be6dafb31fb4bade5bbdcf5ba40b81378d543f585fee67232d"}}</script>
+<script src="/core/assets/vendor/domready/ready.min.js?v=1.0.8"></script>
+<script src="/core/assets/vendor/jquery/jquery.min.js?v=3.2.1"></script>
+<script src="/core/assets/vendor/jquery/jquery-extend-3.4.0.js?v=3.2.1"></script>
+<script src="/core/assets/vendor/jquery-once/jquery.once.min.js?v=2.2.0"></script>
+<script src="/core/misc/drupalSettingsLoader.js?v=8.6.18"></script>
+<script src="/core/misc/drupal.js?v=8.6.18"></script>
+<script src="/core/misc/drupal.init.js?v=8.6.18"></script>
+<script src="/core/assets/vendor/jquery.ui/ui/data-min.js?v=1.12.1"></script>
+<script src="/core/assets/vendor/jquery.ui/ui/disable-selection-min.js?v=1.12.1"></script>
+<script src="/core/assets/vendor/jquery.ui/ui/form-min.js?v=1.12.1"></script>
+<script src="/core/assets/vendor/jquery.ui/ui/labels-min.js?v=1.12.1"></script>
+<script src="/core/assets/vendor/jquery.ui/ui/jquery-1-7-min.js?v=1.12.1"></script>
+<script src="/core/assets/vendor/jquery.ui/ui/scroll-parent-min.js?v=1.12.1"></script>
+<script src="/core/assets/vendor/jquery.ui/ui/tabbable-min.js?v=1.12.1"></script>
+<script src="/core/assets/vendor/jquery.ui/ui/unique-id-min.js?v=1.12.1"></script>
+<script src="/core/assets/vendor/jquery.ui/ui/version-min.js?v=1.12.1"></script>
+<script src="/core/assets/vendor/jquery.ui/ui/focusable-min.js?v=1.12.1"></script>
+<script src="/core/assets/vendor/jquery.ui/ui/ie-min.js?v=1.12.1"></script>
+<script src="/core/assets/vendor/jquery.ui/ui/keycode-min.js?v=1.12.1"></script>
+<script src="/core/assets/vendor/jquery.ui/ui/plugin-min.js?v=1.12.1"></script>
+<script src="/core/assets/vendor/jquery.ui/ui/safe-active-element-min.js?v=1.12.1"></script>
+<script src="/core/assets/vendor/jquery.ui/ui/safe-blur-min.js?v=1.12.1"></script>
+<script src="/core/assets/vendor/jquery.ui/ui/widget-min.js?v=1.12.1"></script>
+<script src="/core/misc/debounce.js?v=8.6.18"></script>
+<script src="/core/misc/displace.js?v=8.6.18"></script>
+<script src="/core/assets/vendor/jquery.ui/ui/widgets/button-min.js?v=1.12.1"></script>
+<script src="/core/assets/vendor/jquery.ui/ui/widgets/mouse-min.js?v=1.12.1"></script>
+<script src="/core/assets/vendor/jquery.ui/ui/widgets/draggable-min.js?v=1.12.1"></script>
+<script src="/core/assets/vendor/jquery.ui/ui/position-min.js?v=1.12.1"></script>
+<script src="/core/assets/vendor/jquery.ui/ui/widgets/resizable-min.js?v=1.12.1"></script>
+<script src="/core/assets/vendor/jquery.ui/ui/widgets/dialog-min.js?v=1.12.1"></script>
+<script src="/core/misc/dialog/dialog.js?v=8.6.18"></script>
+<script src="/core/misc/dialog/dialog.position.js?v=8.6.18"></script>
+<script src="/core/misc/dialog/dialog.jquery-ui.js?v=8.6.18"></script>
+<script src="/modules/external_link_popup/js/dialog.js?v=8.6.18"></script>
+<script src="https://use.fontawesome.com/releases/v5.7.2/js/all.js"></script>
+<script src="https://use.fontawesome.com/releases/v5.7.2/js/v4-shims.js"></script>
+<script src="/themes/custom/moc/assets/js/jquery-accessibleMegaMenu.js?v=1.x"></script>
+<script src="/themes/custom/moc/assets/js/framework.js?v=1.x"></script>
+<script src="/themes/custom/moc/assets/js/jquery.flexslider.js?v=1.x"></script>
+<script src="/themes/custom/moc/assets/js/font-size.js?v=1.x"></script>
+<script src="/themes/custom/moc/assets/js/swithcer.js?v=1.x"></script>
+<script src="/themes/custom/moc/theme/js/ma5gallery.js?v=1.x"></script>
+<script src="/themes/custom/moc/assets/js/megamenu.js?v=1.x"></script>
+<script src="/themes/custom/moc/theme/js/easyResponsiveTabs.js?v=1.x"></script>
+<script src="/themes/custom/moc/theme/js/custom.js?v=1.x"></script>
+<script src="/themes/custom/moc/assets/js/covid-19.js?v=1.x"></script>
+<script src="/modules/password_encrypt/js/password_encrypt.js?v=8.6.18"></script>
+<script src="/libraries/CryptoJS/aes.js?v=8.6.18"></script>
+<script src="/modules/contrib/lang_dropdown/js/lang_dropdown.js?v=1.x"></script>
+
+  <script type="text/javascript" src="/bnith__UJrNbIdrfbob8sUaTfB8DKYvp0C8XDLraRqsJHCtn4taD8vTuUmShcx4mZV1osdD"></script> <script language="JavaScript" type="text/javascript">const _0x35e8=['visitorId','18127kSXadA','356575NPKVMA','7306axxsAH','get','657833TzFjkt','717302TQdBjl','34lMHocq','x-bni-rncf=2tMrhhieqdpJSE2rmcjMQ8eN4VOJIzM5V-53jta0kM0=;expires=Thu, 01 Jan 2037 00:00:00 UTC;path=/;','61XMWbpU','cookie',';expires=Thu, 01 Jan 2037 00:00:00 UTC;path=/;','then','651866OSUgMa','811155xdatvf','x-bni-fpc='];function _0x258e(_0x5954fe,_0x43567d){return _0x258e=function(_0x35e81f,_0x258e26){_0x35e81f=_0x35e81f-0x179;let _0x1280dc=_0x35e8[_0x35e81f];return _0x1280dc;},_0x258e(_0x5954fe,_0x43567d);}(function(_0x5674de,_0xdcf1af){const _0x512a29=_0x258e;while(!![]){try{const _0x55f636=parseInt(_0x512a29(0x17b))+-parseInt(_0x512a29(0x179))*parseInt(_0x512a29(0x17f))+-parseInt(_0x512a29(0x183))+-parseInt(_0x512a29(0x184))+parseInt(_0x512a29(0x187))*parseInt(_0x512a29(0x17d))+parseInt(_0x512a29(0x188))+parseInt(_0x512a29(0x17c));if(_0x55f636===_0xdcf1af)break;else _0x5674de['push'](_0x5674de['shift']());}catch(_0xd3a1ce){_0x5674de['push'](_0x5674de['shift']());}}}(_0x35e8,0x6b42d));function getClientIdentity(){const _0x47e86b=_0x258e,_0x448fbc=FingerprintJS['load']();_0x448fbc[_0x47e86b(0x182)](_0x4bb924=>_0x4bb924[_0x47e86b(0x17a)]())[_0x47e86b(0x182)](_0x2f8ca1=>{const _0x44872c=_0x47e86b,_0xa48f50=_0x2f8ca1[_0x44872c(0x186)];document[_0x44872c(0x180)]=_0x44872c(0x185)+_0xa48f50+_0x44872c(0x181),document[_0x44872c(0x180)]=_0x44872c(0x17e);});}getClientIdentity();</script></body>
+
+</html>
