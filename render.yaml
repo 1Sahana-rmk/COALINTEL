@@ -38,11 +38,16 @@ services:
         sync: false
 
       - key: FRONTEND_URL
-        sync: false
+        fromService:
+          type: web
+          name: coalintel-frontend
+          envVarKey: RENDER_EXTERNAL_URL
 
       - key: ALLOWED_ORIGINS
-        sync: false
-
+        fromService:
+          type: web
+          name: coalintel-frontend
+          envVarKey: RENDER_EXTERNAL_URL
       - key: STORAGE_PROVIDER
         value: local
 
@@ -77,8 +82,11 @@ services:
       - key: NEXT_PUBLIC_API_BASE_URL
         value: /api/v1
 
-      - key: BACKEND_URL
-        sync: false
+       - key: BACKEND_URL
+        fromService:
+          type: web
+          name: coalintel-backend
+          envVarKey: RENDER_EXTERNAL_URL
 
 
 databases:
