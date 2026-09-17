@@ -703,6 +703,93 @@ class GeminiLLMProvider(BaseLLMProvider):
             "provider": "gemini"
         }
 
+class GroqLLMProvider(BaseLLMProvider):
+    """
+    Hosted Groq API LLM Provider implementation.
+    Uses Groq's OpenAI-compatible API.
+    """
+    provider_name: str = "groq"
+
+    def __init__(self, api_key: str, model_name: str = "openai/gpt-oss-20b", timeout: float = 10.0):
+        self.api_key = api_key
+        self.model_name = model_name or "openai/gpt-oss-20b"
+        self.timeout = timeout
+        self.degraded_fallback = DegradedLLMProvider()
+
+    def _get_client(self):
+        import openai
+        return openai.OpenAI(
+            api_key=self.api_key,
+            base_url="https://api.groq.com/openai/v1"
+        )
+
+    def generate(self, prompt: str) -> str:
+        if not self.api_key or self.api_key.strip() in ["", "your-api-key-here"]:
+            return self.degraded_fallback.generate(prompt)
+
+        try:
+            client = self._get_client()
+            response = client.chat.completions.create(
+                model=self.model_name,
+                messages=[{"role": "user", "content": prompt}],
+                timeout=self.timeout
+            )
+            return response.choices[0].message.content
+        except Exception as err:
+            logger.warning(
+                f"Groq API invocation failed ({err}). "
+                "Falling back to degraded grounded synthesis."
+            )
+            return self.degraded_fallback.generate(prompt)
+
+    def generate_general_ai(self, query: str) -> Dict[str, Any]:
+        if not self.api_key or self.api_key.strip() in ["", "your-api-key-here"]:
+            return self.degraded_fallback.generate_general_ai(query)
+
+        try:
+            client = self._get_client()
+            response = client.chat.completions.create(
+                model=self.model_name,
+                messages=[
+                    {
+                        "role": "system",
+                        "content": "You are COALINTEL AI Assistant for Coal India Limited."
+                    },
+                    {"role": "user", "content": query}
+                ],
+                timeout=self.timeout
+            )
+
+            return {
+                "answer": response.choices[0].message.content.strip(),
+                "citations": [],
+                "evidence_chunks": [],
+                "provider": "groq",
+                "degraded_mode": False,
+                "mode": "GENERAL_AI"
+            }
+
+        except Exception as err:
+            logger.warning(f"Groq General AI call failed ({err}).")
+            return self.degraded_fallback.generate_general_ai(query)
+
+    def generate_completion(
+        self,
+        prompt: str,
+        context_chunks: List[Dict[str, Any]]
+    ) -> Dict[str, Any]:
+        ans = self.generate(prompt)
+
+        return {
+            "answer": ans,
+            "citations": [],
+            "degraded_mode": not bool(
+                self.api_key and self.api_key != "your-api-key-here"
+            ),
+            "provider": "groq"
+        }
+
+
 
 class OpenAILLMProvider(BaseLLMProvider):
     """
@@ -798,5 +885,7 @@ def get_llm_provider(
         return GeminiLLMProvider(api_key=key, model_name=m_name, timeout=t_out)
     elif p_name == "openai":
         return OpenAILLMProvider(api_key=key, model_name=m_name, timeout=t_out)
+    elif p_name == "groq":
+        return GroqLLMProvider(api_key=key, model_name=m_name, timeout=t_out)
     else:
         return DegradedLLMProvider()
