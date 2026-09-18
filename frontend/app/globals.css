@@ -1,0 +1,92 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: #0E1113;
+    --foreground: #E8ECEB;
+    --muted-foreground: #9BA5A8;
+
+    --nav: #151A1D;
+    --card: #1C2226;
+    --surface-elevated: #242C30;
+    --border: #30383D;
+
+    --primary: #C58B3A;
+    --primary-hover: #D6A052;
+    --primary-foreground: #0E1113;
+
+    --amber: #C58B3A;
+    --success: #4F8A62;
+    --info: #54788A;
+    --warning: #D6A23A;
+    --danger: #C94B45;
+  }
+
+  body {
+    background-color: #0E1113;
+    color: #E8ECEB;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Accessible focus indicators for keyboard navigation */
+  :focus-visible {
+    outline: 2px solid #C58B3A;
+    outline-offset: 2px;
+  }
+}
+
+/* Custom Dark Industrial Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0E1113;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #30383D;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #C58B3A;
+}
+
+/* Page and Section Entrance Animations */
+.animate-page-enter {
+  animation: pageEnter 300ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Staggered Delay Utilities */
+.stagger-1 { animation-delay: 50ms; }
+.stagger-2 { animation-delay: 100ms; }
+.stagger-3 { animation-delay: 150ms; }
+.stagger-4 { animation-delay: 200ms; }
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

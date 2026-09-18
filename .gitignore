@@ -1,19 +1,71 @@
-# Node dependencies
-node_modules/
-
-# Environment variables
+# Environment & Secret Files
 .env
-.env.*
+.env.local
+.env.*.local
+!.env.example
+*.pem
+*.key
 
-# Uploaded files
-server/uploads/
+# Python & Backend
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+!frontend/lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+.pytest_cache/
+.coverage
+htmlcov/
+*.sqlite
+*.sqlite3
+*.db
 
-# PDF/data files
-*.pdf
-
-# Logs
+# Node.js & Frontend
+node_modules/
+frontend/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+frontend/dist/
+frontend/dist-ssr/
+.vite/
 *.log
 
-# OS files
+# Runtime Storage & Data Volumes (Preserve folder structure via .gitkeep)
+**/storage/uploads/*
+!**/storage/uploads/.gitkeep
+**/storage/reports/*
+!**/storage/reports/.gitkeep
+**/storage/chroma_db/*
+!**/storage/chroma_db/.gitkeep
+
+# IDE & System Files
+.idea/
+.vscode/
+*.swp
+*.swo
 .DS_Store
 Thumbs.db
+
+# Local/sample uploaded document
+coal.pdf

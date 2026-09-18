@@ -1,0 +1,1 @@
+# COALINTEL Core Package Init

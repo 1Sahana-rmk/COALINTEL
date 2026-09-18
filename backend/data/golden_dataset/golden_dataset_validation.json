@@ -1,0 +1,106 @@
+[
+  {
+    "document_id": "cil_ar_2023_24",
+    "filename": "CIL_Integrated_Annual_Report_2023-24.pdf",
+    "organization": "CIL",
+    "valid_pdf": true,
+    "page_count": 262,
+    "text_extractable": true,
+    "ocr_required": false,
+    "official_source": true,
+    "useful_sections_found": [
+      "Operational Performance",
+      "Production Summary"
+    ],
+    "warnings": []
+  },
+  {
+    "document_id": "ecl_ar_2023_24",
+    "filename": "ECL_Annual_Report_2023-24.pdf",
+    "organization": "ECL",
+    "valid_pdf": false,
+    "page_count": 0,
+    "text_extractable": false,
+    "ocr_required": false,
+    "official_source": true,
+    "useful_sections_found": [],
+    "warnings": [
+      "Document download blocked or source URL returned 403/HTML."
+    ]
+  },
+  {
+    "document_id": "bccl_ar_2023_24",
+    "filename": "BCCL_Annual_Report_2023-24.pdf",
+    "organization": "BCCL",
+    "valid_pdf": true,
+    "page_count": 5,
+    "text_extractable": true,
+    "ocr_required": false,
+    "official_source": true,
+    "useful_sections_found": [
+      "Operational Performance",
+      "Production Summary"
+    ],
+    "warnings": []
+  },
+  {
+    "document_id": "secl_ar_2023_24",
+    "filename": "SECL_Annual_Report_2023-24.pdf",
+    "organization": "SECL",
+    "valid_pdf": true,
+    "page_count": 476,
+    "text_extractable": true,
+    "ocr_required": false,
+    "official_source": true,
+    "useful_sections_found": [
+      "Operational Performance",
+      "Production Summary"
+    ],
+    "warnings": []
+  },
+  {
+    "document_id": "cmpdi_ar_2023_24",
+    "filename": "CMPDI_Annual_Report_2023-24.pdf",
+    "organization": "CMPDI",
+    "valid_pdf": true,
+    "page_count": 342,
+    "text_extractable": true,
+    "ocr_required": false,
+    "official_source": true,
+    "useful_sections_found": [
+      "Operational Performance",
+      "Production Summary"
+    ],
+    "warnings": []
+  },
+  {
+    "document_id": "moc_stats_2023_24",
+    "filename": "MoC_Production_Supplies_2023-24.pdf",
+    "organization": "MINISTRY_OF_COAL",
+    "valid_pdf": true,
+    "page_count": 8,
+    "text_extractable": true,
+    "ocr_required": false,
+    "official_source": true,
+    "useful_sections_found": [
+      "Operational Performance",
+      "Production Summary"
+    ],
+    "warnings": []
+  },
+  {
+    "document_id": "moc_ar_prod_2023_24",
+    "filename": "MoC_Annual_Report_2023-24_Chap2_Production.pdf",
+    "organization": "MINISTRY_OF_COAL",
+    "valid_pdf": true,
+    "page_count": 12,
+    "text_extractable": true,
+    "ocr_required": false,
+    "official_source": true,
+    "useful_sections_found": [
+      "Operational Performance",
+      "Production Summary"
+    ],
+    "warnings": []
+  }
+]

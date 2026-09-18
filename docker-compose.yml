@@ -1,0 +1,84 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: coalintel_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-coalintel}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-coalintel_secure_pass}
+      POSTGRES_DB: ${POSTGRES_DB:-coalintel_db}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - coalintel_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-coalintel} -d ${POSTGRES_DB:-coalintel_db}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: coalintel_backend
+    restart: always
+    environment:
+      - PROJECT_NAME=${PROJECT_NAME:-COALINTEL}
+      - ENVIRONMENT=${ENVIRONMENT:-development}
+      - SECRET_KEY=${SECRET_KEY:-coalintel-super-secret-jwt-signing-key-change-in-production}
+      - ALGORITHM=${ALGORITHM:-HS256}
+      - ACCESS_TOKEN_EXPIRE_MINUTES=${ACCESS_TOKEN_EXPIRE_MINUTES:-480}
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_USER=${POSTGRES_USER:-coalintel}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-coalintel_secure_pass}
+      - POSTGRES_DB=${POSTGRES_DB:-coalintel_db}
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-coalintel}:${POSTGRES_PASSWORD:-coalintel_secure_pass}@postgres:5432/${POSTGRES_DB:-coalintel_db}
+      - UPLOAD_DIR=/storage/uploads
+      - CHROMA_DB_DIR=/storage/chroma_db
+      - REPORT_DIR=/storage/generated_reports
+      - LLM_PROVIDER=${LLM_PROVIDER:-gemini}
+      - LLM_API_KEY=${LLM_API_KEY:-}
+      - LLM_MODEL_NAME=${LLM_MODEL_NAME:-gemini-3.6-flash}
+      - LLM_TIMEOUT_SECONDS=${LLM_TIMEOUT_SECONDS:-10.0}
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./storage/uploads:/storage/uploads
+      - ./storage/chroma_db:/storage/chroma_db
+      - ./storage/reports:/storage/generated_reports
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - coalintel_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: coalintel_frontend
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - coalintel_network
+
+volumes:
+  postgres_data:
+
+networks:
+  coalintel_network:
+    driver: bridge

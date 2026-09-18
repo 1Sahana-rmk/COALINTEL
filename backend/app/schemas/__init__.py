@@ -1,0 +1,1 @@
+# COALINTEL Schemas Package Init
