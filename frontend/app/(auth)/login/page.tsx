@@ -3,11 +3,11 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Logo } from '@/components/ui/Logo';
-import { Input } from '@/components/ui/Input';
-import { Button } from '@/components/ui/Button';
-import { ErrorState } from '@/components/ui/ErrorState';
-import { authApi } from '@/lib/api/authApi';
+import { Logo } from '../../../components/ui/Logo';
+import { Input } from '../../../components/ui/Input';
+import { Button } from '../../../components/ui/Button';
+import { ErrorState } from '../../../components/ui/ErrorState';
+import { authApi } from '../../../lib/api/authApi';
 import { ShieldCheck, Lock, User, Sparkles, Database, FileSpreadsheet } from 'lucide-react';
 
 export default function LoginPage() {
