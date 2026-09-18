@@ -3,12 +3,12 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Logo } from '@/components/ui/Logo';
-import { Input } from '@/components/ui/Input';
-import { Button } from '@/components/ui/Button';
-import { Badge } from '@/components/ui/Badge';
-import { ErrorState } from '@/components/ui/ErrorState';
-import { authApi } from '@/lib/api/authApi';
+import { Logo } from '../../../components/ui/Logo';
+import { Input } from '../../../components/ui/Input';
+import { Button } from '../../../components/ui/Button';
+import { Badge } from '../../../components/ui/Badge';
+import { ErrorState } from '../../../components/ui/ErrorState';
+import { authApi } from '../../../lib/api/authApi';;
 import { ShieldCheck, Lock, User, Mail, Building2, Sparkles } from 'lucide-react';
 
 const SUBSIDIARIES = [
