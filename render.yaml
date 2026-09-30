@@ -13,7 +13,6 @@ services:
     dockerfilePath: ./backend/Dockerfile
     dockerContext: ./backend
 
-    healthCheckPath: /health
 
     envVars:
       - key: ENVIRONMENT
@@ -94,7 +93,6 @@ services:
     dockerfilePath: ./document_ai_service/Dockerfile
     dockerContext: .
 
-    healthCheckPath: /health
 
     envVars:
       - key: DOCUMENT_AI_HOST
