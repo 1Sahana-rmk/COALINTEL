@@ -8,6 +8,40 @@ import { Badge } from '@/components/ui/Badge';
 import { CitationItem, EvidenceChunkItem } from '@/lib/api/queryApi';
 import { apiClient } from '@/lib/api/client';
 import { buildOfficialSourceUrl } from '@/lib/officialSourceLink';
+import type { FileType } from '@/types/document';
+
+const SUPPORTED_FILE_TYPES = new Set([
+  'PDF',
+  'DOCX',
+  'XLSX',
+  'CSV',
+  'PNG',
+  'JPG',
+  'JPEG',
+  'TIF',
+  'TIFF',
+]);
+
+function normalizeCitationFileType(value: string | null | undefined): FileType | undefined {
+  const normalized = value?.trim().toUpperCase();
+  if (!normalized || !SUPPORTED_FILE_TYPES.has(normalized)) return undefined;
+
+  if (
+    normalized === 'PDF' ||
+    normalized === 'DOCX' ||
+    normalized === 'XLSX' ||
+    normalized === 'CSV' ||
+    normalized === 'PNG' ||
+    normalized === 'JPG' ||
+    normalized === 'JPEG' ||
+    normalized === 'TIF' ||
+    normalized === 'TIFF'
+  ) {
+    return normalized;
+  }
+
+  return undefined;
+}
 
 interface CitationDrawerProps {
   citation: CitationItem | null;
@@ -36,7 +70,7 @@ export const CitationDrawer: React.FC<CitationDrawerProps> = ({
     {
       source_type: citation.source_type,
       source_url: citation.source_url,
-      file_type: citation.file_type,
+      file_type: normalizeCitationFileType(citation.file_type),
     },
     pageNum,
   );

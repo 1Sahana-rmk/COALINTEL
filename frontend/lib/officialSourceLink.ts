@@ -1,4 +1,8 @@
-import type { DocumentItem } from '../types/document';
+import type { DocumentItem, FileType } from '../types/document';
+
+type OfficialSourceLinkDocument = Pick<DocumentItem, 'source_type' | 'source_url'> & {
+  file_type?: FileType | null;
+};
 
 const VERIFIED_OFFICIAL_SOURCE_TYPES = new Set(['OFFICIAL', 'OFFICIAL_WEBSITE']);
 
@@ -8,7 +12,7 @@ const VERIFIED_OFFICIAL_SOURCE_TYPES = new Set(['OFFICIAL', 'OFFICIAL_WEBSITE'])
  * Filenames are intentionally never used to construct this link.
  */
 export function buildOfficialSourceUrl(
-  document: Pick<DocumentItem, 'source_type' | 'source_url' | 'file_type'>,
+  document: OfficialSourceLinkDocument,
   pageNumber?: number | null,
 ): string | null {
   if (!VERIFIED_OFFICIAL_SOURCE_TYPES.has((document.source_type || '').trim().toUpperCase())) {
