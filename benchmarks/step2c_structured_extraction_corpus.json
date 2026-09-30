@@ -1,0 +1,98 @@
+{
+  "corpus_version": "2c-1",
+  "description": "Small frozen, field-labelled Step 2C corpus. Values and evidence locators are deliberately explicit; no labels are inferred from UI output.",
+  "cases": [
+    {
+      "case_id": "native_period_table",
+      "document_id": 2001,
+      "filename": "controlled_period_table.pdf",
+      "file_type": "PDF",
+      "pages": [
+        {
+          "page_number": 1,
+          "text": "Monthly coal production table for April and May 2023",
+          "extraction_method": "NATIVE",
+          "classification": "DIGITAL",
+          "confidence": 0.99
+        }
+      ],
+      "tables": [
+        {
+          "page_number": 1,
+          "table_number": 1,
+          "title": "Monthly coal production",
+          "headers": ["Mine", "Coal Production Apr 2023 (MT)", "Coal Production May 2023 (MT)"],
+          "rows": [["MCL", "781.05", "1,294.73"]],
+          "extraction_confidence": 0.96,
+          "extraction_method": "NATIVE",
+          "cells": [
+            {"row_index": 1, "column_index": 0, "value": "MCL", "bounding_box": [10, 40, 90, 60]},
+            {"row_index": 1, "column_index": 1, "value": 781.05, "bounding_box": [100, 40, 220, 60]},
+            {"row_index": 1, "column_index": 2, "value": 1294.73, "bounding_box": [230, 40, 360, 60]}
+          ]
+        }
+      ],
+      "expected_facts": [
+        {"entity_canonical": "MCL", "metric_type": "COAL_PRODUCTION", "value": 781.05, "unit": "MT", "period": "April 2023", "evidence_type": "TABLE_CELL", "page": 1, "table": 1, "row": 1, "column": 1},
+        {"entity_canonical": "MCL", "metric_type": "COAL_PRODUCTION", "value": 1294.73, "unit": "MT", "period": "May 2023", "evidence_type": "TABLE_CELL", "page": 1, "table": 1, "row": 1, "column": 2}
+      ]
+    },
+    {
+      "case_id": "controlled_ocr_numeric_and_geology",
+      "document_id": 2002,
+      "filename": "COALINTEL_Scanned_OCR_Acceptance_Test.pdf",
+      "file_type": "PDF",
+      "pages": [
+        {
+          "page_number": 1,
+          "text": "COAL PRODUCTION TEST\nBCCL Production: 781.05 MT\nECL Production: 1,294.73 MT\nDifference: -14.82 MT\nEfficiency: 97.45%\nBorehole: BH-27\nCoal Seam: Seam IV\nDepth: 143.20 m\nThickness: 4.60 m\nGrade: G8\n0.0047 12,345,678.90 -0.875 99.07%\n23.456789, 86.123456\n20-09-2026 CMPDI-BH-104A M.Cu.M",
+          "extraction_method": "OCR",
+          "classification": "SCANNED",
+          "confidence": 0.82,
+          "metadata": {"ocr_engine": "tesseract"}
+        }
+      ],
+      "tables": [],
+      "expected_facts": [
+        {"entity_canonical": "BCCL", "metric_type": "COAL_PRODUCTION", "value": 781.05, "unit": "MT", "period": null, "evidence_type": "PAGE_TEXT", "page": 1},
+        {"entity_canonical": "ECL", "metric_type": "COAL_PRODUCTION", "value": 1294.73, "unit": "MT", "period": null, "evidence_type": "PAGE_TEXT", "page": 1},
+        {"entity_canonical": null, "metric_type": "COAL_PRODUCTION", "value": -14.82, "unit": "MT", "period": null, "evidence_type": "PAGE_TEXT", "page": 1},
+        {"entity_canonical": null, "metric_type": "ACHIEVEMENT_PERCENT", "value": 97.45, "unit": "%", "period": null, "evidence_type": "PAGE_TEXT", "page": 1},
+        {"entity_canonical": null, "metric_type": "BOREHOLE_ID", "value_text": "BH-27", "evidence_type": "PAGE_TEXT", "page": 1}
+      ]
+    },
+    {
+      "case_id": "structural_labels_rejected",
+      "document_id": 2003,
+      "filename": "controlled_structural_labels.csv",
+      "file_type": "CSV",
+      "pages": [
+        {
+          "page_number": 1,
+          "text": "Sl No,Mine,Coal Production (MT)\n1,Sl No,781.05\n2,Grand Total,1,294.73",
+          "extraction_method": "NATIVE",
+          "classification": "DIGITAL",
+          "confidence": 0.99
+        }
+      ],
+      "tables": [
+        {
+          "page_number": 1,
+          "table_number": 1,
+          "headers": ["Sl No", "Mine", "Coal Production (MT)"],
+          "rows": [["1", "Sl No", "781.05"], ["2", "Grand Total", "1,294.73"]],
+          "extraction_confidence": 0.60,
+          "extraction_method": "NATIVE",
+          "cells": []
+        }
+      ],
+      "expected_facts": []
+    }
+  ],
+  "real_document_inventory": [
+    "backend/data/golden_dataset/fy2023_24/ministry_of_coal/MoC_Production_Supplies_2023-24.pdf",
+    "backend/data/golden_dataset/fy2023_24/ministry_of_coal/MoC_Annual_Report_2023-24_Chap2_Production.pdf",
+    "backend/data/golden_dataset/fy2023_24/cil/CIL_Integrated_Annual_Report_2023-24.pdf",
+    "backend/data/golden_dataset/fy2023_24/secl/SECL_Annual_Report_2023-24.pdf"
+  ]
+}

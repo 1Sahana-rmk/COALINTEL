@@ -1,0 +1,163 @@
+{
+  "benchmark": "STEP2C_STRUCTURED_EXTRACTION",
+  "corpus_version": "2c-1",
+  "case_count": 3,
+  "cases": [
+    {
+      "case_id": "native_period_table",
+      "document_id": 2001,
+      "filename": "controlled_period_table.pdf",
+      "expected_fact_count": 2,
+      "candidate_count": 2,
+      "full_fact_exact_count": 2,
+      "full_fact_exact_rate": 1.0,
+      "provenance_correct_count": 2,
+      "provenance_correct_rate": 1.0,
+      "entity": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "true_positive": 1,
+        "expected": 1,
+        "predicted": 1
+      },
+      "metric": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "true_positive": 1,
+        "expected": 1,
+        "predicted": 1
+      },
+      "value_exact_rate": 1.0,
+      "unit_exact_rate": 1.0,
+      "period_exact_rate": 1.0,
+      "numeric_exact_rate": 1.0,
+      "structural_review_candidates": 0,
+      "status_counts": {
+        "ACCEPTED": 2
+      },
+      "elapsed_ms": 2.792
+    },
+    {
+      "case_id": "controlled_ocr_numeric_and_geology",
+      "document_id": 2002,
+      "filename": "COALINTEL_Scanned_OCR_Acceptance_Test.pdf",
+      "expected_fact_count": 5,
+      "candidate_count": 10,
+      "full_fact_exact_count": 3,
+      "full_fact_exact_rate": 0.6,
+      "provenance_correct_count": 3,
+      "provenance_correct_rate": 0.6,
+      "entity": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "true_positive": 2,
+        "expected": 2,
+        "predicted": 2
+      },
+      "metric": {
+        "precision": 0.2857,
+        "recall": 0.6667,
+        "f1": 0.4,
+        "true_positive": 2,
+        "expected": 3,
+        "predicted": 7
+      },
+      "value_exact_rate": 0.6,
+      "unit_exact_rate": 0.6,
+      "period_exact_rate": 1.0,
+      "numeric_exact_rate": 1.0,
+      "structural_review_candidates": 5,
+      "status_counts": {
+        "REVIEW_REQUIRED": 10
+      },
+      "elapsed_ms": 1.426
+    },
+    {
+      "case_id": "structural_labels_rejected",
+      "document_id": 2003,
+      "filename": "controlled_structural_labels.csv",
+      "expected_fact_count": 0,
+      "candidate_count": 2,
+      "full_fact_exact_count": 0,
+      "full_fact_exact_rate": null,
+      "provenance_correct_count": 0,
+      "provenance_correct_rate": null,
+      "entity": {
+        "precision": 0.0,
+        "recall": 1.0,
+        "f1": 0.0,
+        "true_positive": 0,
+        "expected": 0,
+        "predicted": 0
+      },
+      "metric": {
+        "precision": 0.0,
+        "recall": 1.0,
+        "f1": 0.0,
+        "true_positive": 0,
+        "expected": 0,
+        "predicted": 1
+      },
+      "value_exact_rate": null,
+      "unit_exact_rate": null,
+      "period_exact_rate": null,
+      "numeric_exact_rate": null,
+      "structural_review_candidates": 1,
+      "status_counts": {
+        "REVIEW_REQUIRED": 2
+      },
+      "elapsed_ms": 0.556
+    }
+  ],
+  "aggregate": {
+    "expected_fact_count": 7,
+    "candidate_count": 14,
+    "full_fact_exact_count": 5,
+    "full_fact_exact_rate": 0.7143,
+    "provenance_correct_count": 5,
+    "provenance_correct_rate": 0.7143,
+    "numeric_exact_rate": 1.0,
+    "entity": {
+      "precision": 0.6667,
+      "recall": 1.0,
+      "f1": 0.6667,
+      "aggregation": "macro-average across labelled cases"
+    },
+    "metric": {
+      "precision": 0.4286,
+      "recall": 0.8889,
+      "f1": 0.4667,
+      "aggregation": "macro-average across labelled cases"
+    },
+    "value_exact_rate": 0.8,
+    "unit_exact_rate": 0.8,
+    "period_exact_rate": 1.0,
+    "structural_review_candidates": 6
+  },
+  "real_document_inventory": [
+    {
+      "path": "backend/data/golden_dataset/fy2023_24/ministry_of_coal/MoC_Production_Supplies_2023-24.pdf",
+      "exists": true
+    },
+    {
+      "path": "backend/data/golden_dataset/fy2023_24/ministry_of_coal/MoC_Annual_Report_2023-24_Chap2_Production.pdf",
+      "exists": true
+    },
+    {
+      "path": "backend/data/golden_dataset/fy2023_24/cil/CIL_Integrated_Annual_Report_2023-24.pdf",
+      "exists": true
+    },
+    {
+      "path": "backend/data/golden_dataset/fy2023_24/secl/SECL_Annual_Report_2023-24.pdf",
+      "exists": true
+    }
+  ],
+  "real_document_smoke": [],
+  "notes": [
+    "Benchmark runs outside production ingestion.",
+    "No real-document accuracy is claimed without frozen field-level labels."
+  ]
+}

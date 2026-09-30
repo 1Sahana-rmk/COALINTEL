@@ -1,0 +1,45 @@
+{
+  "audit_metadata": {
+    "project": "COALINTEL V2",
+    "phase": "Phase 5B High-Precision Conflict Engine Remediation",
+    "audited_branch": "feature/coalintel-v2-phase-5b-conflict-engine",
+    "target_branch": "main",
+    "audit_timestamp": "2026-09-02T15:57:00Z",
+    "verdict": "MERGE_SAFE"
+  },
+  "statistics": {
+    "original_conflicts_count": 3067,
+    "remediated_conflicts_count": 1,
+    "valid_conflicts_count": 1,
+    "false_positives_count": 0,
+    "false_positive_rate_before_pct": 96.88,
+    "false_positive_rate_after_pct": 0.0
+  },
+  "exclusion_breakdown": {
+    "generic_entity_exclusions": 328,
+    "domain_incompatibility_exclusions": 5,
+    "unit_incompatibility_exclusions": 0,
+    "scope_exclusions": 0,
+    "threshold_exclusions": 0
+  },
+  "sampled_records": [
+    {
+      "conflict_id": 1,
+      "document_a": "ECL_Annual_Report_2023-24.pdf",
+      "document_b": "BCCL_Production_Audit_Q4.pdf",
+      "organization_a": "ECL",
+      "organization_b": "BCCL",
+      "mine_name": "Rajmahal OpenCast",
+      "metric_name": "Coal Production",
+      "fiscal_year": "2023-24",
+      "value_a": 42.5,
+      "unit_a": "MT",
+      "value_b": 41.8,
+      "unit_b": "MT",
+      "discrepancy_percentage": 1.65,
+      "conflict_status": "OPEN",
+      "classification": "VALID_CONFLICT",
+      "classification_reason": "Genuine cross-document discrepancy for specific mine Rajmahal OC (42.50 MT vs 41.80 MT)"
+    }
+  ]
+}

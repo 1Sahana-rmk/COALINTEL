@@ -1,0 +1,6 @@
+# The Document AI service uses the repository root as its Docker context.
+# Keep local environments, data, secrets and unrelated application trees out
+# of the build context. Docker always sends the selected Dockerfile itself.
+**
+!document_ai_service/
+!document_ai_service/**

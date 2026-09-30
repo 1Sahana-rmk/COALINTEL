@@ -1,0 +1,206 @@
+[
+  {
+    "document_id": "cil_ar_2023_24",
+    "organization": "CIL",
+    "document_title": "Coal India Limited Integrated Annual Report 2023-24",
+    "financial_year": "2023-24",
+    "source_url": "https://nsearchives.nseindia.com/annual_reports/AR_24687_COALINDIA_2023_2024_2707202415317.pdf",
+    "source_type": "PDF",
+    "priority": "P0",
+    "local_path": "C:\\Users\\Henil Patel\\COALINTEL\\backend\\data\\golden_dataset\\fy2023_24\\cil\\CIL_Integrated_Annual_Report_2023-24.pdf",
+    "filename": "CIL_Integrated_Annual_Report_2023-24.pdf",
+    "sha256": "7c080850e3e0cbc032e4a3463b077fc75c690532395e46199bfc57444e6a95d1",
+    "file_size_bytes": 18818381,
+    "page_count": 262,
+    "download_status": "SUCCESS",
+    "ingestion_status": "ALREADY_INGESTED",
+    "validation_status": "VALIDATED",
+    "retrieval_timestamp": "2026-09-02 12:32:56",
+    "official_source": true,
+    "expected_sections": [
+      "Operational Statistics",
+      "Subsidiary Performance",
+      "Production Summary"
+    ],
+    "expected_metrics": [
+      "Total Production",
+      "Raw Coal Offtake"
+    ],
+    "notes": "Official FY2023-24 document."
+  },
+  {
+    "document_id": "ecl_ar_2023_24",
+    "organization": "ECL",
+    "document_title": "Eastern Coalfields Limited Annual Report 2023-24",
+    "financial_year": "2023-24",
+    "source_url": "https://easterncoal.nic.in/annualreport/annualreport23-24.pdf",
+    "source_type": "PDF",
+    "priority": "P0",
+    "local_path": "C:\\Users\\Henil Patel\\COALINTEL\\backend\\data\\golden_dataset\\fy2023_24\\ecl\\ECL_Annual_Report_2023-24.pdf",
+    "filename": "ECL_Annual_Report_2023-24.pdf",
+    "sha256": "N/A",
+    "file_size_bytes": 0,
+    "page_count": 0,
+    "download_status": "BLOCKED_BY_SOURCE",
+    "ingestion_status": "SKIPPED",
+    "validation_status": "INVALID",
+    "retrieval_timestamp": "2026-09-02 12:33:38",
+    "official_source": true,
+    "expected_sections": [
+      "Coal Production",
+      "Opencast Mining",
+      "Overburden Removal"
+    ],
+    "expected_metrics": [
+      "Total Production",
+      "Opencast Production",
+      "Underground Production",
+      "OB Removal"
+    ],
+    "notes": "Blocked by source server security policy."
+  },
+  {
+    "document_id": "bccl_ar_2023_24",
+    "organization": "BCCL",
+    "document_title": "Bharat Coking Coal Limited Annual Report 2023-24",
+    "financial_year": "2023-24",
+    "source_url": "https://bcclweb.in/?page_id=25564",
+    "source_type": "PDF",
+    "priority": "P0",
+    "local_path": "C:\\Users\\Henil Patel\\COALINTEL\\backend\\data\\golden_dataset\\fy2023_24\\bccl\\BCCL_Annual_Report_2023-24.pdf",
+    "filename": "BCCL_Annual_Report_2023-24.pdf",
+    "sha256": "160b66806582bd608f5b5a0866ce48275be4968319068dfef75c96f469afae5c",
+    "file_size_bytes": 66753,
+    "page_count": 5,
+    "download_status": "SUCCESS",
+    "ingestion_status": "ALREADY_INGESTED",
+    "validation_status": "VALIDATED",
+    "retrieval_timestamp": "2026-09-02 12:33:38",
+    "official_source": true,
+    "expected_sections": [
+      "Coking Coal Production",
+      "Operational Highlights"
+    ],
+    "expected_metrics": [
+      "Coal Production",
+      "Coking Coal Output"
+    ],
+    "notes": "Official FY2023-24 document."
+  },
+  {
+    "document_id": "secl_ar_2023_24",
+    "organization": "SECL",
+    "document_title": "South Eastern Coalfields Limited Annual Report 2023-24",
+    "financial_year": "2023-24",
+    "source_url": "https://www.coalindia.in/documents/10996/South_Eastern_Coalfields_Limited_AR_2024_11092024.pdf",
+    "source_type": "PDF",
+    "priority": "P0",
+    "local_path": "C:\\Users\\Henil Patel\\COALINTEL\\backend\\data\\golden_dataset\\fy2023_24\\secl\\SECL_Annual_Report_2023-24.pdf",
+    "filename": "SECL_Annual_Report_2023-24.pdf",
+    "sha256": "63c6f2d9691cf7d42437c53bca1fc1c2d8d8f19ad8165fb4379a398dfde88d82",
+    "file_size_bytes": 8381614,
+    "page_count": 476,
+    "download_status": "SUCCESS",
+    "ingestion_status": "ALREADY_INGESTED",
+    "validation_status": "VALIDATED",
+    "retrieval_timestamp": "2026-09-02 12:33:39",
+    "official_source": true,
+    "expected_sections": [
+      "Mega OpenCast Mines",
+      "Gevra OC",
+      "Production Statistics"
+    ],
+    "expected_metrics": [
+      "Total Production",
+      "Gevra OC Production",
+      "OB Removal"
+    ],
+    "notes": "Official FY2023-24 document."
+  },
+  {
+    "document_id": "cmpdi_ar_2023_24",
+    "organization": "CMPDI",
+    "document_title": "Central Mine Planning & Design Institute Annual Report 2023-24",
+    "financial_year": "2023-24",
+    "source_url": "https://www.cmpdi.co.in/sites/default/files/2026-03/CMPDIL_Annual_Report_2023-24.pdf",
+    "source_type": "PDF",
+    "priority": "P1",
+    "local_path": "C:\\Users\\Henil Patel\\COALINTEL\\backend\\data\\golden_dataset\\fy2023_24\\cmpdi\\CMPDI_Annual_Report_2023-24.pdf",
+    "filename": "CMPDI_Annual_Report_2023-24.pdf",
+    "sha256": "1fdbe1579fece29b7cf1512d60f286508ea52662b5bdbe99a34ebcaba7047076",
+    "file_size_bytes": 15606007,
+    "page_count": 342,
+    "download_status": "SUCCESS",
+    "ingestion_status": "ALREADY_INGESTED",
+    "validation_status": "VALIDATED",
+    "retrieval_timestamp": "2026-09-02 12:33:39",
+    "official_source": true,
+    "expected_sections": [
+      "Geological Exploration",
+      "Drilling Operations",
+      "Technical Consultancy"
+    ],
+    "expected_metrics": [
+      "Drilling Meterage",
+      "Geological Reports Prepared"
+    ],
+    "notes": "Official FY2023-24 document."
+  },
+  {
+    "document_id": "moc_stats_2023_24",
+    "organization": "MINISTRY_OF_COAL",
+    "document_title": "Ministry of Coal Major Production & Supply Statistics 2023-24",
+    "financial_year": "2023-24",
+    "source_url": "https://www.coal.gov.in/major-statistics/production-and-supplies",
+    "source_type": "HTML_PDF",
+    "priority": "P0",
+    "local_path": "C:\\Users\\Henil Patel\\COALINTEL\\backend\\data\\golden_dataset\\fy2023_24\\ministry_of_coal\\MoC_Production_Supplies_2023-24.pdf",
+    "filename": "MoC_Production_Supplies_2023-24.pdf",
+    "sha256": "81e97f107faf37d282f9cd7d4889ac52d1b92574cd21b9c081ae81796d9007d0",
+    "file_size_bytes": 60937,
+    "page_count": 8,
+    "download_status": "SUCCESS",
+    "ingestion_status": "ALREADY_INGESTED",
+    "validation_status": "VALIDATED",
+    "retrieval_timestamp": "2026-09-02 12:33:39",
+    "official_source": true,
+    "expected_sections": [
+      "All India Coal Production",
+      "CIL Production Share"
+    ],
+    "expected_metrics": [
+      "All-India Production",
+      "CIL Total Production"
+    ],
+    "notes": "Official FY2023-24 document."
+  },
+  {
+    "document_id": "moc_ar_prod_2023_24",
+    "organization": "MINISTRY_OF_COAL",
+    "document_title": "Ministry of Coal Annual Report 2023-24 \u2014 Coal Production & Supplies Chapter",
+    "financial_year": "2023-24",
+    "source_url": "https://coal.gov.in/sites/default/files/2024-07/chap2AnnualReport2024en2.pdf",
+    "source_type": "PDF",
+    "priority": "P0",
+    "local_path": "C:\\Users\\Henil Patel\\COALINTEL\\backend\\data\\golden_dataset\\fy2023_24\\ministry_of_coal\\MoC_Annual_Report_2023-24_Chap2_Production.pdf",
+    "filename": "MoC_Annual_Report_2023-24_Chap2_Production.pdf",
+    "sha256": "6bec99e0766f2db7a217a5065c0be400bf2da021ed9d2fffa5757ea335ecd549",
+    "file_size_bytes": 432605,
+    "page_count": 12,
+    "download_status": "SUCCESS",
+    "ingestion_status": "ALREADY_INGESTED",
+    "validation_status": "VALIDATED",
+    "retrieval_timestamp": "2026-09-02 12:33:39",
+    "official_source": true,
+    "expected_sections": [
+      "Coal and Lignite Production",
+      "Subsidiary Breakdown"
+    ],
+    "expected_metrics": [
+      "All-India Production",
+      "CIL Production",
+      "Lignite Production"
+    ],
+    "notes": "Official FY2023-24 document."
+  }
+]
