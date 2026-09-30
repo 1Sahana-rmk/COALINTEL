@@ -69,3 +69,12 @@ Thumbs.db
 
 # Local/sample uploaded document
 coal.pdf
+
+# Local Paddle Document AI virtual environment
+.venv-paddle312/
+
+# Pytest temporary working directories
+.pytest-tmp-*/
+**/.pytest-tmp-*/
+pytest-local-tmp/
+**/pytest-local-tmp/

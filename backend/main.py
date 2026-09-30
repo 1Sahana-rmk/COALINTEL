@@ -30,7 +30,15 @@ async def lifespan(app: FastAPI):
     try:
         from database import engine, Base
         import app.models  # Registers all 7 models with Base metadata
-        Base.metadata.create_all(bind=engine)
+        # Migration-managed Step 3 tables (notably pgvector) must never be
+        # auto-created by the generic startup path.  This keeps an existing
+        # Step 1 database startable while requiring the explicit, auditable
+        # migration before semantic retrieval is enabled.
+        managed_tables = [
+            table for table in Base.metadata.sorted_tables
+            if not table.info.get("requires_step3_migration")
+        ]
+        Base.metadata.create_all(bind=engine, tables=managed_tables)
         logger.info("PostgreSQL database tables verified and created successfully.")
 
         # Read-Only Database Schema Compatibility Check (Phase 9C & Phase 11 Production Hardening)
@@ -79,9 +87,18 @@ async def lifespan(app: FastAPI):
         from app.models.user import User
         from database_seed import seed_default_users
         from app.services.processing_pipeline import recover_stale_processing_documents
+        from app.services.official_sync_service import ensure_ministry_source, recover_interrupted_source_syncs
 
         db_bootstrap = SessionLocal()
         try:
+            # Register the connector without making a network request during
+            # application startup. A cron/worker can call the due-sync
+            # scheduler, and admins can use the Sync Now endpoint.
+            ensure_ministry_source(db_bootstrap)
+            recovered_syncs = recover_interrupted_source_syncs(db_bootstrap)
+            if recovered_syncs:
+                logger.warning("Marked %s orphaned official synchronization claim(s) as ERROR after restart.", recovered_syncs)
+
             user_count = db_bootstrap.query(User).count()
             if user_count == 0:
                 logger.info("No users found; bootstrapping default users.")
@@ -172,6 +189,8 @@ from app.api.audit import router as audit_router
 from app.api.comparison import router as comparison_router
 from app.api.parliamentary import router as parliamentary_router
 from app.api.mines import router as mines_router
+from app.api.sources import router as sources_router
+from app.api.knowledge import router as knowledge_router
 
 app.include_router(auth_router, prefix=settings.API_V1_STR)
 app.include_router(documents_router, prefix=settings.API_V1_STR)
@@ -184,6 +203,8 @@ app.include_router(audit_router, prefix=settings.API_V1_STR)
 app.include_router(comparison_router, prefix=settings.API_V1_STR)
 app.include_router(parliamentary_router, prefix=settings.API_V1_STR)
 app.include_router(mines_router, prefix=settings.API_V1_STR)
+app.include_router(sources_router, prefix=settings.API_V1_STR)
+app.include_router(knowledge_router, prefix=settings.API_V1_STR)
 
 
 @app.get("/", status_code=status.HTTP_200_OK, tags=["Root"])

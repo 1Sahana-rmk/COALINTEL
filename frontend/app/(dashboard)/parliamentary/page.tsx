@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { Badge } from '@/components/ui/Badge';
 import { LoadingState } from '@/components/ui/LoadingState';
@@ -10,10 +10,16 @@ import { CitationDrawer } from '@/components/query/CitationDrawer';
 import { useScope } from '@/context/ScopeContext';
 import { formatStandardValue } from '@/lib/utils/cn';
 import {
-  generateBriefing,
+  startBriefingJob,
+  getBriefingJob,
   exportBriefingPdf,
+  exportBriefingPdfById,
   ParliamentaryBriefingResponse,
 } from '@/lib/api/parliamentaryApi';
+import {
+  getParliamentaryErrorMessage,
+  getParliamentaryExportErrorMessage,
+} from '@/lib/parliamentaryError';
 import {
   Landmark,
   Sparkles,
@@ -59,6 +65,8 @@ export default function ParliamentaryPage() {
   const [error, setError] = useState<string | null>(null);
   const [briefing, setBriefing] = useState<ParliamentaryBriefingResponse | null>(null);
   const [downloadingPdf, setDownloadingPdf] = useState(false);
+  const [briefingJobId, setBriefingJobId] = useState<number | null>(null);
+  const [briefingJobStatus, setBriefingJobStatus] = useState<string | null>(null);
 
   // Citation Drawer state
   const [activeEvidence, setActiveEvidence] = useState<{
@@ -80,25 +88,63 @@ export default function ParliamentaryPage() {
     setError(null);
 
     try {
-      const res = await generateBriefing({
+      const job = await startBriefingJob({
         question_text: questionText,
         fiscal_year: selectedFiscalYear,
         subsidiary_filter: selectedSubsidiary,
         question_type: questionType,
       });
-      setBriefing(res);
+      setBriefingJobId(job.job_id);
+      setBriefingJobStatus(job.status);
+      if (job.briefing) setBriefing(job.briefing);
     } catch (err: any) {
-      setError(err?.response?.data?.detail || err.message || 'Failed to generate Parliamentary Briefing Note.');
+      setError(getParliamentaryErrorMessage(err));
     } finally {
       setLoading(false);
     }
   };
 
+  useEffect(() => {
+    if (!briefingJobId || ['COMPLETED', 'FAILED'].includes(briefingJobStatus || '')) return;
+    let active = true;
+    let timer: number | undefined;
+    const poll = async () => {
+      try {
+        const job = await getBriefingJob(briefingJobId);
+        if (!active) return;
+        setBriefingJobStatus(job.status);
+        if (job.status === 'COMPLETED' && job.briefing) {
+          setBriefing(job.briefing);
+          setLoading(false);
+          return;
+        }
+        if (job.status === 'FAILED') {
+          setError(job.error || 'Briefing generation failed.');
+          setLoading(false);
+          return;
+        }
+        timer = window.setTimeout(poll, 2000);
+      } catch (err: any) {
+        if (!active) return;
+        setError(getParliamentaryErrorMessage(err));
+        setLoading(false);
+      }
+    };
+    poll();
+    return () => {
+      active = false;
+      if (timer) window.clearTimeout(timer);
+    };
+  }, [briefingJobId, briefingJobStatus]);
+
   const handleExportPdf = async () => {
     if (!briefing) return;
+    setError(null);
     setDownloadingPdf(true);
     try {
-      const blob = await exportBriefingPdf(briefing);
+      const blob = briefingJobId
+        ? await exportBriefingPdfById(briefingJobId)
+        : await exportBriefingPdf(briefing);
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -108,7 +154,7 @@ export default function ParliamentaryPage() {
       a.remove();
       window.URL.revokeObjectURL(url);
     } catch (err: any) {
-      alert('Failed to export PDF briefing document.');
+      setError(getParliamentaryExportErrorMessage(err));
     } finally {
       setDownloadingPdf(false);
     }
@@ -119,6 +165,7 @@ export default function ParliamentaryPage() {
       {/* Header */}
       <PageHeader
         title="Parliamentary Question & Executive Briefing Intelligence Engine"
+        titleKey="page.parliamentary.title"
         description="Multi-subsidiary evidence synthesis, deterministic metric validation, and institutional briefing note compilation."
         breadcrumbs={[{ label: 'Parliamentary Intelligence' }]}
         badge={<Badge variant="amber">Parliamentary Engine</Badge>}
@@ -250,6 +297,9 @@ export default function ParliamentaryPage() {
                   >
                     Confidence: {briefing.confidence_rating} ({Math.round(briefing.confidence * 100)}%)
                   </Badge>
+                  <Badge variant="secondary" size="md" className="font-mono">
+                    {briefing.validation_state || 'REVIEW_REQUIRED'}
+                  </Badge>
 
                   <button
                     onClick={handleExportPdf}
@@ -269,6 +319,12 @@ export default function ParliamentaryPage() {
                   <b>Institutional Disclaimer:</b> AI-generated evidence-backed Parliamentary Briefing Note for analytical decision support. Not an official Ministry issued document.
                 </span>
               </div>
+
+              {briefing.warnings?.length ? (
+                <div className="p-3 bg-[#D6A23A]/10 border border-[#D6A23A]/30 rounded-lg text-xs text-[#D6A23A]">
+                  <b>Evidence warnings:</b> {briefing.warnings.join(' ')}
+                </div>
+              ) : null}
 
               {/* Executive Summary */}
               <div className="space-y-2">

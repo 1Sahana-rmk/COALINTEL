@@ -7,6 +7,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/com
 import { Pickaxe, ArrowRight } from 'lucide-react';
 import { ExtractedMetricItem, MetricValidationStatus } from '@/types/document';
 import { formatStandardValue } from '@/lib/utils/cn';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface ExtractedMetricsTableProps {
   metrics: ExtractedMetricItem[];
@@ -33,35 +34,36 @@ export const ExtractedMetricsTable: React.FC<ExtractedMetricsTableProps> = ({
   onSelectMetric,
   loading = false,
 }) => {
+  const { t } = useLanguage();
   return (
-    <Card className="border-[#30383D] bg-[#1C2226] shadow-sm">
-      <CardHeader className="py-3 px-4 bg-[#151A1D] border-b border-[#30383D]">
+    <Card className="h-full min-h-0 flex flex-col border-[#30383D] bg-[#1C2226] shadow-sm">
+      <CardHeader className="shrink-0 py-3 px-4 bg-[#151A1D] border-b border-[#30383D]">
         <div className="flex items-center justify-between">
           <CardTitle className="text-sm font-semibold text-[#E8ECEB]">
             <Pickaxe className="h-4 w-4 text-[#C58B3A]" />
-            <span>Extracted Mining Metrics & Unit Normalization</span>
+            <span>{t('workspace.metrics')}</span>
           </CardTitle>
           <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-[#151A1D] text-[#9BA5A8] border border-[#30383D]">
-            {metrics.length} Metrics Found
+            {metrics.length} {t('workspace.metricsFound')}
           </span>
         </div>
         <CardDescription className="text-xs text-[#9BA5A8]">
-          Structured extraction with unit normalization (MT / M.Cu.M) and evidence traceability.
+          {t('workspace.metricsDescription')}
         </CardDescription>
       </CardHeader>
 
-      <CardContent className="p-0">
+      <CardContent className="min-h-0 flex-1 overflow-y-auto p-0">
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
-            <thead>
+          <table className="min-w-[1000px] w-full text-left border-collapse">
+            <thead className="sticky top-0 z-10">
               <tr className="border-b border-[#30383D] bg-[#151A1D] text-[11px] font-mono text-[#9BA5A8] uppercase tracking-wider">
-                <th className="py-3 px-4">Mine Entity</th>
-                <th className="py-3 px-4">Metric Type</th>
-                <th className="py-3 px-4">Raw Extracted Value</th>
-                <th className="py-3 px-4">Normalized Value</th>
-                <th className="py-3 px-4">Confidence</th>
-                <th className="py-3 px-4">Validation Status</th>
-                <th className="py-3 px-4 text-right">Lineage</th>
+                <th className="py-3 px-4">{t('workspace.mineEntity')}</th>
+                <th className="py-3 px-4">{t('workspace.metricType')}</th>
+                <th className="py-3 px-4">{t('workspace.rawExtracted')}</th>
+                <th className="py-3 px-4">{t('workspace.normalizedValue')}</th>
+                <th className="py-3 px-4">{t('workspace.confidence')}</th>
+                <th className="py-3 px-4">{t('workspace.validationStatus')}</th>
+                <th className="py-3 px-4 text-right">{t('workspace.lineage')}</th>
               </tr>
             </thead>
 
@@ -81,7 +83,7 @@ export const ExtractedMetricsTable: React.FC<ExtractedMetricsTableProps> = ({
               ) : metrics.length === 0 ? (
                 <tr>
                   <td colSpan={7} className="py-8 text-center text-[#9BA5A8] text-xs">
-                    No structured metrics extracted from this document.
+                    {t('workspace.noMetrics')}
                   </td>
                 </tr>
               ) : (
@@ -113,7 +115,7 @@ export const ExtractedMetricsTable: React.FC<ExtractedMetricsTableProps> = ({
                         <span className="text-[11px] text-[#C58B3A] font-semibold">{m.standard_unit || 'MT'}</span>
                         {isConverted && (
                           <span className="ml-1 text-[9px] px-1 py-0.2 rounded bg-[#C58B3A]/15 text-[#C58B3A] border border-[#C58B3A]/30">
-                            Converted
+                            {t('workspace.converted')}
                           </span>
                         )}
                       </td>
@@ -145,7 +147,7 @@ export const ExtractedMetricsTable: React.FC<ExtractedMetricsTableProps> = ({
                           rightIcon={<ArrowRight className="h-3.5 w-3.5" />}
                           className="text-xs text-[#C58B3A] hover:text-[#D6A052] hover:bg-[#C58B3A]/10"
                         >
-                          Evidence
+                          {t('workspace.evidence')}
                         </Button>
                       </td>
                     </tr>

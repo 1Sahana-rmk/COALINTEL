@@ -790,18 +790,109 @@ def extract_entity_tuples_from_tables(
     if not tables:
         return []
 
+    def find_header_start(raw_rows: List[List[Any]]) -> int:
+        """Find a real header row after optional table title/preamble rows.
+
+        PyMuPDF can return a page title, prose, or a unit line before the
+        actual tabular header.  The old row-wise expansion always assumed
+        rows 0/1 were headers, which made a serial-number column become the
+        entity column for otherwise valid Ministry tables.  This is a
+        structural guard only; it does not assign domain meaning to a table.
+        """
+        header_markers = (
+            r"\bsl\s*\.?\s*no\b",
+            r"\bsr\s*\.?\s*no\b",
+            r"\bserial\b",
+            r"\bsubs(?:idiary)?\b",
+            r"\bcompany\b",
+            r"\bentity\b",
+            r"\bmine\b",
+            r"\bmetric\b",
+            r"\bvalue\b",
+            r"\btarget\b",
+            r"\bactual\b",
+            r"\bproduction\b",
+            r"\bdispatch\b",
+            r"\bquantity\b",
+            r"\bunit\b",
+            r"\byear\b",
+            r"\bperiod\b",
+        )
+
+        for row_index, source_row in enumerate(raw_rows[:10]):
+            values = [
+                str(cell).replace("\n", " ").strip()
+                for cell in source_row
+                if cell is not None and str(cell).strip()
+            ]
+            if len(values) < 2:
+                continue
+            joined = " ".join(values)
+            marker_count = sum(
+                bool(re.search(pattern, joined, re.IGNORECASE))
+                for pattern in header_markers
+            )
+            if marker_count >= 2:
+                return row_index
+        return 0
+
+    # Keep the legacy domain adapter compatible with the common model while
+    # its older emission block is still being migrated.  That block consumes
+    # the current ``row`` variable after the scan loop; run it once per data
+    # row with the original header context so no row is silently dropped.
+    expanded_tables = []
+    for tab_info in tables:
+        if tab_info.get("_rowwise_expansion"):
+            continue
+        raw_rows = tab_info.get("raw_rows", [])
+        if len(raw_rows) >= 3:
+            header_start = find_header_start(raw_rows)
+            second_row_index = header_start + 1
+            second_row_text = (
+                " ".join(str(cell or "") for cell in raw_rows[second_row_index])
+                if second_row_index < len(raw_rows)
+                else ""
+            )
+            header_count = (
+                2
+                if re.search(
+                    r"\b(?:FY|Achmt|Growth|Actual|Target)\b",
+                    second_row_text,
+                    re.IGNORECASE,
+                )
+                else 1
+            )
+            data_start = header_start + header_count
+            for row_index in range(data_start, len(raw_rows)):
+                expanded = dict(tab_info)
+                expanded["raw_rows"] = (
+                    raw_rows[header_start:data_start] + [raw_rows[row_index]]
+                )
+                expanded["_rowwise_expansion"] = True
+                expanded_tables.append(expanded)
+        else:
+            expanded_tables.append(tab_info)
+    if expanded_tables and any(tab.get("_rowwise_expansion") for tab in expanded_tables):
+        return extract_entity_tuples_from_tables(
+            tables=expanded_tables,
+            page_number=page_number,
+            page_text=page_text,
+            default_subsidiary=default_subsidiary,
+            default_year=default_year,
+        )
+
     extracted_metrics = []
 
     for tab_info in tables:
         raw_rows = tab_info.get("raw_rows", [])
-        if not raw_rows or len(raw_rows) < 3:
+        if not raw_rows or len(raw_rows) < 2:
             continue
 
         table_unit = detect_table_unit(raw_rows, page_text)
 
-        # Detect table identity using the table's own position on the PDF page.
-        # This is important because one PDF page can contain multiple tables.
-            
+        # Generic ingestion must not infer a domain table name from page
+        # coordinates.  Domain interpretation can use explicit source text,
+        # but a table's position is not a reliable semantic identifier.
         table_header_text = " ".join(
             str(cell)
             for source_row in raw_rows[:3]
@@ -812,50 +903,26 @@ def extract_entity_tuples_from_tables(
 
         # Use the table bounding box to associate the table with
         # the correct section heading on the page.
-        table_bbox = tab_info.get("bbox", []) if isinstance(tab_info, dict) else []
-        table_top_y = None
-
-        if table_bbox and len(table_bbox) >= 2:
-            try:
-                table_top_y = float(table_bbox[1])
-            except (TypeError, ValueError):
-                table_top_y = None
-
-        # Page 54 of the Ministry of Coal report contains:
-        #   y ~ 123 -> Underground Production table
-        #   y ~ 317 -> Open Cast Departmental Production table
-        #
-        # Use the vertical position only as structural context.
-        if table_top_y is not None:
-            if table_top_y < 300:
-                table_title = "Underground Production"
-            else:
-                table_title = "Open Cast Departmental Production"
-
-        # If bounding-box information is unavailable, use local table/header
-        # text as a fallback. Do not use the entire page as the primary source.
-        if not table_title:
-
-            if re.search(
+        # Use explicit text in the table itself only; do not use fixed page
+        # coordinates or report-specific assumptions.
+        if re.search(
                 r"\bopen\s+cast\s+production\b",
                 table_header_text,
                 re.IGNORECASE
-            ):
-                table_title = "Open Cast Departmental Production"
+        ):
+            table_title = "Open Cast Departmental Production"
 
-            elif re.search(
+        elif re.search(
                 r"\bunderground\s+production\b",
                 table_header_text,
                 re.IGNORECASE
-            ):
-                table_title = "Underground Production"
+        ):
+            table_title = "Underground Production"
 
-            logger.info(
-                f"TABLE TITLE DEBUG | page={page_number} | "
-                f"table_top_y={table_top_y} | "
-                f"title={table_title!r} | "
-                f"header={table_header_text[:250]!r}"
-            )
+        logger.info(
+            f"TABLE TITLE DEBUG | page={page_number} | "
+            f"title={table_title!r} | header={table_header_text[:250]!r}"
+        )
 
         # Step 1: Detect header rows (Row 0 and optionally Row 1)
         row0 = [str(c).replace("\n", " ").strip() if c is not None else "" for c in raw_rows[0]]
@@ -1160,8 +1227,29 @@ def extract_entity_tuples_from_tables(
                 raw_entity_cell
             ).strip()
 
+            # A serial-number header/row is structural evidence, not an
+            # entity.  Do not let it become a canonical mine name simply
+            # because a numeric value appears in the same row.
+            if clean_entity.casefold() in {
+                "sl no", "sr no", "sr. no", "s.no", "serial no", "no."
+            }:
+                continue
+
+            entity_header = (
+                str(col_headers[entity_col_idx]).strip().casefold()
+                if entity_col_idx is not None and entity_col_idx < len(col_headers)
+                else ""
+            )
+            serial_header = bool(re.search(
+                r"\b(?:sl|sr|serial)\s*\.?\s*no\b|\bs\.no\b",
+                entity_header,
+                re.IGNORECASE,
+            ))
+            if serial_header and re.fullmatch(r"\d+[.)]?", clean_entity):
+                continue
+
             if not clean_entity or clean_entity in [
-                "-", "--", "Sl No", "Total"
+                "-", "--", "Total"
             ]:
                 if row[0] and "total" in str(row[0]).lower():
                     clean_entity = str(row[0]).strip()

@@ -9,6 +9,14 @@ from app.models.user import User
 
 bearer_scheme = HTTPBearer()
 
+# Keep the existing persisted role names as the compatibility contract. These
+# sets centralize the current endpoint policy without introducing a second
+# permission or role model.
+ADMIN_ONLY_ROLES = ["Admin"]
+INGESTION_ROLES = ["Admin", "Analyst"]
+REVIEW_ROLES = ["Admin", "Reviewer"]
+REPORT_GENERATION_ROLES = ["Admin", "Analyst"]
+
 def get_current_user(
     credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme),
     db: Session = Depends(get_db)

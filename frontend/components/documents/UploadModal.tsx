@@ -16,7 +16,7 @@ interface UploadModalProps {
 }
 
 const MAX_FILE_SIZE_BYTES = 50 * 1024 * 1024; // 50 MB
-const ALLOWED_EXTENSIONS = ['.pdf', '.docx', '.xlsx', '.csv'];
+  const ALLOWED_EXTENSIONS = ['.pdf', '.docx', '.xlsx', '.csv', '.png', '.jpg', '.jpeg', '.tif', '.tiff'];
 
 export const UploadModal: React.FC<UploadModalProps> = ({
   isOpen,
@@ -178,7 +178,7 @@ export const UploadModal: React.FC<UploadModalProps> = ({
             </div>
             <div>
               <h3 className="text-lg font-bold text-[#E8ECEB]">Ingest Mining Document</h3>
-              <p className="text-xs text-[#9BA5A8]">PDF, DOCX, XLSX, CSV up to 50 MB</p>
+                <p className="text-xs text-[#9BA5A8]">PDF, DOCX, XLSX, CSV, PNG, JPG, TIFF up to 50 MB</p>
             </div>
           </div>
 
@@ -228,7 +228,7 @@ export const UploadModal: React.FC<UploadModalProps> = ({
             <input
               ref={fileInputRef}
               type="file"
-              accept=".pdf,.docx,.xlsx,.csv"
+                accept=".pdf,.docx,.xlsx,.csv,.png,.jpg,.jpeg,.tif,.tiff"
               onChange={handleFileChange}
               className="hidden"
             />
@@ -255,7 +255,7 @@ export const UploadModal: React.FC<UploadModalProps> = ({
                   <span className="font-semibold text-[#C58B3A]">Click to browse</span> or drag and drop document here
                 </div>
                 <span className="text-[10px] text-[#9BA5A8] font-mono uppercase tracking-wider">
-                  Supported formats: PDF, DOCX, XLSX, CSV (Max 50 MB)
+                   Supported formats: PDF, DOCX, XLSX, CSV, PNG, JPG, TIFF (Max 50 MB)
                 </span>
               </div>
             )}

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import {
   GitCompare,
@@ -27,6 +27,7 @@ import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { useScope } from '@/context/ScopeContext';
+import { useLanguage } from '@/context/LanguageContext';
 import { formatStandardValue } from '@/lib/utils/cn';
 import {
   fetchComparisonMatrix,
@@ -37,13 +38,25 @@ import {
   DocumentMetadataItem,
   ComparisonConflictItem,
 } from '@/lib/api/comparisonApi';
+import {
+  authoritativeCatalogDocuments,
+  ALL_FISCAL_YEARS_VALUE,
+  canRequestComparisonMatrix,
+  canonicalDocumentIds,
+  comparisonRequestKey,
+  shouldApplyComparisonResponse,
+} from '@/lib/comparisonState';
 
 export default function ComparisonPage() {
-  const { selectedSubsidiary, selectedFiscalYear } = useScope();
+  const { selectedSubsidiary } = useScope();
+  const { t } = useLanguage();
 
   // Control state
   const [metricName, setMetricName] = useState<string>('Coal Production');
-  const [fiscalYearFilter, setFiscalYearFilter] = useState<string>(selectedFiscalYear || '2024-25');
+  // Comparison has an explicit unfiltered default. The global dashboard scope
+  // may retain a fiscal year for other pages, but must not silently constrain a
+  // fresh cross-document comparison.
+  const [fiscalYearFilter, setFiscalYearFilter] = useState<string>(ALL_FISCAL_YEARS_VALUE);
   const [entityFilter, setEntityFilter] = useState<string>('');
 
   // Selector options & documents
@@ -64,76 +77,155 @@ export default function ComparisonPage() {
   ]);
   const [documentsCatalog, setDocumentsCatalog] = useState<DocumentMetadataItem[]>([]);
   const [selectedDocIds, setSelectedDocIds] = useState<string[]>([]);
+  const [optionsReady, setOptionsReady] = useState(false);
+  const [refreshRevision, setRefreshRevision] = useState(0);
 
   // Data & loading state
   const [data, setData] = useState<ComparisonMatrixResponse | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const matrixRequestIdRef = useRef(0);
+  const activeMatrixKeyRef = useRef('');
 
   // Source Traceability Modal state (Section 12)
   const [inspectSource, setInspectSource] = useState<ComparisonSourceItem | null>(null);
 
   // 1. Fetch dynamic options and available documents on mount
   useEffect(() => {
+    let cancelled = false;
+
     async function loadOptions() {
       try {
         const opts = await fetchComparisonOptions();
+        if (cancelled) return;
+        const catalogDocuments = authoritativeCatalogDocuments(opts.documents || []);
         if (opts.metrics && opts.metrics.length > 0) setAvailableMetrics(opts.metrics);
         if (opts.fiscal_years && opts.fiscal_years.length > 0) setAvailableFiscalYears(opts.fiscal_years);
-        if (opts.documents && opts.documents.length > 0) {
-          setDocumentsCatalog(opts.documents);
+        if (catalogDocuments.length > 0) {
+          setDocumentsCatalog(catalogDocuments);
           // Default to all documents selected
-          setSelectedDocIds(opts.documents.map((d) => d.id));
+          setSelectedDocIds(catalogDocuments.map((d) => d.id));
         }
       } catch (err) {
-        console.warn('Could not load dynamic comparison options:', err);
+        if (!cancelled) console.warn('Could not load dynamic comparison options:', err);
+      } finally {
+        if (!cancelled) setOptionsReady(true);
       }
     }
     loadOptions();
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
-  // 2. Fetch comparison matrix when filters change
-  const loadMatrix = useCallback(async () => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      // Log developer diagnostics (without logging secrets or tokens)
-      console.log('[COALINTEL Comparison Audit] Executing matrix request:', {
-        metric: metricName,
-        fiscal_year: fiscalYearFilter,
-        subsidiary: selectedSubsidiary,
-        entity_filter: entityFilter || 'ALL',
-        selected_documents_count: selectedDocIds.length,
-      });
-
-      const res = await fetchComparisonMatrix({
-        metric_name: metricName,
-        fiscal_year: fiscalYearFilter,
-        entity_filter: entityFilter || undefined,
-        subsidiary_filter: selectedSubsidiary,
-        document_ids: selectedDocIds.length > 0 ? selectedDocIds : undefined,
-      });
-      setData(res);
-      if (res.available_documents && res.available_documents.length > 0 && documentsCatalog.length === 0) {
-        setDocumentsCatalog(res.available_documents);
-        setSelectedDocIds(res.available_documents.map((d) => d.id));
-      }
-    } catch (err: any) {
-      console.error('[COALINTEL Comparison Error] API request failed:', {
-        error_name: err?.name,
-        error_message: err?.message,
-        status: err?.response?.status,
-        status_text: err?.response?.statusText,
-      });
-      setError('Unable to load comparison data. The comparison service is currently unavailable.');
-    } finally {
-      setIsLoading(false);
-    }
-  }, [metricName, fiscalYearFilter, entityFilter, selectedSubsidiary, selectedDocIds, documentsCatalog.length]);
+  // 2. Fetch one authoritative matrix for the current filter/selection key.
+  // The initial request is intentionally gated until options have loaded:
+  // omitted document_ids means "all documents" in the backend contract.
+  const matrixKey = comparisonRequestKey({
+    metricName,
+    fiscalYear: fiscalYearFilter,
+    entityFilter,
+    subsidiaryFilter: selectedSubsidiary,
+    documentIds: selectedDocIds,
+  });
+  activeMatrixKeyRef.current = matrixKey;
 
   useEffect(() => {
-    loadMatrix();
-  }, [loadMatrix]);
+    const requestId = ++matrixRequestIdRef.current;
+    const requestKey = matrixKey;
+    const selectedIds = canonicalDocumentIds(selectedDocIds);
+
+    if (!canRequestComparisonMatrix(optionsReady, selectedIds)) {
+      if (optionsReady) {
+        setData(null);
+        setError(null);
+        setIsLoading(false);
+      }
+      return;
+    }
+
+    const controller = new AbortController();
+    setIsLoading(true);
+    setError(null);
+    const startedAt = Date.now();
+
+    if (process.env.NODE_ENV === 'development') {
+      console.debug('[COALINTEL Comparison] matrix_request_start', {
+        request_id: requestId,
+        request_key: requestKey,
+        started_at: new Date(startedAt).toISOString(),
+        metric_name: metricName,
+        fiscal_year: fiscalYearFilter,
+        subsidiary_filter: selectedSubsidiary,
+        selected_document_ids: selectedIds,
+      });
+    }
+
+    fetchComparisonMatrix({
+      metric_name: metricName,
+      fiscal_year: fiscalYearFilter,
+      entity_filter: entityFilter || undefined,
+      subsidiary_filter: selectedSubsidiary,
+      document_ids: selectedIds,
+      signal: controller.signal,
+    })
+      .then((res) => {
+        const current = shouldApplyComparisonResponse(
+          requestKey,
+          activeMatrixKeyRef.current,
+          requestId,
+          matrixRequestIdRef.current,
+        );
+        if (process.env.NODE_ENV === 'development') {
+          console.debug('[COALINTEL Comparison] matrix_request_complete', {
+            request_id: requestId,
+            request_key: requestKey,
+            completed_at: new Date().toISOString(),
+            duration_ms: Date.now() - startedAt,
+            response_rows: res.matrices.length,
+            applied_to_rendered_state: current,
+          });
+        }
+        if (!current) return;
+        setData(res);
+        setIsLoading(false);
+      })
+      .catch((err: any) => {
+        if (err?.name === 'CanceledError' || err?.name === 'AbortError' || controller.signal.aborted) return;
+        const current = shouldApplyComparisonResponse(
+          requestKey,
+          activeMatrixKeyRef.current,
+          requestId,
+          matrixRequestIdRef.current,
+        );
+        if (!current) return;
+        console.error('[COALINTEL Comparison Error] API request failed:', {
+          request_id: requestId,
+          error_name: err?.name,
+          error_message: err?.message,
+          status: err?.response?.status,
+          status_text: err?.response?.statusText,
+        });
+        setError('Unable to load comparison data. The comparison service is currently unavailable.');
+        setIsLoading(false);
+      });
+
+    return () => controller.abort();
+  }, [
+    entityFilter,
+    fiscalYearFilter,
+    matrixKey,
+    metricName,
+    optionsReady,
+    refreshRevision,
+    selectedDocIds,
+    selectedSubsidiary,
+  ]);
+
+  const loadMatrix = useCallback(() => {
+    setRefreshRevision((revision) => revision + 1);
+  }, []);
 
   // Document selection toggles
   const handleToggleDoc = (docId: string) => {
@@ -160,9 +252,9 @@ export default function ComparisonPage() {
               <GitCompare className="h-6 w-6" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-[#E8ECEB]">Cross-Document Metric Comparison Matrix</h1>
+              <h1 className="text-2xl font-bold text-[#E8ECEB]">{t('comparison.title')}</h1>
               <p className="text-xs text-[#9BA5A8] font-mono mt-0.5">
-                Authoritative Multi-Source Government Verification, Variance Audit & Conflict Detection
+                {t('comparison.description')}
               </p>
             </div>
           </div>
@@ -172,7 +264,7 @@ export default function ComparisonPage() {
         <div className="flex items-center gap-3">
           <div className="px-3.5 py-2 rounded-lg bg-[#151A1D] border border-[#30383D] flex items-center gap-2 text-xs font-mono shadow-sm">
             <Building2 className="h-4 w-4 text-[#C58B3A]" />
-            <span className="text-[#9BA5A8]">Active Scope:</span>
+            <span className="text-[#9BA5A8]">{t('header.scope')}</span>
             <span className="text-[#C58B3A] font-bold">{selectedSubsidiary}</span>
           </div>
 
@@ -182,7 +274,7 @@ export default function ComparisonPage() {
             onClick={loadMatrix}
             leftIcon={<RefreshCw className={`h-3.5 w-3.5 ${isLoading ? 'animate-spin' : ''}`} />}
           >
-            Refresh Matrix
+            {t('comparison.refresh')}
           </Button>
         </div>
       </div>
@@ -194,7 +286,7 @@ export default function ComparisonPage() {
             <div className="flex items-center gap-2">
               <FileSpreadsheet className="h-4 w-4 text-[#C58B3A]" />
               <h2 className="text-xs font-mono font-bold uppercase tracking-wider text-[#E8ECEB]">
-                Authoritative Government Documents Catalog & Selection
+                {t('comparison.catalogTitle')}
               </h2>
               <span className="text-[11px] font-mono text-[#9BA5A8]">
                 ({selectedDocIds.length} of {documentsCatalog.length} Selected)
@@ -206,7 +298,7 @@ export default function ComparisonPage() {
                 onClick={handleSelectAllDocs}
                 className="text-[11px] font-mono text-[#C58B3A] hover:underline flex items-center gap-1"
               >
-                <CheckSquare className="h-3 w-3" /> Select All
+                <CheckSquare className="h-3 w-3" /> {t('comparison.selectAll')}
               </button>
               <span className="text-[#30383D]">|</span>
               <button
@@ -214,7 +306,7 @@ export default function ComparisonPage() {
                 onClick={handleClearAllDocs}
                 className="text-[11px] font-mono text-[#9BA5A8] hover:underline flex items-center gap-1"
               >
-                <Square className="h-3 w-3" /> Clear Selection
+                <Square className="h-3 w-3" /> {t('comparison.clearSelection')}
               </button>
             </div>
           </div>
@@ -274,7 +366,7 @@ export default function ComparisonPage() {
           {/* Target Metric Selector */}
           <div>
             <label className="block text-[11px] font-mono text-[#9BA5A8] uppercase tracking-wider mb-1.5 font-semibold">
-              <Layers className="h-3.5 w-3.5 inline mr-1 text-[#C58B3A]" /> Target Metric
+              <Layers className="h-3.5 w-3.5 inline mr-1 text-[#C58B3A]" /> {t('comparison.targetMetric')}
             </label>
             <select
               value={metricName}
@@ -292,14 +384,14 @@ export default function ComparisonPage() {
           {/* Fiscal Year Context Filter */}
           <div>
             <label className="block text-[11px] font-mono text-[#9BA5A8] uppercase tracking-wider mb-1.5 font-semibold">
-              <Calendar className="h-3.5 w-3.5 inline mr-1 text-[#C58B3A]" /> Contextual Fiscal Year
+              <Calendar className="h-3.5 w-3.5 inline mr-1 text-[#C58B3A]" /> {t('comparison.fiscalYear')}
             </label>
             <select
               value={fiscalYearFilter}
               onChange={(e) => setFiscalYearFilter(e.target.value)}
               className="w-full bg-[#151A1D] border border-[#30383D] text-[#E8ECEB] text-xs font-mono rounded-lg px-3 py-2 focus:outline-none focus:border-[#C58B3A]"
             >
-              <option value="">All Fiscal Years</option>
+              <option value={ALL_FISCAL_YEARS_VALUE}>All Fiscal Years</option>
               {availableFiscalYears.map((fy) => (
                 <option key={fy} value={fy}>
                   FY {fy} {fy === '2026-27' ? '(Q1 YTD)' : ''}
@@ -311,7 +403,7 @@ export default function ComparisonPage() {
           {/* Mine Entity Filter */}
           <div>
             <label className="block text-[11px] font-mono text-[#9BA5A8] uppercase tracking-wider mb-1.5 font-semibold">
-              <Filter className="h-3.5 w-3.5 inline mr-1 text-[#C58B3A]" /> Entity / Mine Filter
+              <Filter className="h-3.5 w-3.5 inline mr-1 text-[#C58B3A]" /> {t('comparison.entityFilter')}
             </label>
             <input
               type="text"
@@ -346,7 +438,7 @@ export default function ComparisonPage() {
           <div className="flex items-center gap-2">
             <AlertTriangle className="h-5 w-5 text-[#C94B45] shrink-0" />
             <h3 className="text-sm font-bold text-[#E8ECEB] font-mono">
-              ⚠ Official Source Conflict ({data.conflicts.length} Active Records Detected)
+              ⚠ {t('comparison.officialConflict')} ({data.conflicts.length} {t('comparison.activeRecords')})
             </h3>
           </div>
           <p className="text-xs text-[#9BA5A8] font-mono">
@@ -419,7 +511,7 @@ export default function ComparisonPage() {
             <AlertCircle className="h-6 w-6" />
           </div>
           <div>
-            <h3 className="text-base font-bold text-[#E8ECEB] font-mono">Unable to load comparison data.</h3>
+            <h3 className="text-base font-bold text-[#E8ECEB] font-mono">{t('common.error')}</h3>
             <p className="text-xs text-[#9BA5A8] font-mono mt-1 max-w-md mx-auto">
               The comparison service is currently unavailable or returned an error. Please verify your connection or retry.
             </p>
@@ -431,7 +523,7 @@ export default function ComparisonPage() {
             leftIcon={<RefreshCw className="h-4 w-4" />}
             className="font-mono text-xs"
           >
-            Retry Comparison
+            {t('comparison.retry')}
           </Button>
         </Card>
       )}
@@ -440,16 +532,16 @@ export default function ComparisonPage() {
       {!isLoading && !error && data && data.matrices.length === 0 && (
         <Card className="p-12 text-center bg-[#1C2226] border border-[#30383D] space-y-3">
           <GitCompare className="h-10 w-10 text-[#9BA5A8] mx-auto" />
-          <h3 className="text-base font-bold text-[#E8ECEB]">No comparison data available</h3>
+          <h3 className="text-base font-bold text-[#E8ECEB]">{t('comparison.noDataTitle')}</h3>
           <p className="text-xs text-[#9BA5A8] max-w-md mx-auto font-mono">
-            No compatible metrics were found across the selected documents. Try selecting all documents above or adjusting the Fiscal Year filter to FY 2024-25.
+            {t('comparison.noDataDescription')}
           </p>
           <Button
             variant="secondary"
             size="sm"
             onClick={() => {
               handleSelectAllDocs();
-              setFiscalYearFilter('');
+              setFiscalYearFilter(ALL_FISCAL_YEARS_VALUE);
               setEntityFilter('');
             }}
             className="font-mono text-xs mt-2"
@@ -500,14 +592,19 @@ export default function ComparisonPage() {
                       </Badge>
                     )}
 
-                    {matrix.has_discrepancy || matrix.has_conflict ? (
+                    {matrix.is_resolved ? (
+                      <Badge variant="success" size="md" className="gap-1 font-bold">
+                        <CheckCircle2 className="h-4 w-4" />
+                        RESOLVED
+                      </Badge>
+                    ) : matrix.has_discrepancy || matrix.has_conflict ? (
                       <div className="flex items-center gap-2">
                         <Badge variant="danger" size="md" className="gap-1 font-bold">
                           <AlertTriangle className="h-4 w-4" />
                           DISCREPANCY DETECTED ({matrix.variance_percentage}% Variance)
                         </Badge>
                         <Link
-                          href={matrix.canonical_conflict_id ? `/conflicts?id=${matrix.canonical_conflict_id}` : '/conflicts'}
+                          href={matrix.canonical_conflict_key ? `/conflicts?id=${encodeURIComponent(matrix.canonical_conflict_key)}` : matrix.canonical_conflict_id ? `/conflicts?id=${matrix.canonical_conflict_id}` : '/conflicts'}
                           className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-[#C94B45]/20 hover:bg-[#C94B45]/30 text-[#E8ECEB] border border-[#C94B45]/50 text-xs font-mono font-semibold transition-colors"
                         >
                           <AlertTriangle className="h-3.5 w-3.5 text-[#C94B45]" />
@@ -625,7 +722,7 @@ export default function ComparisonPage() {
                                 leftIcon={<Eye className="h-3.5 w-3.5 text-[#C58B3A]" />}
                                 className="text-xs py-1 text-[#C58B3A] hover:text-[#D6A052] hover:bg-[#242C30]"
                               >
-                                View Source
+                                {t('comparison.viewSource')}
                               </Button>
                             </td>
                           </tr>
@@ -661,7 +758,7 @@ export default function ComparisonPage() {
             <div className="flex items-center justify-between border-b border-[#30383D] pb-3">
               <div className="flex items-center gap-2">
                 <FileText className="h-5 w-5 text-[#C58B3A]" />
-                <h3 className="text-base font-bold text-[#E8ECEB] font-mono">Official Source Traceability</h3>
+                <h3 className="text-base font-bold text-[#E8ECEB] font-mono">{t('comparison.officialTraceability')}</h3>
               </div>
               <button
                 type="button"
@@ -759,7 +856,7 @@ export default function ComparisonPage() {
 
             <div className="flex justify-end pt-2">
               <Button variant="secondary" size="sm" onClick={() => setInspectSource(null)}>
-                Close
+                {t('comparison.close')}
               </Button>
             </div>
           </div>

@@ -45,7 +45,7 @@ export const WordCloudTagCloud: React.FC<WordCloudTagCloudProps> = ({ topics }) 
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <Cloud className="h-4 w-4 text-[#C58B3A]" />
-            <CardTitle className="text-sm font-bold text-[#E8ECEB]">TF-IDF Mining Word Cloud Visualization</CardTitle>
+            <CardTitle className="text-sm font-bold text-[#E8ECEB]">Corpus-Derived Mining Word Cloud</CardTitle>
           </div>
 
           {/* Category Filter Pills */}

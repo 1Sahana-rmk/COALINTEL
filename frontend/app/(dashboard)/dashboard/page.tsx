@@ -6,7 +6,7 @@ import { PageHeader } from '@/components/ui/PageHeader';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/Card';
-import { FilterBar } from '@/components/dashboard/FilterBar';
+import { FilterBar, FiscalYearOption } from '@/components/dashboard/FilterBar';
 import { KpiGrid } from '@/components/dashboard/KpiGrid';
 import { ProductionChart } from '@/components/dashboard/ProductionChart';
 import { ValidationFeedWidget } from '@/components/dashboard/ValidationFeedWidget';
@@ -15,10 +15,13 @@ import { documentApi } from '@/lib/api/documentApi';
 import { DashboardKpis, ProductionSeriesItem, ValidationFeedItem } from '@/types/dashboard';
 import { DocumentItem } from '@/types/document';
 import { useScope } from '@/context/ScopeContext';
-import { Upload, FileText, Activity, ArrowRight, Database, Mountain } from 'lucide-react';
+import { ALL_FISCAL_YEARS_VALUE, FISCAL_YEARS } from '@/lib/constants';
+import { FileText, Activity, ArrowRight, Database, Mountain } from 'lucide-react';
+import { canIngestDocuments, useCurrentUserRole } from '@/hooks/useCurrentUserRole';
 
 export default function DashboardPage() {
   const { selectedSubsidiary, setSelectedSubsidiary, selectedFiscalYear, setSelectedFiscalYear } = useScope();
+  const userRole = useCurrentUserRole();
   const [isLoading, setIsLoading] = useState(false);
   const [isApiConnected, setIsApiConnected] = useState(false);
 
@@ -26,6 +29,7 @@ export default function DashboardPage() {
   const [productionData, setProductionData] = useState<ProductionSeriesItem[]>([]);
   const [validationItems, setValidationItems] = useState<ValidationFeedItem[]>([]);
   const [recentDocuments, setRecentDocuments] = useState<DocumentItem[]>([]);
+  const [fiscalYearOptions, setFiscalYearOptions] = useState<readonly FiscalYearOption[]>(FISCAL_YEARS);
 
   const fetchDashboardData = useCallback(async () => {
     setIsLoading(true);
@@ -52,6 +56,19 @@ export default function DashboardPage() {
 
       if (chartRes.status === 'fulfilled' && chartRes.value?.production_data) {
         setProductionData(chartRes.value.production_data);
+        if (chartRes.value.available_fiscal_years?.length) {
+          const available = new Set(chartRes.value.available_fiscal_years);
+          if (selectedFiscalYear !== ALL_FISCAL_YEARS_VALUE) {
+            available.add(selectedFiscalYear);
+          }
+          setFiscalYearOptions([
+            FISCAL_YEARS[0],
+            ...Array.from(available).sort().reverse().map((year) => ({
+              value: year,
+              label: year === '2026-27' ? 'FY 2026-27 (YTD Provisional)' : `FY ${year}`,
+            })),
+          ]);
+        }
       }
 
       if (feedRes.status === 'fulfilled' && Array.isArray(feedRes.value)) {
@@ -77,7 +94,9 @@ export default function DashboardPage() {
       {/* Page Header */}
       <PageHeader
         title="Executive Mining Intelligence Dashboard"
+        titleKey="page.dashboard.title"
         description="Unified operational insights, unit-normalized production metrics, arithmetic validation, and cross-document discrepancy tracking across CIL subsidiaries and canonical Government of India mines."
+        descriptionKey="page.dashboard.description"
         breadcrumbs={[{ label: 'Executive Dashboard' }]}
         badge={<Badge variant="gold">Government Verified Data</Badge>}
         actions={
@@ -88,8 +107,8 @@ export default function DashboardPage() {
               </Button>
             </Link>
             <Link href="/documents">
-              <Button variant="primary" leftIcon={<Upload className="h-4 w-4" />}>
-                Ingest Document
+              <Button variant={canIngestDocuments(userRole) ? 'primary' : 'secondary'} leftIcon={<FileText className="h-4 w-4" />}>
+                {canIngestDocuments(userRole) ? 'Ingest Document' : 'View Documents'}
               </Button>
             </Link>
           </div>
@@ -104,6 +123,7 @@ export default function DashboardPage() {
         onFiscalYearChange={setSelectedFiscalYear}
         onRefresh={fetchDashboardData}
         isLoading={isLoading}
+        fiscalYearOptions={fiscalYearOptions}
       />
 
       {/* KPI Overview Grid with visual hierarchy */}
@@ -117,6 +137,7 @@ export default function DashboardPage() {
           data={productionData}
           loading={isLoading}
           isApiConnected={isApiConnected}
+          allFiscalYears={selectedFiscalYear === ALL_FISCAL_YEARS_VALUE}
         />
         <ValidationFeedWidget items={validationItems} loading={isLoading} />
       </section>

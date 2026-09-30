@@ -152,6 +152,8 @@ def get_comparison_options(
     for ds in data_sources:
         documents.append({
             "id": ds.source_id,
+            "document_kind": "catalog",
+            "identifier_type": "catalog",
             "document_title": ds.document_title,
             "organization": ds.organization,
             "financial_year": ds.financial_year,
@@ -172,6 +174,8 @@ def get_comparison_options(
             clean_title = doc.filename.replace("_", " ").replace(".pdf", "").replace(".csv", "").replace(".xlsx", "")
             documents.append({
                 "id": str(doc.id),
+                "document_kind": "ingested",
+                "identifier_type": "database",
                 "document_title": clean_title,
                 "organization": doc.subsidiary or "Ministry of Coal / CIL",
                 "financial_year": doc.fiscal_year or "2023-24",
@@ -426,6 +430,8 @@ def get_comparison_matrix(
     # -------------------------------------------------------------
     # PATH C: Cross-Document Conflict Records Integration
     # -------------------------------------------------------------
+    # Keep resolved records available for matrix status decoration, but only
+    # expose unresolved records in the active conflict collection.
     conflicts_query = db.query(DataConflictRecord)
     if active_fy:
         conflicts_query = conflicts_query.filter(DataConflictRecord.financial_year == active_fy)
@@ -447,22 +453,23 @@ def get_comparison_matrix(
         e_mine = db.query(MineMaster).filter(MineMaster.mine_id == cr.entity_id).first()
         e_name = e_mine.mine_name if e_mine else cr.entity_id
         conflicts_map[(e_name, cr.financial_year)] = cr
-        active_conflicts_list.append({
-            "conflict_id": cr.conflict_id,
-            "entity": e_name,
-            "metric": cr.metric,
-            "financial_year": cr.financial_year,
-            "source_a": cr.source_a,
-            "value_a": float(cr.value_a),
-            "source_b": cr.source_b,
-            "value_b": float(cr.value_b),
-            "difference": float(cr.difference),
-            "difference_percent": float(cr.difference_percent),
-            "possible_reason": cr.possible_reason,
-            "status": cr.resolution_status,
-            "resolved_value": float(cr.resolved_value) if cr.resolved_value is not None else None,
-            "resolution_method": cr.resolution_method
-        })
+        if (cr.resolution_status or "OPEN").upper() != "RESOLVED":
+            active_conflicts_list.append({
+                "conflict_id": cr.conflict_id,
+                "entity": e_name,
+                "metric": cr.metric,
+                "financial_year": cr.financial_year,
+                "source_a": cr.source_a,
+                "value_a": float(cr.value_a),
+                "source_b": cr.source_b,
+                "value_b": float(cr.value_b),
+                "difference": float(cr.difference),
+                "difference_percent": float(cr.difference_percent),
+                "possible_reason": cr.possible_reason,
+                "status": cr.resolution_status,
+                "resolved_value": float(cr.resolved_value) if cr.resolved_value is not None else None,
+                "resolution_method": cr.resolution_method
+            })
 
         # Augment the comparison group with Source A and Source B so that cross-document variance renders directly
         g_key = get_group_key(e_name, cr.financial_year)
@@ -588,16 +595,36 @@ def get_comparison_matrix(
 
         # Resolve or link canonical DataConflict record deterministically
         canonical_conflict_id = None
+        canonical_conflict_key = None
+        resolution_status = None
         if conflict_rec:
             canonical_conflict_id = 10000 + conflict_rec.conflict_id
+            canonical_conflict_key = f"official:{conflict_rec.conflict_id}"
+            resolution_status = (conflict_rec.resolution_status or "OPEN").upper()
         elif has_discrepancy:
-            existing_dc = db.query(DataConflict).filter(
+            # Include resolved records in identity lookup. Searching only OPEN
+            # records recreates a new OPEN conflict on every matrix refresh
+            # after the original conflict was resolved.
+            row_doc_ids = [
+                row.get("document_id")
+                for row in rows[:2]
+                if isinstance(row.get("document_id"), int)
+            ]
+            existing_query = db.query(DataConflict).filter(
                 DataConflict.mine_name.ilike(entity),
-                DataConflict.fiscal_year == fy,
-                DataConflict.status == "OPEN"
-            ).first()
+                DataConflict.metric_name == metric_name,
+                DataConflict.fiscal_year == fy
+            )
+            if len(row_doc_ids) >= 2 and row_doc_ids[0] != row_doc_ids[1]:
+                existing_query = existing_query.filter(or_(
+                    (DataConflict.doc_a_id == row_doc_ids[0]) & (DataConflict.doc_b_id == row_doc_ids[1]),
+                    (DataConflict.doc_a_id == row_doc_ids[1]) & (DataConflict.doc_b_id == row_doc_ids[0])
+                ))
+            existing_dc = existing_query.first()
             if existing_dc:
                 canonical_conflict_id = existing_dc.id
+                canonical_conflict_key = f"data:{existing_dc.id}"
+                resolution_status = (existing_dc.status or "OPEN").upper()
             elif len(rows) >= 2:
                 doc_a_id = rows[0].get("document_id") if isinstance(rows[0].get("document_id"), int) else None
                 doc_b_id = rows[1].get("document_id") if isinstance(rows[1].get("document_id"), int) else None
@@ -612,6 +639,8 @@ def get_comparison_matrix(
                     ).first()
                     if matched_dc:
                         canonical_conflict_id = matched_dc.id
+                        canonical_conflict_key = f"data:{matched_dc.id}"
+                        resolution_status = (matched_dc.status or "OPEN").upper()
                     else:
                         new_dc = DataConflict(
                             doc_a_id=doc_a_id,
@@ -628,6 +657,8 @@ def get_comparison_matrix(
                         db.commit()
                         db.refresh(new_dc)
                         canonical_conflict_id = new_dc.id
+                        canonical_conflict_key = f"data:{new_dc.id}"
+                        resolution_status = "OPEN"
                 else:
                     new_dc = DataConflict(
                         doc_a_id=doc_a_id,
@@ -644,6 +675,8 @@ def get_comparison_matrix(
                     db.commit()
                     db.refresh(new_dc)
                     canonical_conflict_id = new_dc.id
+                    canonical_conflict_key = f"data:{new_dc.id}"
+                    resolution_status = "OPEN"
 
         period_type = "YTD" if "2026-27" in fy else "annual"
         as_of_date = "June 2026" if "2026-27" in fy else None
@@ -663,8 +696,14 @@ def get_comparison_matrix(
             "status": status_label,
             "has_discrepancy": has_discrepancy,
             "is_seeded_demo": has_seeded,
-            "has_conflict": conflict_rec is not None or canonical_conflict_id is not None,
+            "has_conflict": (
+                (conflict_rec is not None and resolution_status != "RESOLVED")
+                or (canonical_conflict_id is not None and resolution_status != "RESOLVED")
+            ),
+            "is_resolved": resolution_status == "RESOLVED",
+            "resolution_status": resolution_status,
             "canonical_conflict_id": canonical_conflict_id,
+            "canonical_conflict_key": canonical_conflict_key,
             "conflict_details": conflict_details,
             "provenance_notice": "Contains Seeded Mine-Level Discrepancy Fixture (database_seed.py)" if has_seeded else ("Official Government Source Conflict Detected" if conflict_rec else "100% Authentic Official Government Sources")
         })
@@ -677,6 +716,8 @@ def get_comparison_matrix(
     available_docs = [
         {
             "id": ds.source_id,
+            "document_kind": "catalog",
+            "identifier_type": "catalog",
             "document_title": ds.document_title,
             "organization": ds.organization,
             "financial_year": ds.financial_year,

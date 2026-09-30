@@ -222,3 +222,23 @@ def test_10_valid_source_variance_semantics(setup_db):
     assert c.status == "OPEN"
     assert c.mine_name == "Rajmahal OpenCast"
     assert float(c.discrepancy_pct) == 1.65
+
+
+def test_existing_conflict_identity_is_case_normalized(setup_db):
+    """Detector reruns do not create a second pair for casing-only changes."""
+    db = setup_db
+    doc1 = Document(filename="DocA.pdf", subsidiary="ECL", file_type="PDF", file_path="/tmp/1", file_hash="h1", uploaded_by=1)
+    doc2 = Document(filename="DocB.pdf", subsidiary="ECL", file_type="PDF", file_path="/tmp/2", file_hash="h2", uploaded_by=1)
+    db.add_all([doc1, doc2])
+    db.commit()
+    db.add_all([
+        ExtractedMetric(document_id=doc1.id, mine_name="Rajmahal OpenCast", metric_name="Coal Production", numeric_value=42.5, unit="MT", standard_value=42.5, standard_unit="MT", fiscal_year="2023-24"),
+        ExtractedMetric(document_id=doc2.id, mine_name="rajmahal opencast", metric_name="coal production", numeric_value=41.8, unit="MT", standard_value=41.8, standard_unit="MT", fiscal_year="2023-24"),
+    ])
+    db.commit()
+
+    first = detect_and_register_cross_document_conflicts(db)
+    second = detect_and_register_cross_document_conflicts(db)
+    assert first["new_conflicts_count"] == 1
+    assert second["new_conflicts_count"] == 0
+    assert db.query(DataConflict).count() == 1

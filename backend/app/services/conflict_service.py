@@ -1,8 +1,9 @@
 import re
 import logging
+from time import perf_counter
+from datetime import datetime, timezone
 from typing import List, Dict, Any, Optional, Tuple
 from sqlalchemy.orm import Session
-from sqlalchemy import or_
 
 from app.models.extracted_metric import ExtractedMetric
 from app.models.document import Document
@@ -86,13 +87,46 @@ def detect_and_register_cross_document_conflicts(db: Session) -> Dict[str, Any]:
     4. Evaluates specific named mine/entity discrepancies (>1.0%).
     Returns stats dict: {new_conflicts_count, generic_exclusions, domain_exclusions, unit_exclusions, scope_exclusions}.
     """
+    detector_started = perf_counter()
+    metrics_started = perf_counter()
+    logger.info("CONFLICT_METRICS_LOAD_START elapsed_ms=0.00")
     metrics = db.query(ExtractedMetric, Document.filename, Document.subsidiary).\
         join(Document, ExtractedMetric.document_id == Document.id).all()
+    metrics_load_elapsed_ms = round((perf_counter() - metrics_started) * 1000, 2)
+    logger.info("CONFLICT_METRICS_LOAD_DONE elapsed_ms=%.2f metrics=%s", metrics_load_elapsed_ms, len(metrics))
+
+    # Load existing identities once. The conflict resolver list endpoint calls
+    # this detector, so querying DataConflict once per metric pair can turn a
+    # normal read into an N+1 database storm on a large corpus.
+    identities_started = perf_counter()
+    logger.info("CONFLICT_IDENTITIES_LOAD_START elapsed_ms=%.2f", (perf_counter() - detector_started) * 1000)
+    existing_conflicts = db.query(DataConflict).all()
+    identities_load_elapsed_ms = round((perf_counter() - identities_started) * 1000, 2)
+    logger.info(
+        "CONFLICT_IDENTITIES_LOAD_DONE elapsed_ms=%.2f existing_data_conflicts=%s",
+        identities_load_elapsed_ms,
+        len(existing_conflicts),
+    )
+    existing_conflict_keys = {
+        (
+            (conflict.mine_name or "").strip().lower(),
+            (conflict.metric_name or "").strip().lower(),
+            (conflict.fiscal_year or "").strip().lower(),
+            frozenset((conflict.doc_a_id, conflict.doc_b_id)),
+        )
+        for conflict in existing_conflicts
+    }
 
     # Filter & Group metrics by (mine_name, metric_name, fiscal_year)
     metric_groups: Dict[tuple, List[tuple]] = {}
 
     stats = {
+        "metrics_loaded": len(metrics),
+        "metrics_load_elapsed_ms": metrics_load_elapsed_ms,
+        "candidate_pair_count": 0,
+        "existing_data_conflict_count": len(existing_conflict_keys),
+        "identities_load_elapsed_ms": identities_load_elapsed_ms,
+        "discrepancy_count": 0,
         "new_conflicts_count": 0,
         "generic_entity_exclusions": 0,
         "domain_incompatibility_exclusions": 0,
@@ -122,6 +156,7 @@ def detect_and_register_cross_document_conflicts(db: Session) -> Dict[str, Any]:
             for j in range(i + 1, len(group)):
                 m_a, fname_a, sub_a, dom_a = group[i]
                 m_b, fname_b, sub_b, dom_b = group[j]
+                stats["candidate_pair_count"] += 1
 
                 # Rule 2: Distinct documents only
                 if m_a.document_id == m_b.document_id:
@@ -152,18 +187,17 @@ def detect_and_register_cross_document_conflicts(db: Session) -> Dict[str, Any]:
                     stats["threshold_exclusions"] += 1
                     continue
 
-                # Rule 6: De-duplicate existing conflict record
-                existing = db.query(DataConflict).filter(
-                    DataConflict.mine_name == m_a.mine_name,
-                    DataConflict.metric_name == m_a.metric_name,
-                    DataConflict.fiscal_year == m_a.fiscal_year,
-                    or_(
-                        (DataConflict.doc_a_id == m_a.document_id) & (DataConflict.doc_b_id == m_b.document_id),
-                        (DataConflict.doc_a_id == m_b.document_id) & (DataConflict.doc_b_id == m_a.document_id)
-                    )
-                ).first()
+                stats["discrepancy_count"] += 1
 
-                if not existing:
+                # Rule 6: De-duplicate existing conflict record
+                conflict_key = (
+                    (m_a.mine_name or "").strip().lower(),
+                    (m_a.metric_name or "").strip().lower(),
+                    (m_a.fiscal_year or "").strip().lower(),
+                    frozenset((m_a.document_id, m_b.document_id)),
+                )
+
+                if conflict_key not in existing_conflict_keys:
                     conflict_rec = DataConflict(
                         doc_a_id=m_a.document_id,
                         doc_b_id=m_b.document_id,
@@ -176,6 +210,7 @@ def detect_and_register_cross_document_conflicts(db: Session) -> Dict[str, Any]:
                         status="OPEN"
                     )
                     db.add(conflict_rec)
+                    existing_conflict_keys.add(conflict_key)
                     stats["new_conflicts_count"] += 1
                     logger.info(
                         f"Registered high-precision conflict for '{m_a.mine_name}' ({m_a.metric_name}, FY{m_a.fiscal_year}): "
@@ -184,6 +219,8 @@ def detect_and_register_cross_document_conflicts(db: Session) -> Dict[str, Any]:
 
     if stats["new_conflicts_count"] > 0:
         db.commit()
+
+    stats["detector_elapsed_ms"] = round((perf_counter() - detector_started) * 1000, 2)
 
     return stats
 
@@ -203,8 +240,14 @@ def resolve_data_conflict(
     if not conflict:
         raise ValueError(f"Conflict ID #{conflict_id} not found.")
 
+    # Resolution is idempotent. A repeated click/retry returns the committed
+    # record and does not append another audit entry.
+    if (conflict.status or "OPEN").upper() == "RESOLVED":
+        return conflict
+
     conflict.status = "RESOLVED"
     conflict.resolved_by = user_id
+    conflict.resolved_at = datetime.now(timezone.utc)
     conflict.resolution_notes = notes or f"Resolved via action '{resolution_action}' by User #{user_id}"
 
     audit_entry = AuditLog(

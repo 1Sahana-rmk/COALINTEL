@@ -28,6 +28,7 @@ export default function AuditPage() {
       {/* Page Header */}
       <PageHeader
         title="System Security & Audit Trail Ledger"
+        titleKey="page.audit.title"
         description="Immutable audit trail tracking user authentication events, document ingestions, conflict resolutions, and report approvals."
         breadcrumbs={[{ label: 'Audit Logs' }]}
         badge={<Badge variant="amber">Restricted: Admin</Badge>}

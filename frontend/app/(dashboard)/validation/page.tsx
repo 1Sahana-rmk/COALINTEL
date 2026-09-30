@@ -31,7 +31,9 @@ export default function ValidationPage() {
       {/* Page Header */}
       <PageHeader
         title="Arithmetic Validation Feed"
+        titleKey="page.validation.title"
         description="Deterministic unit normalization (Lakh Tonnes → MT) and arithmetic discrepancy monitoring (> 5% calculation threshold)."
+        descriptionKey="page.validation.description"
         breadcrumbs={[{ label: 'Validation Feed' }]}
         badge={<Badge variant="amber">Deterministic Engine</Badge>}
         actions={

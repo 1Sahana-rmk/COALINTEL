@@ -30,6 +30,16 @@ export const CitedAnswerCard: React.FC<CitedAnswerCardProps> = ({
           </div>
 
           <div className="flex items-center gap-2">
+            {response.route && (
+              <Badge variant="secondary" size="sm">
+                Route: {response.route}
+              </Badge>
+            )}
+            {response.support_state && response.support_state !== 'SUPPORTED' && (
+              <Badge variant={response.support_state === 'CONFLICTING' ? 'warning' : 'danger'} size="sm">
+                {response.support_state}
+              </Badge>
+            )}
             {isGeneralAi ? (
               <Badge variant="secondary" size="sm">
                 General Knowledge
@@ -57,6 +67,25 @@ export const CitedAnswerCard: React.FC<CitedAnswerCardProps> = ({
             {response.answer}
           </div>
 
+          {response.conflicts && response.conflicts.length > 0 && (
+            <div className="p-4 rounded-lg bg-[#6B4E1E]/15 border border-[#C58B3A]/40 text-xs text-[#E8ECEB] space-y-2">
+              <div className="font-semibold text-[#D6A23A]">Conflicting supported evidence</div>
+              <p className="text-[#C9D0D2]">COALINTEL preserved these candidates separately; no value was averaged or selected silently.</p>
+              {response.conflicts.map((group, groupIndex) => (
+                <div key={groupIndex} className="font-mono text-[11px] text-[#E8ECEB]">
+                  {group.map((fact, factIndex) => {
+                    const entity = (fact.entity as { canonical?: string; raw?: string } | undefined)?.canonical
+                      || (fact.entity as { raw?: string } | undefined)?.raw || 'Entity';
+                    const metric = (fact.metric as { canonical?: string; raw?: string } | undefined)?.canonical
+                      || (fact.metric as { raw?: string } | undefined)?.raw || 'Metric';
+                    const value = (fact.value as { raw?: string; normalized?: number; raw_unit?: string } | undefined);
+                    return <div key={factIndex}>• {entity} — {metric}: {value?.raw ?? value?.normalized ?? 'Unavailable'} {value?.raw_unit ?? ''}</div>;
+                  })}
+                </div>
+              ))}
+            </div>
+          )}
+
           {/* Verification Footer Banner */}
           <div className="flex flex-wrap items-center justify-between pt-3 border-t border-[#30383D] text-xs text-[#9BA5A8] gap-2 font-mono">
             {isGeneralAi ? (
@@ -81,6 +110,9 @@ export const CitedAnswerCard: React.FC<CitedAnswerCardProps> = ({
                 ? 'Zero Artificial Citations'
                 : `${response.citations?.length || 0} Grounded Citations Attached`}
             </span>
+            {response.generation_status && (
+              <span className="text-[#9BA5A8]">Generation: {response.generation_status}</span>
+            )}
           </div>
         </CardContent>
       </Card>

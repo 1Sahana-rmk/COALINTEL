@@ -5,7 +5,9 @@ services:
   - type: web
     name: coalintel-backend
     runtime: docker
-    plan: free
+    # Local uploads, Chroma data and generated reports are configured under
+    # /storage. A persistent disk requires a paid web-service plan.
+    plan: starter
     branch: Main_1
 
     dockerfilePath: ./backend/Dockerfile
@@ -32,25 +34,16 @@ services:
         generateValue: true
 
       - key: LLM_PROVIDER
-        value: groq
+        value: gemini
 
       - key: LLM_API_KEY
         sync: false
 
-      - key: LLM_MODEL_NAME
-        value: openai/gpt-oss-20b
-
       - key: FRONTEND_URL
-        fromService:
-          type: web
-          name: coalintel-frontend
-          envVarKey: RENDER_EXTERNAL_URL
+        sync: false
 
       - key: ALLOWED_ORIGINS
-        fromService:
-          type: web
-          name: coalintel-frontend
-          envVarKey: RENDER_EXTERNAL_URL
+        sync: false
 
       - key: STORAGE_PROVIDER
         value: local
@@ -63,6 +56,60 @@ services:
 
       - key: REPORT_DIR
         value: /storage/reports
+
+      - key: DOCUMENT_AI_ENABLED
+        value: "true"
+
+      # Render's private-service hostport reference is normalized to http://
+      # by DocumentAIClient. This avoids hard-coding a public URL or port.
+      - key: DOCUMENT_AI_URL
+        fromService:
+          name: coalintel-document-ai
+          type: pserv
+          property: hostport
+
+      - key: DOCUMENT_AI_DEVICE
+        value: cpu
+
+      - key: DOCUMENT_AI_FALLBACK_TO_TESSERACT
+        value: "true"
+
+    disk:
+      name: coalintel-backend-storage
+      mountPath: /storage
+      sizeGB: 10
+
+
+  # =========================
+  # ISOLATED DOCUMENT AI
+  # =========================
+  # A private service keeps PaddleOCR/PaddleX out of the Python 3.14 backend
+  # and exposes only the internal HTTP contract to the backend service.
+  - type: pserv
+    name: coalintel-document-ai
+    runtime: docker
+    plan: starter
+    branch: Main_1
+
+    dockerfilePath: ./document_ai_service/Dockerfile
+    dockerContext: .
+
+    healthCheckPath: /health
+
+    envVars:
+      - key: DOCUMENT_AI_HOST
+        value: 0.0.0.0
+
+      # The service selects Render's injected PORT. DOCUMENT_AI_PORT is left
+      # unset so local execution still defaults to 127.0.0.1:8765/8765.
+      - key: DOCUMENT_AI_DEVICE
+        value: cpu
+
+      - key: DOCUMENT_AI_CPU_THREADS
+        value: "2"
+
+      - key: DOCUMENT_AI_DISABLE_MKLDNN
+        value: "true"
 
 
   # =========================
@@ -87,10 +134,7 @@ services:
         value: /api/v1
 
       - key: BACKEND_URL
-        fromService:
-          type: web
-          name: coalintel-backend
-          envVarKey: RENDER_EXTERNAL_URL
+        sync: false
 
 
 databases:

@@ -26,3 +26,11 @@ class Report(Base):
 
     def __repr__(self):
         return f"<Report(id={self.id}, title='{self.title}', type='{self.report_type}', status='{self.approval_status}')>"
+
+    @property
+    def validation_state(self):
+        return (self.content_json or {}).get("validation", {}).get("state")
+
+    @property
+    def generation_status(self):
+        return (self.content_json or {}).get("job_status")

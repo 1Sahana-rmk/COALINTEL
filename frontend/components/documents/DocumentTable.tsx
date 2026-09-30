@@ -15,6 +15,8 @@ import {
   Trash2,
   AlertTriangle,
   X,
+  ExternalLink,
+  Download,
 } from 'lucide-react';
 import { Badge } from '@/components/ui/Badge';
 import { Input } from '@/components/ui/Input';
@@ -23,6 +25,7 @@ import { Button } from '@/components/ui/Button';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { CIL_SUBSIDIARIES } from '@/lib/constants';
 import { documentApi } from '@/lib/api/documentApi';
+import { getDocumentSourceActions } from '@/lib/documentSourceAccess';
 import { DocumentItem, DocumentStatus } from '@/types/document';
 
 interface DocumentTableProps {
@@ -87,6 +90,8 @@ export const DocumentTable: React.FC<DocumentTableProps> = ({
   const [documentToDelete, setDocumentToDelete] = useState<DocumentItem | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
+  const [sourceDownloadId, setSourceDownloadId] = useState<number | null>(null);
+  const [sourceError, setSourceError] = useState<{ documentId: number; message: string } | null>(null);
   const pageSize = 10;
 
   // Detect Admin role on mount from localStorage
@@ -156,6 +161,27 @@ export const DocumentTable: React.FC<DocumentTableProps> = ({
       setDeleteError(msg);
     } finally {
       setIsDeleting(false);
+    }
+  };
+
+  const handleSourceDownload = async (doc: DocumentItem) => {
+    setSourceDownloadId(doc.id);
+    setSourceError(null);
+    try {
+      const blob = await documentApi.downloadDocumentSource(doc.id);
+      const objectUrl = window.URL.createObjectURL(blob);
+      const anchor = window.document.createElement('a');
+      anchor.href = objectUrl;
+      anchor.download = doc.filename;
+      anchor.click();
+      window.setTimeout(() => window.URL.revokeObjectURL(objectUrl), 1000);
+    } catch (err: any) {
+      setSourceError({
+        documentId: doc.id,
+        message: err?.response?.data?.detail || err?.message || 'Source file unavailable.',
+      });
+    } finally {
+      setSourceDownloadId(null);
     }
   };
 
@@ -327,6 +353,48 @@ export const DocumentTable: React.FC<DocumentTableProps> = ({
                             View Intelligence
                           </Button>
                         </Link>
+                        {(() => {
+                          const sourceActions = getDocumentSourceActions(doc);
+                          if (sourceActions.officialUrl) {
+                            return (
+                              <>
+                                <a href={sourceActions.officialUrl} target="_blank" rel="noreferrer">
+                                  <Button variant="outline" size="sm" leftIcon={<ExternalLink className="h-3.5 w-3.5" />}>
+                                  Open Official Source
+                                  </Button>
+                                </a>
+                                {sourceActions.storedArtifactAvailable && (
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    isLoading={sourceDownloadId === doc.id}
+                                    onClick={() => handleSourceDownload(doc)}
+                                    leftIcon={<Download className="h-3.5 w-3.5" />}
+                                  >
+                                    Download File
+                                  </Button>
+                                )}
+                                {!sourceActions.storedArtifactAvailable && (
+                                  <span className="text-[11px] text-[#9BA5A8]">Source File Unavailable</span>
+                                )}
+                              </>
+                            );
+                          }
+                          if (sourceActions.storedArtifactAvailable) {
+                            return (
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                isLoading={sourceDownloadId === doc.id}
+                                onClick={() => handleSourceDownload(doc)}
+                                leftIcon={<Download className="h-3.5 w-3.5" />}
+                              >
+                                Download File
+                              </Button>
+                            );
+                          }
+                          return <span className="text-[11px] text-[#9BA5A8]">Source File Unavailable</span>;
+                        })()}
                         {isAdmin && (
                           <Button
                             variant="ghost"
@@ -342,6 +410,9 @@ export const DocumentTable: React.FC<DocumentTableProps> = ({
                           </Button>
                         )}
                       </div>
+                      {sourceError?.documentId === doc.id && (
+                        <div className="mt-1 text-[10px] text-[#C94B45]">{sourceError.message}</div>
+                      )}
                     </td>
                   </tr>
                 ))

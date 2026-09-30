@@ -22,6 +22,7 @@ import {
 import { Logo } from '@/components/ui/Logo';
 import { cn } from '@/lib/utils/cn';
 import { NAV_ITEMS, NavItem } from '@/lib/constants';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface SidebarProps {
   collapsed?: boolean;
@@ -56,6 +57,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onNavigate,
 }) => {
   const pathname = usePathname();
+  const { t } = useLanguage();
 
   // Filter navigation items by role permissions
   const filteredNav = NAV_ITEMS.filter((item) => {
@@ -73,13 +75,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const reportingNav = filteredNav.filter((i) => reportingHrefs.includes(i.href));
   const governanceNav = filteredNav.filter((i) => governanceHrefs.includes(i.href));
 
-  const renderNavGroup = (items: NavItem[], groupTitle: string) => {
+  const renderNavGroup = (items: NavItem[], groupTitleKey: string) => {
     if (items.length === 0) return null;
     return (
       <div className="space-y-1">
         {!collapsed && (
           <p className="px-3 text-[10px] font-mono uppercase tracking-widest text-[#9BA5A8] pt-2 pb-1 font-semibold">
-            {groupTitle}
+            {t(groupTitleKey)}
           </p>
         )}
 
@@ -115,12 +117,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 {iconMap[item.icon]}
               </div>
 
-              {!collapsed && <span className="truncate">{item.label}</span>}
+              {!collapsed && <span className="truncate">{t(item.translationKey || item.label, item.label)}</span>}
 
               {/* Tooltip for collapsed mode */}
               {collapsed && (
                 <div className="absolute left-full ml-3.5 px-2.5 py-1 bg-[#1C2226] border border-[#30383D] text-[#E8ECEB] text-xs rounded-md shadow-dropdown whitespace-nowrap opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-150 z-50 flex items-center gap-1.5">
-                  <span>{item.label}</span>
+                  <span>{t(item.translationKey || item.label, item.label)}</span>
                   {item.roles && item.roles.length > 0 && (
                     <span className="text-[9px] font-mono text-[#C58B3A]">[{item.roles[0]}]</span>
                   )}
@@ -157,15 +159,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
       {/* Navigation List */}
       <nav className="flex-1 overflow-y-auto px-3 py-2 space-y-2.5 scrollbar-thin">
-        {renderNavGroup(intelligenceNav, 'Intelligence Suite')}
+        {renderNavGroup(intelligenceNav, 'nav.intelligence')}
         <div className="h-px bg-[#30383D]/60 mx-1 my-1" />
-        {renderNavGroup(repositoryNav, 'Repository & Verification')}
+        {renderNavGroup(repositoryNav, 'nav.repository')}
         <div className="h-px bg-[#30383D]/60 mx-1 my-1" />
-        {renderNavGroup(reportingNav, 'Reporting & Parliament')}
+        {renderNavGroup(reportingNav, 'nav.reporting')}
         {governanceNav.length > 0 && (
           <>
             <div className="h-px bg-[#30383D]/60 mx-1 my-1" />
-            {renderNavGroup(governanceNav, 'Governance & Audit')}
+            {renderNavGroup(governanceNav, 'nav.governance')}
           </>
         )}
       </nav>
@@ -181,7 +183,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <div className="flex flex-col min-w-0">
                 <span className="text-xs font-semibold text-[#E8ECEB] truncate">{userName}</span>
                 <span className="text-[10px] font-mono text-[#9BA5A8] truncate uppercase">
-                  {userRole} • {userSubsidiary}
+                  {userRole.toUpperCase()} • {userSubsidiary}
                 </span>
               </div>
             </div>
@@ -191,7 +193,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 <UserIcon className="h-4 w-4" />
               </div>
               <div className="absolute left-full ml-3.5 px-2.5 py-1 bg-[#1C2226] border border-[#30383D] text-[#E8ECEB] text-xs rounded-md shadow-dropdown whitespace-nowrap opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-150 z-50">
-                {userName} ({userRole})
+                {userName} ({userRole.toUpperCase()})
               </div>
             </div>
           )}
@@ -200,8 +202,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <button
               onClick={onLogout}
               className="p-1.5 rounded-lg text-[#9BA5A8] hover:text-[#C94B45] hover:bg-[#C94B45]/10 transition-colors"
-              title="Sign Out"
-              aria-label="Sign Out"
+              title={t('common.signOut')}
+              aria-label={t('common.signOut')}
             >
               <LogOut className="h-4 w-4" />
             </button>

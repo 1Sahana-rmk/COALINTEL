@@ -1,0 +1,5 @@
+# Isolated Step 2A benchmark environment only. Do not add to production requirements.
+paddlepaddle==3.2.0
+paddleocr[doc-parser]==3.7.0
+pymupdf==1.28.2
+psutil

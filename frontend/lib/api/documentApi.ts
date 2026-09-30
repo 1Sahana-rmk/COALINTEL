@@ -5,7 +5,15 @@ import {
   DocumentListResponse,
   DocumentPagesResponse,
   DocumentLineageResponse,
+  DocumentTablesResponse,
+  DocumentWarningsResponse,
+  DocumentHistoryResponse,
 } from '@/types/document';
+import { liveReadConfig } from '@/lib/documentPolling';
+
+export interface LiveDocumentReadOptions {
+  cacheBust?: number;
+}
 
 export const documentApi = {
   uploadDocument: async (
@@ -25,9 +33,11 @@ export const documentApi = {
     return response.data;
   },
 
-  getDocuments: async (params?: DocumentListParams): Promise<DocumentListResponse> => {
+  getDocuments: async (params?: DocumentListParams, options?: LiveDocumentReadOptions): Promise<DocumentListResponse> => {
+    const liveConfig = liveReadConfig(options?.cacheBust);
     const response = await apiClient.get<DocumentListResponse>('/documents', {
       params: {
+        ...liveConfig.params,
         status_filter: params?.status_filter && params.status_filter !== 'ALL' ? params.status_filter : undefined,
         subsidiary_filter: params?.subsidiary_filter && params.subsidiary_filter !== 'ALL' && params.subsidiary_filter !== 'ALL CIL' ? params.subsidiary_filter : undefined,
         skip: params?.skip ?? 0,
@@ -37,18 +47,34 @@ export const documentApi = {
     return response.data;
   },
 
-  getDocumentById: async (id: number): Promise<DocumentItem> => {
-    const response = await apiClient.get<DocumentItem>(`/documents/${id}`);
+  getDocumentById: async (id: number, options?: LiveDocumentReadOptions): Promise<DocumentItem> => {
+    const response = await apiClient.get<DocumentItem>(`/documents/${id}`, liveReadConfig(options?.cacheBust));
     return response.data;
   },
 
-  getDocumentPages: async (id: number): Promise<DocumentPagesResponse> => {
-    const response = await apiClient.get<DocumentPagesResponse>(`/documents/${id}/pages`);
+  getDocumentPages: async (id: number, options?: LiveDocumentReadOptions): Promise<DocumentPagesResponse> => {
+    const response = await apiClient.get<DocumentPagesResponse>(`/documents/${id}/pages`, liveReadConfig(options?.cacheBust));
     return response.data;
   },
 
-  getDocumentLineage: async (id: number): Promise<DocumentLineageResponse> => {
-    const response = await apiClient.get<DocumentLineageResponse>(`/documents/${id}/lineage`);
+  getDocumentLineage: async (id: number, options?: LiveDocumentReadOptions): Promise<DocumentLineageResponse> => {
+    const response = await apiClient.get<DocumentLineageResponse>(`/documents/${id}/lineage`, liveReadConfig(options?.cacheBust));
+    return response.data;
+  },
+
+  getDocumentTables: async (id: number, options?: LiveDocumentReadOptions): Promise<DocumentTablesResponse> =>
+    (await apiClient.get<DocumentTablesResponse>(`/documents/${id}/tables`, liveReadConfig(options?.cacheBust))).data,
+
+  getDocumentWarnings: async (id: number, options?: LiveDocumentReadOptions): Promise<DocumentWarningsResponse> =>
+    (await apiClient.get<DocumentWarningsResponse>(`/documents/${id}/warnings`, liveReadConfig(options?.cacheBust))).data,
+
+  getDocumentHistory: async (id: number, options?: LiveDocumentReadOptions): Promise<DocumentHistoryResponse> =>
+    (await apiClient.get<DocumentHistoryResponse>(`/documents/${id}/history`, liveReadConfig(options?.cacheBust))).data,
+
+  downloadDocumentSource: async (id: number): Promise<Blob> => {
+    const response = await apiClient.get<Blob>(`/documents/${id}/source`, {
+      responseType: 'blob',
+    });
     return response.data;
   },
 
@@ -57,4 +83,3 @@ export const documentApi = {
     return response.data;
   },
 };
-

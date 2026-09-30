@@ -68,6 +68,7 @@ function QueryContent() {
       {/* Page Header */}
       <PageHeader
         title="Ask COALINTEL — Cited Mining Q&A Assistant"
+        titleKey="page.query.title"
         description="Evidence-driven natural language retrieval enforcing page-level citation verification [Doc_Name.pdf, Page X] against ChromaDB vector embeddings."
         breadcrumbs={[{ label: 'Ask COALINTEL' }]}
         badge={<Badge variant="amber">Hybrid RAG Engine</Badge>}

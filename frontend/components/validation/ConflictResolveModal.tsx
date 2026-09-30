@@ -1,18 +1,27 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { X, GitCompare, CheckCircle2, FileText, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Select } from '@/components/ui/Select';
 import { Input } from '@/components/ui/Input';
 import { Badge } from '@/components/ui/Badge';
+import { useLanguage } from '@/context/LanguageContext';
 import { ConflictItem, ResolveConflictPayload } from '@/lib/api/validationApi';
+import { buildConflictEvidenceUrl, evidenceLinkLabel } from '@/lib/conflictEvidence';
+import {
+  canSubmitConflictResolution,
+  formatConflictDocumentIdentifier,
+  isResolvedConflict,
+} from '@/lib/conflictResolutionState';
 
 interface ConflictResolveModalProps {
   conflict: ConflictItem | null;
   onClose: () => void;
-  onResolve: (id: number, payload: ResolveConflictPayload) => void;
+  onResolve: (id: number | string, payload: ResolveConflictPayload) => void;
   isLoading?: boolean;
+  error?: string | null;
 }
 
 export const ConflictResolveModal: React.FC<ConflictResolveModalProps> = ({
@@ -20,10 +29,42 @@ export const ConflictResolveModal: React.FC<ConflictResolveModalProps> = ({
   onClose,
   onResolve,
   isLoading = false,
+  error = null,
 }) => {
   const [action, setAction] = useState('ACCEPT_DOC_A');
   const [overrideValue, setOverrideValue] = useState<string>('');
   const [notes, setNotes] = useState<string>('');
+  const { t } = useLanguage();
+  const isOpen = Boolean(conflict);
+
+  useEffect(() => {
+    if (!isOpen || typeof window === 'undefined') return;
+
+    // The dashboard main element is animated with a transform. Portaling the
+    // modal to body makes fixed positioning viewport-relative; locking body
+    // scroll also preserves the user's page and scroll position underneath it.
+    const scrollY = window.scrollY;
+    const body = document.body;
+    const previous = {
+      overflow: body.style.overflow,
+      position: body.style.position,
+      top: body.style.top,
+      width: body.style.width,
+    };
+
+    body.style.overflow = 'hidden';
+    body.style.position = 'fixed';
+    body.style.top = `-${scrollY}px`;
+    body.style.width = '100%';
+
+    return () => {
+      body.style.overflow = previous.overflow;
+      body.style.position = previous.position;
+      body.style.top = previous.top;
+      body.style.width = previous.width;
+      window.scrollTo(0, scrollY);
+    };
+  }, [isOpen]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -37,23 +78,28 @@ export const ConflictResolveModal: React.FC<ConflictResolveModalProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onResolve(conflict.id, {
+    if (!canSubmitConflictResolution(conflict.status, isLoading)) return;
+    onResolve(conflict.conflict_key ?? String(conflict.id), {
       resolution_action: action,
       override_value: action === 'OVERRIDE' && overrideValue ? parseFloat(overrideValue) : undefined,
       notes: notes.trim() || undefined,
     });
   };
 
-  return (
+  const resolved = isResolvedConflict(conflict.status);
+
+  if (typeof document === 'undefined') return null;
+
+  return createPortal((
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0E1113]/80 backdrop-blur-sm animate-fade-in"
+      className="fixed inset-0 z-50 flex min-h-full items-center justify-center overflow-hidden p-4 bg-[#0E1113]/80 backdrop-blur-sm animate-fade-in"
       onClick={onClose}
       role="dialog"
       aria-modal="true"
-      aria-label="Cross-Document Conflict Resolution Modal"
+      aria-label={t('conflicts.resolve')}
     >
       <div
-        className="relative w-full max-w-2xl p-6 rounded-lg bg-[#1C2226] border border-[#30383D] shadow-2xl space-y-6 overflow-y-auto max-h-[90vh] animate-slide-up"
+        className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto overscroll-contain p-6 rounded-lg bg-[#1C2226] border border-[#30383D] shadow-2xl space-y-6 animate-slide-up"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -63,7 +109,7 @@ export const ConflictResolveModal: React.FC<ConflictResolveModalProps> = ({
               <GitCompare className="h-5 w-5" />
             </div>
             <div>
-              <h3 className="text-lg font-bold text-[#E8ECEB]">Cross-Document Conflict Resolution</h3>
+              <h3 className="text-lg font-bold text-[#E8ECEB]">{t('conflicts.resolve')}</h3>
               <p className="text-xs text-[#9BA5A8]">
                 {conflict.mine_name} • {conflict.metric_name} ({conflict.fiscal_year})
               </p>
@@ -74,7 +120,7 @@ export const ConflictResolveModal: React.FC<ConflictResolveModalProps> = ({
             onClick={onClose}
             disabled={isLoading}
             className="p-1.5 rounded-lg text-[#9BA5A8] hover:text-[#E8ECEB] hover:bg-[#242C30] transition-colors"
-            aria-label="Close modal"
+            aria-label={t('common.close')}
           >
             <X className="h-5 w-5" />
           </button>
@@ -85,15 +131,30 @@ export const ConflictResolveModal: React.FC<ConflictResolveModalProps> = ({
           {/* Document A */}
           <div className="p-4 rounded-lg bg-[#242C30] border border-[#30383D] space-y-2">
             <div className="flex items-center justify-between text-xs font-mono text-[#9BA5A8]">
-              <span className="font-bold text-[#C58B3A]">DOCUMENT A</span>
-              <span>ID #{conflict.document_a_id}</span>
+              <span className="font-bold text-[#C58B3A]">{t('conflicts.documentA')}</span>
+              <span>{formatConflictDocumentIdentifier(conflict.document_a_id, conflict.document_a_source_id)}</span>
             </div>
             <div className="flex items-center gap-2 text-xs font-bold text-[#E8ECEB] truncate">
               <FileText className="h-4 w-4 text-[#C58B3A] shrink-0" />
               <span className="truncate" title={conflict.document_a_filename}>{conflict.document_a_filename}</span>
             </div>
+            {buildConflictEvidenceUrl(conflict.document_a_id, conflict.evidence_a) ? (
+              <a
+                href={buildConflictEvidenceUrl(conflict.document_a_id, conflict.evidence_a) as string}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-block text-[10px] text-[#C58B3A] hover:underline"
+              >
+                {evidenceLinkLabel(conflict.evidence_a)}
+              </a>
+            ) : null}
+            {conflict.evidence_a?.page_number == null && (
+              <span className="block text-[10px] text-[#9BA5A8]" title={conflict.evidence_a?.warning || undefined}>
+                Page-level provenance unavailable
+              </span>
+            )}
             <div className="pt-2 border-t border-[#30383D] flex items-baseline justify-between font-mono">
-              <span className="text-xs text-[#9BA5A8]">Reported Value:</span>
+              <span className="text-xs text-[#9BA5A8]">{t('conflicts.reportedValue')}</span>
               <span className="text-base font-bold text-[#E8ECEB]">
                 {conflict.document_a_value} {conflict.document_a_unit}
               </span>
@@ -103,15 +164,30 @@ export const ConflictResolveModal: React.FC<ConflictResolveModalProps> = ({
           {/* Document B */}
           <div className="p-4 rounded-lg bg-[#242C30] border border-[#30383D] space-y-2">
             <div className="flex items-center justify-between text-xs font-mono text-[#9BA5A8]">
-              <span className="font-bold text-[#54788A]">DOCUMENT B</span>
-              <span>ID #{conflict.document_b_id}</span>
+              <span className="font-bold text-[#54788A]">{t('conflicts.documentB')}</span>
+              <span>{formatConflictDocumentIdentifier(conflict.document_b_id, conflict.document_b_source_id)}</span>
             </div>
             <div className="flex items-center gap-2 text-xs font-bold text-[#E8ECEB] truncate">
               <FileText className="h-4 w-4 text-[#54788A] shrink-0" />
               <span className="truncate" title={conflict.document_b_filename}>{conflict.document_b_filename}</span>
             </div>
+            {buildConflictEvidenceUrl(conflict.document_b_id, conflict.evidence_b) ? (
+              <a
+                href={buildConflictEvidenceUrl(conflict.document_b_id, conflict.evidence_b) as string}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-block text-[10px] text-[#C58B3A] hover:underline"
+              >
+                {evidenceLinkLabel(conflict.evidence_b)}
+              </a>
+            ) : null}
+            {conflict.evidence_b?.page_number == null && (
+              <span className="block text-[10px] text-[#9BA5A8]" title={conflict.evidence_b?.warning || undefined}>
+                Page-level provenance unavailable
+              </span>
+            )}
             <div className="pt-2 border-t border-[#30383D] flex items-baseline justify-between font-mono">
-              <span className="text-xs text-[#9BA5A8]">Reported Value:</span>
+              <span className="text-xs text-[#9BA5A8]">{t('conflicts.reportedValue')}</span>
               <span className="text-base font-bold text-[#E8ECEB]">
                 {conflict.document_b_value} {conflict.document_b_unit}
               </span>
@@ -123,17 +199,30 @@ export const ConflictResolveModal: React.FC<ConflictResolveModalProps> = ({
         <div className="p-3 rounded-lg bg-[#D6A23A]/10 border border-[#D6A23A]/30 text-[#D6A23A] text-xs flex items-center justify-between font-semibold">
           <div className="flex items-center gap-2">
             <AlertTriangle className="h-4 w-4 text-[#D6A23A] shrink-0" />
-            <span>Calculated Multi-Source Discrepancy:</span>
+            <span>{t('conflicts.calculatedDiscrepancy')}</span>
           </div>
           <Badge variant="danger" size="md">
             {conflict.discrepancy_percentage?.toFixed(2)}% Discrepancy
           </Badge>
         </div>
 
-        {/* Resolution Form */}
+        {error && !resolved && (
+          <div className="rounded-lg border border-[#C94B45]/40 bg-[#C94B45]/10 p-3 text-xs text-[#C94B45]" role="alert">
+            {error}
+          </div>
+        )}
+
+        {resolved ? (
+          <div className="rounded-lg border border-[#4F8A62]/40 bg-[#4F8A62]/10 p-4 space-y-2 text-xs">
+            <div className="font-bold text-[#4F8A62]">{t('conflicts.resolved')}</div>
+            <p className="text-[#E8ECEB]">This conflict has already been resolved and will not be submitted again.</p>
+            {conflict.resolution_notes && <p className="text-[#9BA5A8]">{conflict.resolution_notes}</p>}
+          </div>
+        ) : (
+        /* Resolution Form */
         <form onSubmit={handleSubmit} className="space-y-4">
           <Select
-            label="Resolution Action"
+            label={t('conflicts.resolutionAction')}
             value={action}
             onChange={(e) => setAction(e.target.value)}
             options={[
@@ -157,7 +246,7 @@ export const ConflictResolveModal: React.FC<ConflictResolveModalProps> = ({
           )}
 
           <div className="space-y-1">
-            <label className="text-xs font-semibold text-[#E8ECEB]">Resolution Audit Justification Notes</label>
+            <label className="text-xs font-semibold text-[#E8ECEB]">{t('conflicts.justification')}</label>
             <textarea
               rows={3}
               placeholder="Provide technical justification or audit rationale for conflict resolution..."
@@ -169,7 +258,7 @@ export const ConflictResolveModal: React.FC<ConflictResolveModalProps> = ({
 
           <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#30383D]">
             <Button variant="ghost" size="md" onClick={onClose} disabled={isLoading}>
-              Cancel
+              {t('common.cancel')}
             </Button>
             <Button
               type="submit"
@@ -178,11 +267,12 @@ export const ConflictResolveModal: React.FC<ConflictResolveModalProps> = ({
               isLoading={isLoading}
               leftIcon={<CheckCircle2 className="h-4 w-4" />}
             >
-              Resolve & Record in Audit Ledger
+              {t('conflicts.resolveAndRecord')}
             </Button>
           </div>
         </form>
+        )}
       </div>
     </div>
-  );
+  ), document.body);
 };

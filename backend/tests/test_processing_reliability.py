@@ -18,6 +18,7 @@ from app.models.user import User
 from app.models.document import Document
 from app.models.document_chunk import DocumentChunk
 from app.models.extracted_metric import ExtractedMetric
+from app.models.structured_fact import StructuredFact
 from sqlalchemy.pool import StaticPool
 from app.services.storage_service import (
     save_uploaded_file,
@@ -41,6 +42,7 @@ from app.services.vector_store_service import (
 from app.services.processing_pipeline import (
     execute_document_processing_pipeline,
     recover_stale_processing_documents,
+    _bounded_metric_text,
 )
 from app.core.security import get_password_hash, create_access_token
 
@@ -145,7 +147,9 @@ class TestDocumentProcessingReliability(unittest.TestCase):
 
         initial_chunks_count = self.db.query(DocumentChunk).filter(DocumentChunk.document_id == doc.id).count()
         initial_metrics_count = self.db.query(ExtractedMetric).filter(ExtractedMetric.document_id == doc.id).count()
+        initial_fact_count = self.db.query(StructuredFact).filter(StructuredFact.document_id == doc.id).count()
         self.assertGreater(initial_chunks_count, 0)
+        self.assertGreater(initial_fact_count, 0)
 
         # Run pipeline second time (idempotency verification)
         re_success = execute_document_processing_pipeline(self.db, doc.id)
@@ -155,8 +159,10 @@ class TestDocumentProcessingReliability(unittest.TestCase):
 
         re_chunks_count = self.db.query(DocumentChunk).filter(DocumentChunk.document_id == doc.id).count()
         re_metrics_count = self.db.query(ExtractedMetric).filter(ExtractedMetric.document_id == doc.id).count()
+        re_fact_count = self.db.query(StructuredFact).filter(StructuredFact.document_id == doc.id).count()
         self.assertEqual(initial_chunks_count, re_chunks_count)
         self.assertEqual(initial_metrics_count, re_metrics_count)
+        self.assertEqual(initial_fact_count, re_fact_count)
 
         # Cleanup test file
         delete_uploaded_file(file_path)
@@ -183,6 +189,59 @@ class TestDocumentProcessingReliability(unittest.TestCase):
         self.db.refresh(missing_doc)
         self.assertEqual(missing_doc.status, "FAILED")
         self.assertIn("missing", missing_doc.error_message.lower())
+
+    def test_04b_reprocesses_stale_failure_state_in_place(self):
+        """A persisted extraction failure can be retried without an invalid transition."""
+        sample_content = b"ECL Rajmahal production 15.5 MT in FY 2023-24"
+        file_path = save_uploaded_file(sample_content, "hash_reprocess_state_1", "reprocess_state.csv")
+        doc = Document(
+            filename="reprocess_state.csv",
+            file_path=file_path,
+            file_hash="hash_reprocess_state_1",
+            file_type="CSV",
+            file_size_bytes=len(sample_content),
+            status="FAILED",
+            processing_status="EXTRACTION_FAILED",
+            uploaded_by=self.admin_user.id,
+        )
+        self.db.add(doc)
+        self.db.commit()
+        self.db.refresh(doc)
+
+        with patch("app.services.processing_pipeline.add_chunks_to_vector_store", return_value=True):
+            self.assertTrue(execute_document_processing_pipeline(self.db, doc.id))
+        self.db.refresh(doc)
+        self.assertEqual(doc.status, "PARSED")
+        self.assertIn(doc.processing_status, {"READY", "REVIEW_RECOMMENDED"})
+        delete_uploaded_file(file_path)
+
+    def test_04c_reprocesses_review_state_in_place(self):
+        sample_content = b"ECL Rajmahal production 15.5 MT in FY 2023-24"
+        file_path = save_uploaded_file(sample_content, "hash_reprocess_review_1", "reprocess_review.csv")
+        doc = Document(
+            filename="reprocess_review.csv",
+            file_path=file_path,
+            file_hash="hash_reprocess_review_1",
+            file_type="CSV",
+            file_size_bytes=len(sample_content),
+            status="PARSED",
+            processing_status="REVIEW_RECOMMENDED",
+            uploaded_by=self.admin_user.id,
+        )
+        self.db.add(doc)
+        self.db.commit()
+        self.db.refresh(doc)
+
+        with patch("app.services.processing_pipeline.add_chunks_to_vector_store", return_value=True):
+            self.assertTrue(execute_document_processing_pipeline(self.db, doc.id))
+        self.db.refresh(doc)
+        self.assertEqual(doc.status, "PARSED")
+        self.assertIn(doc.processing_status, {"READY", "REVIEW_RECOMMENDED"})
+        delete_uploaded_file(file_path)
+
+    def test_04d_metric_text_respects_legacy_column_limits(self):
+        self.assertEqual(len(_bounded_metric_text("x" * 300, 30)), 30)
+        self.assertEqual(_bounded_metric_text("", 10), "UNKNOWN")
 
     def test_05_stale_processing_recovery(self):
         """Verify recover_stale_processing_documents identifies orphaned PROCESSING docs without files."""

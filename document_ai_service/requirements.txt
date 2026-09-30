@@ -1,0 +1,6 @@
+# Install only in the isolated Python 3.12 Document AI environment.
+paddlepaddle==3.2.0
+paddleocr[doc-parser]==3.7.0
+paddlex==3.7.2
+pillow>=10.0.0
+psutil>=7.0.0

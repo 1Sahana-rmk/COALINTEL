@@ -3,11 +3,14 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Logo } from '../../../components/ui/Logo';
-import { Input } from '../../../components/ui/Input';
-import { Button } from '../../../components/ui/Button';
-import { ErrorState } from '../../../components/ui/ErrorState';
-import { authApi } from '../../../lib/api/authApi';
+import { Logo } from '@/components/ui/Logo';
+import { Input } from '@/components/ui/Input';
+import { Button } from '@/components/ui/Button';
+import { ErrorState } from '@/components/ui/ErrorState';
+import { authApi } from '@/lib/api/authApi';
+import { DEMO_ACCOUNTS, DemoLoginRole } from '@/lib/demoAccounts';
+import { useLanguage } from '@/context/LanguageContext';
+import { LanguageSelector } from '@/components/ui/LanguageSelector';
 import { ShieldCheck, Lock, User, Sparkles, Database, FileSpreadsheet } from 'lucide-react';
 
 export default function LoginPage() {
@@ -16,6 +19,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { t } = useLanguage();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,13 +48,10 @@ export default function LoginPage() {
     }
   };
 
-  const handleQuickLogin = async (role: 'admin' | 'analyst') => {
+  const handleQuickLogin = async (role: DemoLoginRole) => {
     setIsLoading(true);
     setError(null);
-    const creds =
-      role === 'admin'
-        ? { username: 'admin', password: 'Admin@123' }
-        : { username: 'analyst', password: 'Analyst@123' };
+    const creds = DEMO_ACCOUNTS[role];
 
     setUsername(creds.username);
     setPassword(creds.password);
@@ -132,9 +133,12 @@ export default function LoginPage() {
       <div className="relative flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-16 z-10 bg-[#0E1113] order-1 lg:order-2">
         <div className="w-full max-w-md space-y-8 p-8 rounded-lg bg-[#1C2226] border border-[#30383D] shadow-sm">
           <div className="space-y-2 text-center sm:text-left">
-            <h2 className="text-2xl font-bold tracking-tight text-[#E8ECEB]">Sign in to Platform</h2>
+            <div className="flex items-start justify-between gap-3">
+              <h2 className="text-2xl font-bold tracking-tight text-[#E8ECEB]">{t('auth.signIn')}</h2>
+              <LanguageSelector compact />
+            </div>
             <p className="text-xs text-[#9BA5A8]">
-              Enter your authorized operational credentials to access COALINTEL V2.
+              {t('auth.signInDescription')}
             </p>
           </div>
 
@@ -143,9 +147,9 @@ export default function LoginPage() {
           {/* Role Selection Helpers / Demo Quick Login Shortcuts */}
           <div className="space-y-2">
             <span className="text-[11px] uppercase tracking-wider text-[#9BA5A8] font-mono block">
-              Predefined Demo Shortcuts
+              {t('auth.demoShortcuts')}
             </span>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               <Button
                 type="button"
                 variant="outline"
@@ -154,7 +158,7 @@ export default function LoginPage() {
                 onClick={() => handleQuickLogin('admin')}
                 className="text-xs border-[#C58B3A]/60 text-[#C58B3A] hover:bg-[#C58B3A]/10"
               >
-                Admin Login
+                {t('auth.adminLogin')}
               </Button>
               <Button
                 type="button"
@@ -164,16 +168,36 @@ export default function LoginPage() {
                 onClick={() => handleQuickLogin('analyst')}
                 className="text-xs border-[#4F8A62]/60 text-[#4F8A62] hover:bg-[#4F8A62]/10"
               >
-                Analyst Login
+                {t('auth.analystLogin')}
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                disabled={isLoading}
+                onClick={() => handleQuickLogin('reviewer')}
+                className="text-xs border-[#54788A]/60 text-[#8FB9C9] hover:bg-[#54788A]/10"
+              >
+                {t('auth.reviewerLogin')}
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                disabled={isLoading}
+                onClick={() => handleQuickLogin('viewer')}
+                className="text-xs border-[#9BA5A8]/60 text-[#C9D0D1] hover:bg-[#9BA5A8]/10"
+              >
+                {t('auth.viewerLogin')}
               </Button>
             </div>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <Input
-              label="Username"
+              label={t('auth.username')}
               type="text"
-              placeholder="Enter your username"
+              placeholder={t('auth.usernamePlaceholder')}
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               leftIcon={<User className="h-4 w-4 text-[#9BA5A8]" />}
@@ -181,9 +205,9 @@ export default function LoginPage() {
             />
 
             <Input
-              label="Password"
+              label={t('auth.password')}
               type="password"
-              placeholder="Enter your password"
+              placeholder={t('auth.passwordPlaceholder')}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               leftIcon={<Lock className="h-4 w-4 text-[#9BA5A8]" />}
@@ -196,7 +220,7 @@ export default function LoginPage() {
                   type="checkbox"
                   className="rounded bg-[#151A1D] border-[#30383D] text-[#C58B3A] focus:ring-[#C58B3A]"
                 />
-                <span>Remember session</span>
+                <span>{t('auth.remember')}</span>
               </label>
 
               <span className="text-[#9BA5A8] cursor-not-allowed" title="Contact System Administrator for credential resets">
@@ -212,18 +236,18 @@ export default function LoginPage() {
               isLoading={isLoading}
               rightIcon={<ShieldCheck className="h-4 w-4" />}
             >
-              Authenticate & Access Platform
+              {t('auth.authenticate')}
             </Button>
           </form>
 
           {/* Institutional Access & Signup Link */}
           <div className="pt-4 border-t border-[#30383D] text-center text-xs text-[#9BA5A8]">
-            <span>Don&apos;t have an account? </span>
+            <span>{t('auth.noAccount')} </span>
             <Link
               href="/signup"
               className="text-[#C58B3A] hover:text-[#D6A052] font-semibold underline underline-offset-2 ml-1"
             >
-              Sign up
+              {t('auth.signUp')}
             </Link>
           </div>
         </div>
@@ -231,4 +255,3 @@ export default function LoginPage() {
     </div>
   );
 }
-

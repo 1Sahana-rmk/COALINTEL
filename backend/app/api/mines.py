@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy.exc import OperationalError, ProgrammingError
 
 from database import get_db
+from app.core.rbac import get_current_user
 from app.schemas.mine import (
     MineSummaryResponse,
     MineDetailResponse,
@@ -18,7 +19,10 @@ from app.schemas.mine import (
 from app.services import mine_service
 
 logger = logging.getLogger("COALINTEL-MINES-API")
-router = APIRouter(tags=["Government Mine Intelligence"])
+# These registry/data endpoints were historically public. Keep their response
+# contracts and business logic unchanged, but require an authenticated session
+# consistently with the rest of the application.
+router = APIRouter(tags=["Government Mine Intelligence"], dependencies=[Depends(get_current_user)])
 
 
 @router.get("/mines", response_model=List[MineSummaryResponse])

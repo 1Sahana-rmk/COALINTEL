@@ -25,18 +25,21 @@ interface ProductionChartProps {
   data?: ProductionSeriesItem[];
   loading?: boolean;
   isApiConnected?: boolean;
+  allFiscalYears?: boolean;
 }
 
 interface CustomTooltipProps {
   active?: boolean;
   payload?: any[];
   label?: string;
+  allFiscalYears?: boolean;
 }
 
 const CustomTooltip: React.FC<CustomTooltipProps> = ({
   active,
   payload,
   label,
+  allFiscalYears = false,
 }) => {
   if (!active || !payload || payload.length === 0) return null;
 
@@ -66,7 +69,7 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({
     <div className="bg-[#151A1D] border border-[#30383D] rounded-lg p-3 shadow-dropdown text-xs space-y-2 min-w-[200px]">
       <div className="flex items-center justify-between border-b border-[#30383D] pb-1.5">
         <span className="font-bold text-[#E8ECEB] font-mono">
-          {label} Subsidiary
+          {allFiscalYears ? `FY ${label}` : `${label} Subsidiary`}
         </span>
 
         {variancePercent !== null && (
@@ -131,6 +134,7 @@ export const ProductionChart: React.FC<ProductionChartProps> = ({
   data = [],
   loading = false,
   isApiConnected = false,
+  allFiscalYears = false,
 }) => {
   const chartSeries = data;
 
@@ -140,7 +144,11 @@ export const ProductionChart: React.FC<ProductionChartProps> = ({
         <div className="flex items-center justify-between">
           <CardTitle>
             <BarChart3 className="h-5 w-5 text-[#C58B3A]" />
-            <span>Subsidiary Coal Production vs Target (MT)</span>
+            <span>
+              {allFiscalYears
+                ? 'Coal Production Progression by Fiscal Year (MT)'
+                : 'Subsidiary Coal Production vs Target (MT)'}
+            </span>
           </CardTitle>
 
           <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-[#242C30] text-[#9BA5A8] border border-[#30383D]">
@@ -149,8 +157,9 @@ export const ProductionChart: React.FC<ProductionChartProps> = ({
         </div>
 
         <CardDescription>
-          Deterministic comparison of extracted actual coal production
-          figures against operational target plans across CIL subsidiaries.
+          {allFiscalYears
+            ? 'Annual values are kept separate by fiscal year; they are not summed across years.'
+            : 'Deterministic comparison of extracted actual coal production figures against operational target plans across CIL subsidiaries.'}
         </CardDescription>
       </CardHeader>
 
@@ -191,7 +200,7 @@ export const ProductionChart: React.FC<ProductionChartProps> = ({
                 />
 
                 <XAxis
-                  dataKey="subsidiary"
+                  dataKey={allFiscalYears ? 'fiscal_year' : 'subsidiary'}
                   stroke="#9BA5A8"
                   fontSize={11}
                   tickLine={false}
@@ -207,7 +216,7 @@ export const ProductionChart: React.FC<ProductionChartProps> = ({
                 />
 
                 <Tooltip
-                  content={<CustomTooltip />}
+                  content={<CustomTooltip allFiscalYears={allFiscalYears} />}
                   cursor={{ fill: 'rgba(197, 139, 58, 0.08)' }}
                 />
 

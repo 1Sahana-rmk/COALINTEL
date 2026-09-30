@@ -8,7 +8,7 @@ from database import get_db
 from app.models.user import User
 from app.models.report import Report
 from app.models.audit_log import AuditLog
-from app.core.rbac import get_current_user, require_roles
+from app.core.rbac import REPORT_GENERATION_ROLES, REVIEW_ROLES, get_current_user, require_roles
 from app.schemas.report import ReportGenerateRequest, ReportResponse
 from app.services.report_service import create_report_assembly
 
@@ -19,7 +19,7 @@ router = APIRouter(tags=["Report Generation Subsystem"])
 def generate_report_endpoint(
     payload: ReportGenerateRequest,
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_roles(["Admin", "Analyst", "Reviewer"]))
+    current_user: User = Depends(require_roles(REPORT_GENERATION_ROLES))
 ):
     """
     Generates an official institutional PDF report using ReportLab engine.
@@ -102,7 +102,7 @@ def download_report_pdf(
 def approve_report_endpoint(
     id: int,
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_roles(["Admin", "Reviewer"]))
+    current_user: User = Depends(require_roles(REVIEW_ROLES))
 ):
     """
     Approves a report draft (status -> 'APPROVED'). Requires Admin or Reviewer RBAC role.
@@ -129,4 +129,3 @@ def approve_report_endpoint(
     db.refresh(report)
 
     return ReportResponse.model_validate(report)
-

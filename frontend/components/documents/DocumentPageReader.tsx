@@ -12,6 +12,9 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 import { Badge } from '@/components/ui/Badge';
 import { DocumentPageItem } from '@/types/document';
+import { DocumentTableItem } from '@/types/document';
+import { buildPageContentSummary, reliableTables } from '@/lib/documentEvidencePresentation';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface DocumentPageReaderProps {
   filename: string;
@@ -20,6 +23,7 @@ interface DocumentPageReaderProps {
   activePageNumber?: number;
   onPageChange?: (pageNum: number) => void;
   highlightTerm?: string;
+  pageTables?: DocumentTableItem[];
   loading?: boolean;
 }
 
@@ -30,11 +34,13 @@ export const DocumentPageReader: React.FC<DocumentPageReaderProps> = ({
   activePageNumber = 1,
   onPageChange,
   highlightTerm = '',
+  pageTables = [],
   loading = false,
 }) => {
   const [currentPage, setCurrentPage] = useState<number>(activePageNumber);
   const [searchTerm, setSearchTerm] = useState<string>(highlightTerm);
   const [fontSize, setFontSize] = useState<'sm' | 'base' | 'lg'>('base');
+  const { t } = useLanguage();
 
   // Keep internal currentPage in sync when activePageNumber changes externally (e.g. from lineage drawer)
   React.useEffect(() => {
@@ -53,6 +59,8 @@ export const DocumentPageReader: React.FC<DocumentPageReaderProps> = ({
   const activePageItem = useMemo(() => {
     return pages.find((p) => p.page_number === currentPage) || pages[0] || null;
   }, [pages, currentPage]);
+  const structuredPageTables = useMemo(() => reliableTables(pageTables), [pageTables]);
+  const pageSummary = useMemo(() => buildPageContentSummary(structuredPageTables), [structuredPageTables]);
 
   // Render text with search term highlighting
   const renderHighlightedText = (text: string) => {
@@ -95,14 +103,14 @@ export const DocumentPageReader: React.FC<DocumentPageReaderProps> = ({
             <BookOpen className="h-4 w-4 text-[#C58B3A] shrink-0" />
             <CardTitle className="text-sm font-semibold truncate max-w-xs text-[#E8ECEB]">{filename}</CardTitle>
             <Badge variant="amber" size="sm" className="hidden md:inline-flex">
-              Page {currentPage} of {totalPages || 1}
+              {t('workspace.page')} {currentPage} / {totalPages || 1}
             </Badge>
           </div>
 
           {/* Center Search within Page */}
           <div className="w-full sm:w-64">
             <Input
-              placeholder="Search text in page..."
+              placeholder={t('workspace.searchText')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               leftIcon={<Search className="h-3.5 w-3.5 text-[#9BA5A8]" />}
@@ -142,7 +150,7 @@ export const DocumentPageReader: React.FC<DocumentPageReaderProps> = ({
                 onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage <= 1 || loading}
                 className="p-1.5 rounded-lg bg-[#242C30] border border-[#30383D] text-[#E8ECEB] hover:bg-[#30383D] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-                title="Previous Page"
+                title={t('workspace.previous')}
               >
                 <ChevronLeft className="h-4 w-4" />
               </button>
@@ -163,7 +171,7 @@ export const DocumentPageReader: React.FC<DocumentPageReaderProps> = ({
                 onClick={() => handlePageChange(currentPage + 1)}
                 disabled={currentPage >= (totalPages || 1) || loading}
                 className="p-1.5 rounded-lg bg-[#242C30] border border-[#30383D] text-[#E8ECEB] hover:bg-[#30383D] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-                title="Next Page"
+                title={t('workspace.next')}
               >
                 <ChevronRight className="h-4 w-4" />
               </button>
@@ -187,19 +195,35 @@ export const DocumentPageReader: React.FC<DocumentPageReaderProps> = ({
             <div className="flex items-center justify-between pb-3 border-b border-[#30383D] text-[11px] font-mono text-[#9BA5A8]">
               <span className="flex items-center gap-1.5 text-[#E8ECEB] font-semibold">
                 <Bookmark className="h-3.5 w-3.5 text-[#C58B3A]" />
-                Provenanced Extracted Text Canvas
+                {t('workspace.pageTextCanvas')}
               </span>
               <span className="text-[#C58B3A] font-semibold">Page {activePageItem.page_number}</span>
             </div>
 
-            {/* Structured Page Content */}
-            <div className={`font-sans tracking-wide text-[#E8ECEB] selection:bg-[#C58B3A]/30 ${fontClasses[fontSize]}`}>
-              {renderHighlightedText(activePageItem.text_snippet || 'No text content available for this page.')}
-            </div>
+            {pageSummary ? (
+              <>
+                <section className="rounded-lg border border-[#C58B3A]/30 bg-[#C58B3A]/10 p-4 space-y-2">
+                  <h3 className="text-sm font-semibold text-[#E8ECEB]">{t('workspace.pageSummary')}</h3>
+                  <p className="text-sm leading-relaxed text-[#E8ECEB]">{pageSummary}</p>
+                  <p className="text-[10px] text-[#9BA5A8]">{t('workspace.summaryNote')}</p>
+                </section>
+
+                <details className="rounded-lg border border-[#30383D] bg-[#151A1D]">
+                  <summary className="cursor-pointer px-3 py-2 text-xs font-semibold text-[#C58B3A]">{t('workspace.rawText')}</summary>
+                  <div className={`border-t border-[#30383D] p-4 font-sans tracking-wide text-[#E8ECEB] selection:bg-[#C58B3A]/30 ${fontClasses[fontSize]}`}>
+                    {renderHighlightedText(activePageItem.text_snippet || t('workspace.noTextForPage'))}
+                  </div>
+                </details>
+              </>
+            ) : (
+              <div className={`font-sans tracking-wide text-[#E8ECEB] selection:bg-[#C58B3A]/30 ${fontClasses[fontSize]}`}>
+                {renderHighlightedText(activePageItem.text_snippet || t('workspace.noTextForPage'))}
+              </div>
+            )}
           </div>
         ) : (
           <div className="p-8 text-center text-[#9BA5A8] text-xs font-mono">
-            No page text data retrieved for Page {currentPage}.
+            {t('workspace.noPageData')} {currentPage}.
           </div>
         )}
       </CardContent>

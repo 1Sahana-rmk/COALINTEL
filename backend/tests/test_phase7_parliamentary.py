@@ -227,7 +227,61 @@ def test_parliamentary_pdf_export(auth_headers):
     res = client.post("/api/v1/parliamentary/export-pdf", json=briefing_payload, headers=auth_headers)
     assert res.status_code == 200
     assert res.headers["content-type"] == "application/pdf"
+    assert "attachment" in res.headers["content-disposition"]
+    assert "Parliamentary_Briefing_ALL CIL_2023-24.pdf" in res.headers["content-disposition"]
     assert len(res.content) > 100
+
+
+def test_parliamentary_pdf_export_bounds_large_discrepancy_payload(auth_headers):
+    """Export renders a bounded, already-generated payload instead of hanging on every row."""
+    briefing_payload = {
+        "question": "What is the production target variance?",
+        "question_type": "TARGETS",
+        "fiscal_year": "2023-24",
+        "selected_scope": "ALL CIL",
+        "executive_summary": "Bounded export regression fixture.",
+        "key_findings": ["Values are copied from the accepted briefing payload."],
+        "subsidiary_metrics": [],
+        "discrepancies": [
+            {
+                "entity": f"Mine {index}",
+                "metric_name": "Coal Production",
+                "fiscal_year": "2023-24",
+                "doc_a_filename": "a.pdf",
+                "doc_a_value": 8.0,
+                "doc_b_filename": "b.pdf",
+                "doc_b_value": 8.5,
+                "unit": "MT",
+                "variance_percentage": 6.25,
+                "status": "DISCREPANCY DETECTED",
+                "is_seeded_demo": False,
+                "provenance_label": "Verified High-Precision Conflict",
+            }
+            for index in range(300)
+        ],
+        "evidence": [
+            {
+                "document_id": 42,
+                "document_name": "a.pdf",
+                "page_number": 7,
+                "chunk_index": 0,
+                "text_snippet": "Coal Production: 8 MT",
+                "rrf_score": 0.9,
+                "subsidiary": "MCL",
+            }
+        ],
+        "confidence": 0.8,
+        "confidence_rating": "MEDIUM",
+        "has_sufficient_evidence": True,
+        "limitations": ["Large discrepancy result is bounded in the exported presentation."],
+        "generated_at": "2026-09-24 12:00:00 UTC",
+    }
+
+    res = client.post("/api/v1/parliamentary/export-pdf", json=briefing_payload, headers=auth_headers)
+    assert res.status_code == 200
+    assert res.headers["content-type"] == "application/pdf"
+    assert res.content.startswith(b"%PDF")
+    assert len(res.content) > 1000
 
 
 def test_phase5b_conflict_and_phase6_comparison_regression():

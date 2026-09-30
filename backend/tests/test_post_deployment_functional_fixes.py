@@ -224,8 +224,8 @@ def test_dashboard_all_subsidiaries_aggregation(isolated_client):
     none_res = client.get("/api/v1/dashboard/kpis", params={"subsidiary_filter": "NONEXISTENT_SUB"}, headers=headers)
     assert none_res.status_code == 200
     none_data = none_res.json()
-    assert float(none_data["total_production_mt"]) == 0.0
-    assert float(none_data["total_obr_mcum"]) == 0.0
+    assert none_data["total_production_mt"] == "N/A"
+    assert none_data["total_obr_mcum"] == "N/A"
 
 
 def test_normalization_service_subsidiary_scope():
@@ -267,9 +267,12 @@ def test_conflicts_api_detail_and_status_filter(isolated_client):
     # 1. List conflicts with status_filter="ALL"
     res = client.get("/api/v1/conflicts", params={"status_filter": "ALL"}, headers=headers)
     assert res.status_code == 200
-    conflicts = res.json()
-    assert len(conflicts) >= 1
-    conflict_id = conflicts[0]["id"]
+    conflict_page = res.json()
+    assert conflict_page["total"] >= 1
+    assert conflict_page["skip"] == 0
+    assert conflict_page["limit"] <= 100
+    assert conflict_page["items"]
+    conflict_id = conflict_page["items"][0]["id"]
 
     # 2. Get conflict by ID
     detail_res = client.get(f"/api/v1/conflicts/{conflict_id}", headers=headers)
@@ -386,4 +389,3 @@ def test_degraded_response_supports_llm_api_key_wording():
     concept_res = provider.generate_general_ai("unusual prompt xyz123")
     assert "LLM_API_KEY" in concept_res["answer"]
     assert "GEMINI_API_KEY" in concept_res["answer"]
-

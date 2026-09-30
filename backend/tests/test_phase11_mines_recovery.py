@@ -22,6 +22,13 @@ from app.models.extracted_metric import ExtractedMetric
 from data.government_mine_data_seed import run_government_data_ingestion
 
 client = TestClient(app)
+# The mines/data registry endpoints are authenticated application endpoints.
+# Keep this legacy data-shape suite focused on response compatibility by using
+# the existing seeded Admin session for its positive requests.
+from app.core.security import create_access_token
+client.headers.update({
+    "Authorization": f"Bearer {create_access_token(subject='admin', role='Admin', subsidiary='CIL HQ')}"
+})
 
 
 def test_migration_002_file_integrity():

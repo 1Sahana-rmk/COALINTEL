@@ -2,6 +2,7 @@ export interface NavItem {
   href: string;
   label: string;
   icon: string;
+  translationKey?: string;
   roles?: readonly string[];
 }
 
@@ -18,7 +19,10 @@ export const CIL_SUBSIDIARIES = [
   { value: 'CIL HQ', label: 'Coal India Limited HQ (CIL HQ)' },
 ] as const;
 
+export const ALL_FISCAL_YEARS_VALUE = 'ALL';
+
 export const FISCAL_YEARS = [
+  { value: ALL_FISCAL_YEARS_VALUE, label: 'All Fiscal Years' },
   { value: '2026-27', label: 'FY 2026-27 (YTD Provisional)' },
   { value: '2025-26', label: 'FY 2025-26' },
   { value: '2024-25', label: 'FY 2024-25' },
@@ -35,15 +39,15 @@ export const REPORT_TEMPLATES = [
 ] as const;
 
 export const NAV_ITEMS: NavItem[] = [
-  { href: '/dashboard', label: 'Executive Dashboard', icon: 'LayoutDashboard' },
-  { href: '/mines', label: 'Mines Intelligence', icon: 'Mountain' },
-  { href: '/documents', label: 'Document Library', icon: 'FileText' },
-  { href: '/query', label: 'Ask COALINTEL', icon: 'Sparkles' },
-  { href: '/parliamentary', label: 'Parliamentary Briefing', icon: 'Landmark' },
-  { href: '/comparison', label: 'Metric Comparison', icon: 'GitCompare' },
-  { href: '/analytics', label: 'Analytics & Cloud', icon: 'BarChart3' },
-  { href: '/validation', label: 'Validation Feed', icon: 'ShieldCheck' },
-  { href: '/conflicts', label: 'Conflict Resolver', icon: 'GitCompare', roles: ['Admin', 'Reviewer'] },
-  { href: '/reports', label: 'Report Wizard', icon: 'FileSpreadsheet' },
-  { href: '/audit', label: 'Audit Logs', icon: 'History', roles: ['Admin'] },
+  { href: '/dashboard', label: 'Executive Dashboard', translationKey: 'nav.dashboard', icon: 'LayoutDashboard' },
+  { href: '/mines', label: 'Mines Intelligence', translationKey: 'nav.mines', icon: 'Mountain' },
+  { href: '/documents', label: 'Document Library', translationKey: 'nav.documents', icon: 'FileText' },
+  { href: '/query', label: 'Ask COALINTEL', translationKey: 'nav.query', icon: 'Sparkles' },
+  { href: '/parliamentary', label: 'Parliamentary Briefing', translationKey: 'nav.parliamentary', icon: 'Landmark' },
+  { href: '/comparison', label: 'Metric Comparison', translationKey: 'nav.comparison', icon: 'GitCompare' },
+  { href: '/analytics', label: 'Analytics & Cloud', translationKey: 'nav.analytics', icon: 'BarChart3' },
+  { href: '/validation', label: 'Validation Feed', translationKey: 'nav.validation', icon: 'ShieldCheck' },
+  { href: '/conflicts', label: 'Conflict Resolver', translationKey: 'nav.conflicts', icon: 'GitCompare', roles: ['Admin', 'Reviewer'] },
+  { href: '/reports', label: 'Report Wizard', translationKey: 'nav.reports', icon: 'FileSpreadsheet' },
+  { href: '/audit', label: 'Audit Logs', translationKey: 'nav.audit', icon: 'History', roles: ['Admin'] },
 ];

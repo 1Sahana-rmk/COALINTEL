@@ -17,6 +17,8 @@ export interface ReportItem {
   approval_status: string;
   created_by?: number | null;
   created_at?: string | null;
+  validation_state?: string | null;
+  generation_status?: string | null;
 }
 
 export interface ReportListParams {

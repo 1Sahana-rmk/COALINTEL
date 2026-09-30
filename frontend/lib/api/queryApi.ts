@@ -4,6 +4,17 @@ export interface CitationItem {
   document_name: string;
   page_number: number;
   citation_tag: string;
+  document_id?: number | null;
+  evidence_type?: string | null;
+  table_id?: number | null;
+  locator?: Record<string, unknown>;
+  source_url?: string | null;
+  source_type?: string | null;
+  file_type?: string | null;
+  excerpt?: string | null;
+  extraction_method?: string | null;
+  confidence?: number | null;
+  validation_state?: string | null;
 }
 
 export interface EvidenceChunkItem {
@@ -16,6 +27,12 @@ export interface EvidenceChunkItem {
   rrf_score: number;
   vector_score?: number;
   keyword_score?: number;
+  page_id?: number | null;
+  table_id?: number | null;
+  chunk_type?: string | null;
+  source_locator?: Record<string, unknown>;
+  source_url?: string | null;
+  source_type?: string | null;
 }
 
 export interface QueryResponse {
@@ -26,6 +43,14 @@ export interface QueryResponse {
   provider: string;
   degraded_mode: boolean;
   mode?: string;
+  route?: 'STRUCTURED' | 'SEMANTIC' | 'HYBRID' | string;
+  support_state?: 'SUPPORTED' | 'CONFLICTING' | 'UNSUPPORTED' | 'UNAVAILABLE' | string;
+  generation_status?: string;
+  analysis?: Record<string, unknown>;
+  structured_facts?: Array<Record<string, unknown>>;
+  semantic_evidence?: Array<Record<string, unknown>>;
+  conflicts?: Array<Array<Record<string, unknown>>>;
+  source_references?: Array<Record<string, unknown>>;
 }
 
 export interface QueryRequestParams {

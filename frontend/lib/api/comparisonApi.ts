@@ -2,6 +2,8 @@ import { apiClient } from './client';
 
 export interface DocumentMetadataItem {
   id: string;
+  document_kind?: 'catalog' | 'ingested';
+  identifier_type?: 'catalog' | 'database';
   document_title: string;
   organization: string;
   financial_year: string;
@@ -72,7 +74,10 @@ export interface ComparisonMatrixItem {
   has_discrepancy: boolean;
   is_seeded_demo: boolean;
   has_conflict?: boolean;
+  is_resolved?: boolean;
+  resolution_status?: string | null;
   canonical_conflict_id?: number | null;
+  canonical_conflict_key?: string | null;
   conflict_details?: ConflictDetails | null;
   provenance_notice: string;
 }
@@ -124,22 +129,31 @@ export async function fetchComparisonOptions(): Promise<ComparisonOptionsRespons
   return response.data;
 }
 
-export async function fetchComparisonMatrix(params: {
+export interface ComparisonMatrixRequest {
   metric_name: string;
   fiscal_year?: string;
   entity_filter?: string;
   subsidiary_filter?: string;
   document_ids?: string[];
-}): Promise<ComparisonMatrixResponse> {
+  signal?: AbortSignal;
+}
+
+export function buildComparisonMatrixQuery(params: ComparisonMatrixRequest): string {
   const queryParams = new URLSearchParams();
   queryParams.append('metric_name', params.metric_name);
   if (params.fiscal_year) queryParams.append('fiscal_year', params.fiscal_year);
   if (params.entity_filter) queryParams.append('entity_filter', params.entity_filter);
   if (params.subsidiary_filter) queryParams.append('subsidiary_filter', params.subsidiary_filter);
   if (params.document_ids && params.document_ids.length > 0) {
-    params.document_ids.forEach((id) => queryParams.append('document_ids', id));
+    [...params.document_ids].sort().forEach((id) => queryParams.append('document_ids', id));
   }
+  return queryParams.toString();
+}
 
-  const response = await apiClient.get<ComparisonMatrixResponse>(`/comparison/matrix?${queryParams.toString()}`);
+export async function fetchComparisonMatrix(params: ComparisonMatrixRequest): Promise<ComparisonMatrixResponse> {
+  const query = buildComparisonMatrixQuery(params);
+  const response = await apiClient.get<ComparisonMatrixResponse>(`/comparison/matrix?${query}`, {
+    signal: params.signal,
+  });
   return response.data;
 }

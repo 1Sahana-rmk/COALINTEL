@@ -5,10 +5,18 @@ import {
   ValidationFeedItem,
   WordCloudItem,
 } from '@/types/dashboard';
+import { ALL_FISCAL_YEARS_VALUE } from '@/lib/constants';
 
 export interface DashboardFilterParams {
   fiscal_year?: string;
   subsidiary_filter?: string;
+}
+
+export function normalizeDashboardFiscalYear(fiscalYear?: string): string | undefined {
+  if (!fiscalYear || fiscalYear.toUpperCase() === ALL_FISCAL_YEARS_VALUE) {
+    return undefined;
+  }
+  return fiscalYear;
 }
 
 export const dashboardApi = {
@@ -24,7 +32,7 @@ export const dashboardApi = {
 
     const response = await apiClient.get<DashboardKpis>('/dashboard/kpis', {
       params: {
-        fiscal_year: params?.fiscal_year || undefined,
+        fiscal_year: normalizeDashboardFiscalYear(params?.fiscal_year),
         subsidiary_filter: isAll ? undefined : sub,
       },
     });
@@ -42,7 +50,7 @@ export const dashboardApi = {
 
     const response = await apiClient.get<DashboardChartsResponse>('/dashboard/charts', {
       params: {
-        fiscal_year: params?.fiscal_year || undefined,
+        fiscal_year: normalizeDashboardFiscalYear(params?.fiscal_year),
         subsidiary_filter: isAll ? undefined : sub,
       },
     });

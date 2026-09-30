@@ -11,9 +11,12 @@ import { ReportHistoryTable } from '@/components/reports/ReportHistoryTable';
 import { reportApi, ReportItem } from '@/lib/api/reportApi';
 import { useScope } from '@/context/ScopeContext';
 import { FileSpreadsheet } from 'lucide-react';
+import { canGenerateReports, useCurrentUserRole } from '@/hooks/useCurrentUserRole';
 
 export default function ReportsPage() {
   const { selectedSubsidiary } = useScope();
+  const userRole = useCurrentUserRole();
+  const canGenerate = canGenerateReports(userRole);
   const queryClient = useQueryClient();
   const [selectedReport, setSelectedReport] = useState<ReportItem | null>(null);
 
@@ -55,6 +58,7 @@ export default function ReportsPage() {
       {/* Page Header */}
       <PageHeader
         title="Institutional Report Assembly Wizard"
+        titleKey="page.reports.title"
         description="Automated compilation of Parliamentary Inquiry Replies, Annual Summaries, and Production Audits rendered via Python ReportLab engine."
         breadcrumbs={[{ label: 'Report Wizard' }]}
         badge={<Badge variant="amber">ReportLab Engine</Badge>}
@@ -66,10 +70,16 @@ export default function ReportsPage() {
       {/* Main Grid: Config Form & Draft Preview */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
         <div className="lg:col-span-5">
-          <ReportWizardForm
-            onGenerate={(payload) => generateMutation.mutate(payload)}
-            isLoading={generateMutation.isPending}
-          />
+          {canGenerate ? (
+            <ReportWizardForm
+              onGenerate={(payload) => generateMutation.mutate(payload)}
+              isLoading={generateMutation.isPending}
+            />
+          ) : (
+            <div className="rounded-xl border border-[#30383D] bg-[#151A1D] p-5 text-xs text-[#9BA5A8]">
+              Report generation is restricted to Admin and Analyst roles. You can review available reports and approved outputs here.
+            </div>
+          )}
         </div>
 
         <div className="lg:col-span-7">

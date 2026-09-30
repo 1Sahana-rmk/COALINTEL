@@ -194,6 +194,37 @@ def test_extract_november_2024_table():
     assert monthly_metrics["SECL"]["numeric_value"] == 13.31
 
 
+def test_table_preamble_does_not_promote_serial_column_to_entity():
+    """Preamble/title rows must not make Sl No values canonical entities."""
+    tables = [{
+        "table_index": 0,
+        "raw_rows": [
+            ["Monthly Coal Statistics for May 2023", "", "", ""],
+            ["Coal Production", "", "", ""],
+            ["Narrative introduction", "", "", ""],
+            ["", "", "", "Fig. in MT"],
+            ["Sl No", "Subs", "Monthly Target", "Production during May"],
+            ["", "", "", "FY 24"],
+            ["1", "ECL", "3.95", "3.49"],
+            ["2", "BCCL", "2.93", "3.18"],
+        ],
+    }]
+
+    metrics = extract_entity_tuples_from_tables(
+        tables=tables,
+        page_number=1,
+        page_text="Monthly Coal Statistics for May 2023 Fig. in MT",
+        default_subsidiary="CIL HQ",
+        default_year="2023-24",
+    )
+
+    entities = {metric["mine_name"] for metric in metrics}
+    assert "ECL" in entities
+    assert "BCCL" in entities
+    assert "Sl No" not in entities
+    assert not any(entity.isdigit() for entity in entities)
+
+
 # ==============================================================================
 # 5. REAL PDF INTEGRATION TEST (READ-ONLY)
 # ==============================================================================
@@ -373,4 +404,3 @@ def test_aggregate_rows_not_treated_as_operating_subsidiaries():
     assert monthly_metrics["CIL Total"]["mine_name"] == "CIL Total"
     assert monthly_metrics["Captive/Others"]["mine_name"] == "Captive/Others"
     assert monthly_metrics["Grand Total"]["mine_name"] == "Grand Total"
-

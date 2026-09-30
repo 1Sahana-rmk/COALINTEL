@@ -3,12 +3,14 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Logo } from '../../../components/ui/Logo';
-import { Input } from '../../../components/ui/Input';
-import { Button } from '../../../components/ui/Button';
-import { Badge } from '../../../components/ui/Badge';
-import { ErrorState } from '../../../components/ui/ErrorState';
-import { authApi } from '../../../lib/api/authApi';;
+import { Logo } from '@/components/ui/Logo';
+import { Input } from '@/components/ui/Input';
+import { Button } from '@/components/ui/Button';
+import { Badge } from '@/components/ui/Badge';
+import { ErrorState } from '@/components/ui/ErrorState';
+import { authApi } from '@/lib/api/authApi';
+import { useLanguage } from '@/context/LanguageContext';
+import { LanguageSelector } from '@/components/ui/LanguageSelector';
 import { ShieldCheck, Lock, User, Mail, Building2, Sparkles } from 'lucide-react';
 
 const SUBSIDIARIES = [
@@ -34,6 +36,7 @@ export default function SignupPage() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { t } = useLanguage();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -91,7 +94,7 @@ export default function SignupPage() {
           <div className="mt-8 lg:mt-12 space-y-4 lg:space-y-6 max-w-xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded bg-[#C58B3A]/15 border border-[#C58B3A]/30 text-[#C58B3A] text-xs font-mono">
               <Sparkles className="h-3.5 w-3.5" />
-              <span>Analyst Self-Registration</span>
+              <span>{t('auth.signupRole')}</span>
             </div>
 
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-[#E8ECEB] font-sans leading-tight">
@@ -105,8 +108,8 @@ export default function SignupPage() {
 
             <div className="p-4 rounded-lg bg-[#1C2226] border border-[#30383D] space-y-2">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-semibold text-[#E8ECEB]">Role Attribution</span>
-                <Badge variant="success" size="sm">Analyst (Standard)</Badge>
+                <span className="text-xs font-semibold text-[#E8ECEB]">{t('auth.signupRole')}</span>
+                <Badge variant="success" size="sm">{t('auth.signupRole')}</Badge>
               </div>
 
               <p className="text-[11px] text-[#9BA5A8]">
@@ -125,7 +128,10 @@ export default function SignupPage() {
       <div className="relative flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-12 z-10 bg-[#0E1113] order-1 lg:order-2 overflow-y-auto">
         <div className="w-full max-w-md space-y-6 p-8 rounded-lg bg-[#1C2226] border border-[#30383D] shadow-sm">
           <div className="space-y-1.5 text-center sm:text-left">
-            <h2 className="text-2xl font-bold tracking-tight text-[#E8ECEB]">Create Analyst Account</h2>
+            <div className="flex items-start justify-between gap-3">
+              <h2 className="text-2xl font-bold tracking-tight text-[#E8ECEB]">{t('auth.signupTitle')}</h2>
+              <LanguageSelector compact />
+            </div>
             <p className="text-xs text-[#9BA5A8]">
               Enter your details to register for platform access.
             </p>

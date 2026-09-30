@@ -61,6 +61,29 @@ export interface ParliamentaryBriefingResponse {
   has_sufficient_evidence: boolean;
   limitations: string[];
   generated_at: string;
+  validation_state?: 'SUPPORTED' | 'SUPPORTED_WITH_WARNINGS' | 'REVIEW_REQUIRED' | 'INSUFFICIENT_EVIDENCE' | 'FAILED';
+  warnings?: string[];
+  report_id?: number | null;
+}
+
+export interface ParliamentaryBriefingJobResponse {
+  job_id: number;
+  status: 'QUEUED' | 'RETRIEVING' | 'GENERATING' | 'VALIDATING' | 'RENDERING' | 'COMPLETED' | 'FAILED';
+  validation_state?: string | null;
+  error?: string | null;
+  briefing?: ParliamentaryBriefingResponse | null;
+}
+
+export async function startBriefingJob(
+  payload: ParliamentaryBriefingRequest
+): Promise<ParliamentaryBriefingJobResponse> {
+  const response = await apiClient.post<ParliamentaryBriefingJobResponse>('/parliamentary/briefing/jobs', payload);
+  return response.data;
+}
+
+export async function getBriefingJob(jobId: number): Promise<ParliamentaryBriefingJobResponse> {
+  const response = await apiClient.get<ParliamentaryBriefingJobResponse>(`/parliamentary/briefing/jobs/${jobId}`);
+  return response.data;
 }
 
 export async function generateBriefing(
@@ -74,6 +97,13 @@ export async function exportBriefingPdf(
   briefing: ParliamentaryBriefingResponse
 ): Promise<Blob> {
   const response = await apiClient.post('/parliamentary/export-pdf', briefing, {
+    responseType: 'blob',
+  });
+  return response.data;
+}
+
+export async function exportBriefingPdfById(jobId: number): Promise<Blob> {
+  const response = await apiClient.get(`/parliamentary/briefing/jobs/${jobId}/export-pdf`, {
     responseType: 'blob',
   });
   return response.data;

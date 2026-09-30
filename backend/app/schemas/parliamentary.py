@@ -63,5 +63,16 @@ class ParliamentaryBriefingResponse(BaseModel):
     has_sufficient_evidence: bool = True
     limitations: List[str]
     generated_at: str
+    validation_state: str = "REVIEW_REQUIRED"
+    warnings: List[str] = []
+    report_id: Optional[int] = None
 
     model_config = ConfigDict(from_attributes=True)
+
+
+class ParliamentaryBriefingJobResponse(BaseModel):
+    job_id: int
+    status: str
+    validation_state: Optional[str] = None
+    error: Optional[str] = None
+    briefing: Optional[ParliamentaryBriefingResponse] = None

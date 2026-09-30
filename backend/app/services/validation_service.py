@@ -49,17 +49,35 @@ def run_deterministic_validation_feed(
     feed_items = []
 
     for m, filename in metrics:
-        pct_diff = 0.0
-        val_status = m.validation_status or "VALIDATED"
-        msg = "Deterministic unit normalization and value verified."
+        pct_diff = None
+        discrepancy_available = False
+        # The feed status describes this feed's deterministic arithmetic check,
+        # not the extraction status persisted on the metric.  A metric can be
+        # extracted with high confidence while still having no supported
+        # arithmetic operands to validate.
+        val_status = "UNVERIFIED"
+        msg = "Arithmetic discrepancy unavailable: no supported unit-conversion check for this metric."
 
         # Perform arithmetic check if raw vs standard conversion exists
         if m.raw_unit and "lakh" in m.raw_unit.lower():
-            expected_std = round(m.numeric_value * 0.1, 4)
-            pct_diff, calc_status = validate_metric_arithmetic(m.standard_value, expected_std)
-            if calc_status == "WARNING_ARITHMETIC":
-                val_status = "WARNING_ARITHMETIC"
-                msg = f"Arithmetic discrepancy > 5% detected: Extracted standard value {m.standard_value} MT differs from calculated {expected_std} MT ({pct_diff}% diff)."
+            if m.numeric_value is not None and m.standard_value is not None:
+                expected_std = round(float(m.numeric_value) * 0.1, 4)
+                pct_diff, calc_status = validate_metric_arithmetic(
+                    float(m.standard_value), expected_std
+                )
+                discrepancy_available = True
+                val_status = calc_status
+                if calc_status == "WARNING_ARITHMETIC":
+                    msg = f"Arithmetic discrepancy > 5% detected: Extracted standard value {m.standard_value} MT differs from calculated {expected_std} MT ({pct_diff}% diff)."
+                else:
+                    msg = "Deterministic unit conversion and arithmetic check passed."
+            else:
+                msg = "Arithmetic discrepancy unavailable: conversion operands are incomplete."
+        else:
+            # A zero here would falsely imply that a comparison was performed.
+            # Non-conversion metrics do not have a deterministic arithmetic
+            # discrepancy check in this feed.
+            msg = "Arithmetic discrepancy unavailable: no supported unit-conversion check for this metric."
 
         feed_items.append({
             "id": m.id,
@@ -68,13 +86,28 @@ def run_deterministic_validation_feed(
             "metric_name": m.metric_name,
             "fiscal_year": m.fiscal_year,
             "reported_value": m.standard_value,
-            "calculated_value": round(m.numeric_value * 0.1, 4) if (m.raw_unit and "lakh" in m.raw_unit.lower()) else m.standard_value,
+            "calculated_value": (
+                round(float(m.numeric_value) * 0.1, 4)
+                if discrepancy_available
+                else None
+            ),
             "standard_unit": m.standard_unit,
             "percentage_difference": pct_diff,
+            "discrepancy_available": discrepancy_available,
             "validation_status": val_status,
             "message": msg,
             "document_id": m.document_id,
-            "filename": filename
+            "filename": filename,
+            # Preserve the persisted extraction score as a separate field.
+            # ``validation_status`` above describes the deterministic
+            # arithmetic check and must not be represented as OCR confidence.
+            "extraction_confidence": (
+                float(m.confidence_score)
+                if m.confidence_score is not None
+                else None
+            ),
+            "page_number": m.page_number,
+            "data_origin": m.data_origin,
         })
 
     return feed_items

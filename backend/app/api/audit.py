@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from database import get_db
 from app.models.user import User
 from app.models.audit_log import AuditLog
-from app.core.rbac import get_current_user, require_roles
+from app.core.rbac import ADMIN_ONLY_ROLES, get_current_user, require_roles
 from app.schemas.audit import AuditLogResponse
 
 router = APIRouter(tags=["System Audit Ledger"])
@@ -15,7 +15,7 @@ router = APIRouter(tags=["System Audit Ledger"])
 def get_audit_logs(
     limit: int = 50,
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_roles(["Admin"]))
+    current_user: User = Depends(require_roles(ADMIN_ONLY_ROLES))
 ):
     """
     Returns paginated system security audit trail events sorted chronologically descending.

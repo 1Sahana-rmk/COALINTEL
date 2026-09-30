@@ -16,6 +16,10 @@ _model_instance = None
 _model_lock = threading.Lock()
 
 
+class ProductionEmbeddingUnavailable(RuntimeError):
+    """Raised when Step 3 cannot produce a real semantic embedding."""
+
+
 class OnnxEmbeddingBackend:
     """
     Low-memory CPU embedding inference backend using ONNX Runtime and pure-Rust Tokenizers.
@@ -271,3 +275,85 @@ def generate_batch_embeddings(texts: List[str], batch_size: Optional[int] = None
         f"({len(all_embeddings)} vectors produced)."
     )
     return all_embeddings
+
+
+def embedding_runtime_status(initialize: bool = False) -> dict:
+    """Return explicit Step 3 embedding readiness without pretending MOCK is real.
+
+    ``initialize=False`` is safe for health checks and does not load a model.
+    The legacy functions above intentionally retain their Step 2-compatible
+    deterministic fallback; Step 3 calls the strict functions below instead.
+    """
+    if _model_instance is None and not initialize:
+        return {
+            "status": "NOT_INITIALIZED",
+            "available": None,
+            "degraded": False,
+            "provider": None,
+            "model": EMBEDDING_MODEL_NAME,
+            "dimension": EMBEDDING_DIMENSION,
+        }
+
+    model = get_embedding_model()
+    if model == "MOCK" or model is None:
+        return {
+            "status": "UNAVAILABLE",
+            "available": False,
+            "degraded": True,
+            "provider": "DETERMINISTIC_HASH_FALLBACK",
+            "model": EMBEDDING_MODEL_NAME,
+            "dimension": EMBEDDING_DIMENSION,
+            "reason": "Only the legacy deterministic fallback is available; it is not semantic retrieval.",
+        }
+    provider = "ONNX" if isinstance(model, OnnxEmbeddingBackend) else "PYTORCH"
+    return {
+        "status": "READY",
+        "available": True,
+        "degraded": False,
+        "provider": provider,
+        "model": EMBEDDING_MODEL_NAME,
+        "dimension": EMBEDDING_DIMENSION,
+    }
+
+
+def _encode_production_model(model: Any, texts: List[str]) -> List[List[float]]:
+    if isinstance(model, OnnxEmbeddingBackend):
+        return model.encode(texts, normalize_embeddings=True).tolist()
+    encoded = model.encode(
+        texts if len(texts) > 1 else texts[0],
+        show_progress_bar=False,
+        convert_to_numpy=True,
+        normalize_embeddings=True,
+    )
+    array = np.asarray(encoded)
+    if array.ndim == 1:
+        array = np.expand_dims(array, 0)
+    return array.tolist()
+
+
+def generate_production_embeddings(texts: List[str]) -> List[List[float]]:
+    """Generate real semantic embeddings or fail explicitly.
+
+    This is the only embedding entry point used by the PostgreSQL knowledge
+    layer.  It never writes deterministic hash vectors to pgvector.
+    """
+    if not texts:
+        return []
+    model = get_embedding_model()
+    if model == "MOCK" or model is None:
+        raise ProductionEmbeddingUnavailable(
+            "Real embedding model unavailable; deterministic fallback is disabled for Step 3 semantic indexing."
+        )
+    try:
+        vectors = _encode_production_model(model, texts)
+    except Exception as exc:
+        logger.error("Production embedding inference failed: %s", exc, exc_info=True)
+        raise ProductionEmbeddingUnavailable("Real embedding inference failed.") from exc
+    if len(vectors) != len(texts) or any(len(vector) != EMBEDDING_DIMENSION for vector in vectors):
+        raise ProductionEmbeddingUnavailable("Embedding provider returned an unexpected vector shape.")
+    return vectors
+
+
+def generate_production_embedding(text: str) -> List[float]:
+    """Strict single-text variant used by semantic queries."""
+    return generate_production_embeddings([text])[0]

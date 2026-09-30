@@ -3,6 +3,7 @@ import sys
 import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.pool import StaticPool
 from fastapi.testclient import TestClient
 
 # Ensure backend directory is in python path
@@ -18,7 +19,12 @@ from app.core.security import verify_password
 @pytest.fixture
 def isolated_db():
     """Creates a temporary isolated SQLite database for bootstrap testing."""
-    test_engine = create_engine("sqlite:///:memory:", echo=False)
+    test_engine = create_engine(
+        "sqlite:///:memory:",
+        echo=False,
+        connect_args={"check_same_thread": False},
+        poolclass=StaticPool,
+    )
     TestSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=test_engine)
     Base.metadata.create_all(bind=test_engine)
     
@@ -99,3 +105,43 @@ def test_auth_login_with_bootstrapped_admin():
         assert data["user"]["role"] == "Admin"
     else:
         assert res.status_code == 401
+
+
+@pytest.mark.parametrize(
+    ("username", "password", "expected_role"),
+    [
+        ("admin", "Admin@123", "Admin"),
+        ("analyst", "Analyst@123", "Analyst"),
+        ("reviewer", "Reviewer@123", "Reviewer"),
+        ("auditor", "Auditor@123", "Viewer"),
+    ],
+)
+def test_all_demo_personas_authenticate_and_me_reports_persisted_role(
+    isolated_db, username, password, expected_role
+):
+    """Demo shortcuts must use persisted users and the real auth/me contract."""
+    seed_default_users(isolated_db)
+
+    def override_get_db():
+        yield isolated_db
+
+    app.dependency_overrides[get_db] = override_get_db
+    try:
+        client = TestClient(app)
+        login_response = client.post(
+            "/api/v1/auth/login",
+            json={"username": username, "password": password},
+        )
+        assert login_response.status_code == 200
+        login_data = login_response.json()
+        assert login_data["user"]["role"] == expected_role
+
+        me_response = client.get(
+            "/api/v1/auth/me",
+            headers={"Authorization": f"Bearer {login_data['access_token']}"},
+        )
+        assert me_response.status_code == 200
+        assert me_response.json()["username"] == username
+        assert me_response.json()["role"] == expected_role
+    finally:
+        app.dependency_overrides.pop(get_db, None)

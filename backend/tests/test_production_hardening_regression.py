@@ -163,6 +163,10 @@ class TestProductionHardeningRegression(unittest.TestCase):
         self.assertEqual(item.id, 10005)
         self.assertEqual(item.mine_name, "Gevra OpenCast")
         self.assertEqual(item.status, "OPEN")
+        self.assertIsNone(item.document_a_id)
+        self.assertEqual(item.document_a_source_id, "MOC-CD-2024-25")
+        self.assertIsNone(item.document_b_id)
+        self.assertEqual(item.document_b_source_id, "MOC-MS-2024-25")
 
         # Resolve
         payload = ConflictResolveRequest(
@@ -188,6 +192,24 @@ class TestProductionHardeningRegression(unittest.TestCase):
         ).first()
         self.assertIsNotNone(audit)
         self.assertEqual(audit.action, "CONFLICT_RESOLVE")
+
+        # Repeating the same submitted resolution is idempotent and does not
+        # append an uncontrolled second audit entry.
+        resolved_again = resolve_conflict_endpoint(
+            id=10005,
+            payload=payload,
+            db=self.db,
+            current_user=self.test_user
+        )
+        self.assertEqual(resolved_again.status, "RESOLVED")
+        self.assertEqual(
+            self.db.query(AuditLog).filter(
+                AuditLog.resource_type == "DataConflictRecord",
+                AuditLog.resource_id == 5,
+                AuditLog.action == "CONFLICT_RESOLVE"
+            ).count(),
+            1
+        )
 
     def test_03_comparison_matrix_links_canonical_conflict_id(self):
         """Verify comparison matrix returns canonical_conflict_id for both gov and document discrepancies."""
@@ -231,6 +253,58 @@ class TestProductionHardeningRegression(unittest.TestCase):
         gevra_matrix = matrix_res["matrices"][0]
         self.assertTrue(gevra_matrix["has_discrepancy"] or gevra_matrix["has_conflict"])
         self.assertEqual(gevra_matrix["canonical_conflict_id"], 10009)
+
+        gov_cr.resolution_status = "RESOLVED"
+        self.db.commit()
+        resolved_matrix = get_comparison_matrix(
+            metric_name="Coal Production",
+            fiscal_year="2024-25",
+            entity_filter="Gevra",
+            db=self.db,
+            current_user=self.test_user
+        )["matrices"][0]
+        self.assertEqual(resolved_matrix["canonical_conflict_id"], 10009)
+        self.assertTrue(resolved_matrix["is_resolved"])
+        self.assertFalse(resolved_matrix["has_conflict"])
+
+    def test_04_data_conflict_resolution_is_idempotent_and_persisted(self):
+        """A document conflict remains the same resolved record after retry."""
+        doc1 = Document(id=11, filename="Primary.pdf", file_path="uploads/Primary.pdf", file_hash="hash11", subsidiary="ECL", file_type="pdf", status="INDEXED")
+        doc2 = Document(id=12, filename="Comparison.pdf", file_path="uploads/Comparison.pdf", file_hash="hash12", subsidiary="ECL", file_type="pdf", status="INDEXED")
+        self.db.add_all([doc1, doc2])
+        self.db.add(DataConflict(
+            id=11,
+            doc_a_id=11,
+            doc_b_id=12,
+            mine_name="Rajmahal OpenCast",
+            metric_name="Coal Production",
+            fiscal_year="2023-24",
+            doc_a_value=41.8,
+            doc_b_value=42.5,
+            discrepancy_pct=1.65,
+            status="OPEN"
+        ))
+        self.db.commit()
+
+        payload = ConflictResolveRequest(
+            resolution_action="ACCEPT_DOC_A",
+            notes="Accepted primary source after review"
+        )
+        first = resolve_conflict_endpoint(11, payload, self.db, self.test_user)
+        second = resolve_conflict_endpoint(11, payload, self.db, self.test_user)
+        self.assertEqual(first.status, "RESOLVED")
+        self.assertEqual(second.status, "RESOLVED")
+        resolved = self.db.query(DataConflict).filter(DataConflict.id == 11).one()
+        self.assertEqual(resolved.status, "RESOLVED")
+        self.assertIsNotNone(resolved.resolved_at)
+        self.assertEqual(
+            self.db.query(AuditLog).filter(
+                AuditLog.resource_type == "DataConflict",
+                AuditLog.resource_id == 11,
+                AuditLog.action == "CONFLICT_RESOLVE"
+            ).count(),
+            1
+        )
 
     # =========================================================================
     # PROBLEM 2: RAG SAFE GROUNDED FALLBACK TESTS

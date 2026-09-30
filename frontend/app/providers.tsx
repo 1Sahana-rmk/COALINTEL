@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ScopeProvider } from '@/context/ScopeContext';
+import { LanguageProvider } from '@/context/LanguageContext';
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(
@@ -19,7 +20,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ScopeProvider>{children}</ScopeProvider>
+      <LanguageProvider>
+        <ScopeProvider>{children}</ScopeProvider>
+      </LanguageProvider>
     </QueryClientProvider>
   );
 }

@@ -6,6 +6,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/com
 import { Badge } from '@/components/ui/Badge';
 import { ShieldCheck, ChevronRight, AlertTriangle, CheckCircle2 } from 'lucide-react';
 import { ValidationFeedItem } from '@/types/dashboard';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface ValidationFeedWidgetProps {
   items?: ValidationFeedItem[];
@@ -64,6 +65,7 @@ export const ValidationFeedWidget: React.FC<ValidationFeedWidgetProps> = ({
   items = defaultFeed,
   loading = false,
 }) => {
+  const { t } = useLanguage();
   const displayItems = items && items.length > 0 ? items : defaultFeed;
 
   return (
@@ -73,17 +75,17 @@ export const ValidationFeedWidget: React.FC<ValidationFeedWidgetProps> = ({
           <div className="flex items-center justify-between">
             <CardTitle>
               <ShieldCheck className="h-5 w-5 text-[#4F8A62]" />
-              <span>Validation & Quality Feed</span>
+              <span>{t('dashboard.validationFeed')}</span>
             </CardTitle>
             <Link
               href="/validation"
               className="text-xs text-[#C58B3A] hover:text-[#D6A052] font-mono flex items-center gap-1 transition-colors"
             >
-              View Feed <ChevronRight className="h-3 w-3" />
+              {t('dashboard.viewFeed')} <ChevronRight className="h-3 w-3" />
             </Link>
           </div>
           <CardDescription>
-            Arithmetic tolerance monitoring (&gt;5%) and multi-source variance checks (&gt;1%).
+            {t('dashboard.validationDescription')}
           </CardDescription>
         </CardHeader>
 
@@ -96,7 +98,7 @@ export const ValidationFeedWidget: React.FC<ValidationFeedWidgetProps> = ({
             </div>
           ) : displayItems.length === 0 ? (
             <div className="p-6 text-center text-xs text-[#9BA5A8] border border-dashed border-[#30383D] rounded-lg">
-              No recent validation alerts found for active scope.
+              {t('dashboard.noAlerts')}
             </div>
           ) : (
             <div className="space-y-3">
@@ -149,7 +151,7 @@ export const ValidationFeedWidget: React.FC<ValidationFeedWidgetProps> = ({
           href="/conflicts"
           className="w-full block text-center py-2 px-3 rounded-lg bg-[#151A1D] hover:bg-[#242C30] border border-[#30383D] text-[#E8ECEB] hover:text-[#C58B3A] text-xs font-mono transition-colors"
         >
-          Inspect Conflicts Matrix →
+          {t('dashboard.inspectConflicts')}
         </Link>
       </div>
     </Card>

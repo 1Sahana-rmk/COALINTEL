@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 # Constants
 MAX_FILE_SIZE_BYTES = 50 * 1024 * 1024  # 50 MB Limit
-ALLOWED_EXTENSIONS = {".pdf", ".docx", ".xlsx", ".csv"}
+ALLOWED_EXTENSIONS = {".pdf", ".docx", ".xlsx", ".csv", ".png", ".jpg", ".jpeg", ".tif", ".tiff"}
 
 
 def sanitize_filename(filename: str) -> str:
@@ -41,7 +41,7 @@ def sanitize_filename(filename: str) -> str:
 def validate_file_upload(filename: str, file_size: int) -> str:
     """
     Enforces maximum file size limit (50MB) and file extension whitelist.
-    Returns normalized uppercase file type ('PDF', 'DOCX', 'XLSX', 'CSV').
+    Returns normalized uppercase file type.
     Raises HTTP 400 Bad Request on validation failure.
     """
     if file_size > MAX_FILE_SIZE_BYTES:
@@ -73,7 +73,14 @@ def process_file_ingestion(
     original_filename: str,
     user_id: int,
     subsidiary: Optional[str] = None,
-    fiscal_year: Optional[str] = None
+    fiscal_year: Optional[str] = None,
+    source_type: str = "MANUAL",
+    source_url: Optional[str] = None,
+    source_organization: Optional[str] = None,
+    title: Optional[str] = None,
+    publication_date=None,
+    source_document_id: Optional[int] = None,
+    document_version: int = 1,
 ) -> Document:
     """
     Executes secure document ingestion:
@@ -104,6 +111,11 @@ def process_file_ingestion(
         "DOCX": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
         "XLSX": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         "CSV": "text/csv",
+        "PNG": "image/png",
+        "JPG": "image/jpeg",
+        "JPEG": "image/jpeg",
+        "TIF": "image/tiff",
+        "TIFF": "image/tiff",
     }
     content_type = content_type_map.get(file_type, "application/octet-stream")
 
@@ -122,6 +134,14 @@ def process_file_ingestion(
             subsidiary=subsidiary,
             fiscal_year=fiscal_year,
             status="PENDING",
+            processing_status="DOWNLOADED",
+            source_type=source_type.upper(),
+            source_url=source_url,
+            source_organization=source_organization,
+            title=title,
+            publication_date=publication_date,
+            source_document_id=source_document_id,
+            document_version=document_version,
             uploaded_by=user_id
         )
         db.add(new_doc)

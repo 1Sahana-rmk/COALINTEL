@@ -8,6 +8,7 @@ class ReportGenerateRequest(BaseModel):
     fiscal_year: Optional[str] = "2023-24"
     subsidiary: Optional[str] = "ECL"
     title: Optional[str] = None
+    async_mode: bool = False
 
 
 class ReportResponse(BaseModel):
@@ -20,5 +21,15 @@ class ReportResponse(BaseModel):
     approval_status: str
     created_by: Optional[int] = None
     created_at: Optional[datetime] = None
+    validation_state: Optional[str] = None
+    generation_status: Optional[str] = None
 
     model_config = ConfigDict(from_attributes=True)
+
+
+class ReportJobResponse(BaseModel):
+    report_id: int
+    status: str
+    validation_state: Optional[str] = None
+    error: Optional[str] = None
+    report: Optional[ReportResponse] = None

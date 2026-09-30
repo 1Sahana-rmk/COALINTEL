@@ -4,6 +4,8 @@ import React from 'react';
 import { StatCard } from '@/components/ui/StatCard';
 import { Pickaxe, Layers, FileText, AlertTriangle, CheckCircle2, ShieldCheck } from 'lucide-react';
 import { DashboardKpis } from '@/types/dashboard';
+import { useLanguage } from '@/context/LanguageContext';
+import { dashboardKpiSubtitle } from '@/lib/dashboardKpiPresentation';
 
 interface KpiGridProps {
   kpis?: DashboardKpis | null;
@@ -29,13 +31,14 @@ const formatKpiMetric = (
   const cleanStr = String(val).replace(/,/g, '').trim();
   const num = parseFloat(cleanStr);
   if (isNaN(num)) {
-    return isApiConnected ? '0.00' : '—';
+    return String(val);
   }
 
   return num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 };
 
 export const KpiGrid: React.FC<KpiGridProps> = ({ kpis, loading = false, isApiConnected = false }) => {
+  const { t } = useLanguage();
   const productionValue = formatKpiMetric(kpis?.total_production_mt, isApiConnected);
   const obrValue = formatKpiMetric(kpis?.total_obr_mcum, isApiConnected);
 
@@ -57,65 +60,77 @@ export const KpiGrid: React.FC<KpiGridProps> = ({ kpis, loading = false, isApiCo
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
       {/* Primary KPI: Coal Production */}
       <StatCard
-        title="Coal Production"
+        title={t('dashboard.coalProduction')}
         value={productionValue}
         unit="MT"
         icon={<Pickaxe className="h-4 w-4" />}
-        subtitle={isApiConnected ? 'Verified Extracted Metric' : 'Production Scope Total'}
+        subtitle={dashboardKpiSubtitle(
+          productionValue,
+          kpis?.total_production_period,
+          isApiConnected,
+          t('dashboard.productionScopeTotal'),
+          t('dashboard.noDataAvailable'),
+        )}
         variant="primary"
         loading={loading}
       />
 
       {/* Primary KPI: Overburden Removal */}
       <StatCard
-        title="Overburden Removal"
+        title={t('dashboard.overburdenRemoval')}
         value={obrValue}
         unit="M.Cu.M"
         icon={<Layers className="h-4 w-4" />}
-        subtitle={isApiConnected ? 'Normalized Stripping Volume' : 'Total Mine Volume'}
+        subtitle={dashboardKpiSubtitle(
+          obrValue,
+          kpis?.total_obr_period,
+          isApiConnected,
+          t('dashboard.totalMineVolume'),
+          t('dashboard.noDataAvailable'),
+        )}
         variant="primary"
         loading={loading}
       />
 
       {/* Actionable Alert KPI: Active Conflicts */}
       <StatCard
-        title="Active Conflicts"
+        title={t('dashboard.activeConflicts')}
         value={conflictsCount}
-        unit="Open"
+        unit={t('dashboard.open')}
         icon={<AlertTriangle className="h-4 w-4" />}
-        subtitle="Discrepancy > 1% Flagged"
-        trend={conflictsCount > 0 ? { value: `${conflictsCount} Review Needed`, isPositive: false } : undefined}
+        subtitle={t('dashboard.discrepancyFlagged')}
+        trend={conflictsCount > 0 ? { value: `${conflictsCount} ${t('dashboard.reviewNeeded')}`, isPositive: false } : undefined}
         variant={conflictsCount > 0 ? 'danger' : 'default'}
         loading={loading}
       />
 
       {/* Secondary Supporting Metric: Ingested Documents */}
       <StatCard
-        title="Ingested Documents"
+        title={t('dashboard.ingestedDocuments')}
         value={docsCount}
-        unit="Docs"
+        unit={t('dashboard.docs')}
         icon={<FileText className="h-4 w-4 text-[#54788A]" />}
-        subtitle="Parsed & Vector Chunked"
+        subtitle={t('dashboard.parsedVectorChunked')}
         variant="default"
         loading={loading}
       />
 
       {/* Secondary Supporting Metric: Entity Accuracy */}
       <StatCard
-        title="Entity Accuracy"
+        title={t('dashboard.entityAccuracy')}
         value={kpis?.entity_accuracy_rate || (isApiConnected ? 'N/A' : '—')}
         icon={<CheckCircle2 className="h-4 w-4 text-[#4F8A62]" />}
-        subtitle="Regex & NLP Normalization"
+        subtitle={t('dashboard.regexNlpNormalization')}
         variant="default"
         loading={loading}
       />
 
       {/* Secondary Supporting Metric: Citation Coverage */}
       <StatCard
-        title="Citation Coverage"
+        title={t('dashboard.citationCoverage')}
         value={kpis?.citation_coverage_rate || (isApiConnected ? 'N/A' : '—')}
         icon={<ShieldCheck className="h-4 w-4 text-[#4F8A62]" />}
-        subtitle="RAG Grounding Verified"
+        subtitle={t('dashboard.ragGroundingVerified')}
         variant="default"
         loading={loading}
       />

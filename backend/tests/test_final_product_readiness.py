@@ -192,8 +192,8 @@ class TestFinalProductReadiness(unittest.TestCase):
         data = resp.json()
 
         self.assertEqual(data["total_documents"], 0)
-        self.assertEqual(data["total_production_mt"], "0.00")
-        self.assertEqual(data["total_obr_mcum"], "0.00")
+        self.assertEqual(data["total_production_mt"], "N/A")
+        self.assertEqual(data["total_obr_mcum"], "N/A")
         self.assertEqual(data["active_conflicts"], 0)
         self.assertEqual(data["entity_accuracy_rate"], "N/A")
         self.assertEqual(data["citation_coverage_rate"], "N/A")

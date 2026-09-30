@@ -73,9 +73,9 @@ export const ReportPreviewCard: React.FC<ReportPreviewCardProps> = ({
           <Sparkles className="h-4 w-4 text-[#C58B3A]" />
           <CardTitle className="text-sm font-semibold text-[#E8ECEB]">ReportLab Draft Assembly Preview</CardTitle>
         </div>
-        <Badge variant={isApproved ? 'success' : 'warning'}>
-          {report.approval_status || 'DRAFT'}
-        </Badge>
+          <Badge variant={isApproved ? 'success' : 'warning'}>
+            {report.approval_status || 'DRAFT'}
+          </Badge>
       </CardHeader>
 
       <CardContent className="p-6 space-y-5">
@@ -107,7 +107,7 @@ export const ReportPreviewCard: React.FC<ReportPreviewCardProps> = ({
         <div className="p-3.5 rounded-lg bg-[#4F8A62]/10 border border-[#4F8A62]/30 text-xs text-[#E8ECEB] flex items-center gap-2.5">
           <ShieldCheck className="h-4 w-4 text-[#4F8A62] shrink-0" />
           <span>
-            Compiled using verified unit-normalized metrics from database <code className="text-[#C58B3A] font-mono font-semibold">extracted_metrics</code> and resolved conflicts.
+            Evidence validation: <code className="text-[#C58B3A] font-mono font-semibold">{report.validation_state || 'REVIEW_REQUIRED'}</code>. Numeric content is sourced from persisted evidence and remains subject to approval.
           </span>
         </div>
 

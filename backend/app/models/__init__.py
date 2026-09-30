@@ -21,6 +21,10 @@ from app.models.mine import (
     StarRating,
 )
 from app.models.parliamentary_qa import ParliamentaryQA
+from app.models.document_artifacts import DocumentPage, DocumentTable, DocumentImage
+from app.models.official_source import OfficialSource, OfficialDocument
+from app.models.structured_fact import StructuredFact
+from app.models.knowledge_chunk import KnowledgeChunk
 
 __all__ = [
     "User",
@@ -42,5 +46,11 @@ __all__ = [
     "CoalBlock",
     "StarRating",
     "ParliamentaryQA",
+    "DocumentPage",
+    "DocumentTable",
+    "DocumentImage",
+    "OfficialSource",
+    "OfficialDocument",
+    "StructuredFact",
+    "KnowledgeChunk",
 ]
-

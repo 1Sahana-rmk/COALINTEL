@@ -1,5 +1,6 @@
 import re
 import logging
+import time
 from typing import Optional, List, Dict, Any, Tuple
 
 from sqlalchemy.orm import Session
@@ -24,6 +25,167 @@ from app.services.normalization_service import (
 )
 
 logger = logging.getLogger(__name__)
+
+
+def _production_target_period(raw_snippet: Optional[str]) -> Optional[str]:
+    """Return the persisted period label when the extractor recorded one."""
+    if not raw_snippet:
+        return None
+    match = re.search(
+        r"\b(?:monthly\s+)?(?:production|target)[^\n]{0,40}?\((?P<period>"
+        r"(?:January|February|March|April|May|June|July|August|September|October|November|December)"
+        r"\s+20\d{2}(?:[-/]\d{2,4})?)\)",
+        raw_snippet,
+        re.IGNORECASE,
+    )
+    return match.group("period") if match else None
+
+
+def handle_production_targets_query(
+    db: Session,
+    query_text: str,
+) -> Optional[Dict[str, Any]]:
+    """Answer Production Targets requests from aligned persisted metric rows.
+
+    This deliberately does not aggregate annual values from rows whose source
+    period is unknown. A target/actual variance is emitted only when both rows
+    share subsidiary, entity, fiscal year, source document, and an
+    extractor-preserved period.
+    """
+    q_entities = detect_query_entities(query_text)
+    q_lower = query_text.lower()
+    fiscal_year = q_entities.get("fiscal_year")
+    target_terms = ("target" in q_lower or "achievement" in q_lower or "variance" in q_lower)
+    production_query = "production" in q_lower or "coal" in q_lower
+    if not fiscal_year or not target_terms or not production_query:
+        return None
+
+    started = time.perf_counter()
+    target_rows = (
+        db.query(ExtractedMetric, Document)
+        .join(Document, ExtractedMetric.document_id == Document.id)
+        .filter(ExtractedMetric.fiscal_year == fiscal_year)
+        .filter(ExtractedMetric.metric_name.ilike("%target%"))
+        .order_by(ExtractedMetric.id.desc())
+        .limit(1000)
+        .all()
+    )
+    actual_rows = (
+        db.query(ExtractedMetric, Document)
+        .join(Document, ExtractedMetric.document_id == Document.id)
+        .filter(ExtractedMetric.fiscal_year == fiscal_year)
+        .filter(ExtractedMetric.metric_name.ilike("%production%"))
+        .filter(~ExtractedMetric.metric_name.ilike("%cumulative%"))
+        .filter(~ExtractedMetric.metric_name.ilike("%target%"))
+        .order_by(ExtractedMetric.id.desc())
+        .limit(1000)
+        .all()
+    )
+
+    def row_key(metric: ExtractedMetric) -> Optional[Tuple[str, str, str, str, int]]:
+        period = _production_target_period(metric.raw_snippet)
+        if not period:
+            return None
+        return (
+            (metric.subsidiary or "").strip().upper(),
+            (metric.mine_name or "").strip().casefold(),
+            metric.fiscal_year,
+            period.casefold(),
+            int(metric.document_id),
+        )
+
+    # Newest persisted row wins if a re-ingestion produced duplicate evidence.
+    targets_by_key: Dict[Tuple[str, str, str, str, int], Tuple[ExtractedMetric, Document]] = {}
+    actuals_by_key: Dict[Tuple[str, str, str, str, int], Tuple[ExtractedMetric, Document]] = {}
+    for metric, document in target_rows:
+        key = row_key(metric)
+        if key and key not in targets_by_key:
+            targets_by_key[key] = (metric, document)
+    for metric, document in actual_rows:
+        key = row_key(metric)
+        if key and key not in actuals_by_key:
+            actuals_by_key[key] = (metric, document)
+
+    aligned_keys = sorted(set(targets_by_key).intersection(actuals_by_key))
+    evidence_chunks: List[Dict[str, Any]] = []
+    comparison_lines: List[str] = []
+    for key in aligned_keys[:50]:
+        target_metric, target_doc = targets_by_key[key]
+        actual_metric, actual_doc = actuals_by_key[key]
+        target_value = float(target_metric.standard_value if target_metric.standard_value is not None else target_metric.numeric_value)
+        actual_value = float(actual_metric.standard_value if actual_metric.standard_value is not None else actual_metric.numeric_value)
+        period = _production_target_period(actual_metric.raw_snippet) or key[3]
+        target_tag = f"[{target_doc.filename}, Page {target_metric.page_number or 1}]"
+        actual_tag = f"[{actual_doc.filename}, Page {actual_metric.page_number or 1}]"
+        if target_value == 0:
+            variance_text = "unavailable (zero target)"
+            achievement_text = "unavailable (zero target)"
+        else:
+            variance = ((actual_value - target_value) / abs(target_value)) * 100
+            achievement = (actual_value / target_value) * 100
+            variance_text = f"{variance:.2f}%"
+            achievement_text = f"{achievement:.2f}%"
+        comparison_lines.append(
+            f"- {key[0] or 'Subsidiary unavailable'} / {key[1] or 'Entity unavailable'} / {period}: "
+            f"actual {actual_value:g} {actual_metric.standard_unit or actual_metric.unit} "
+            f"vs target {target_value:g} {target_metric.standard_unit or target_metric.unit}; "
+            f"achievement {achievement_text}; target variance {variance_text} "
+            f"{actual_tag} {target_tag}"
+        )
+        for metric, document, tag in (
+            (actual_metric, actual_doc, actual_tag),
+            (target_metric, target_doc, target_tag),
+        ):
+            evidence_chunks.append({
+                "chunk_id": None,
+                "document_id": metric.document_id,
+                "filename": document.filename,
+                "page_number": metric.page_number or 1,
+                "chunk_index": -int(metric.id),
+                "text": metric.raw_snippet or "",
+                "rrf_score": 1.0,
+                "authority": "OFFICIAL" if classify_document_authority(document.filename) == "OFFICIAL" else "UNKNOWN",
+                "citation_tag": tag,
+            })
+
+    elapsed_ms = (time.perf_counter() - started) * 1000
+    logger.info(
+        "PARLIAMENTARY_STRUCTURED_TARGETS_DONE elapsed_ms=%.2f target_rows=%d actual_rows=%d aligned_pairs=%d",
+        elapsed_ms, len(target_rows), len(actual_rows), len(aligned_keys),
+    )
+
+    if comparison_lines:
+        answer = (
+            f"Structured production-target evidence for FY {fiscal_year}. "
+            "The comparisons below use only persisted target and production rows "
+            "with matching subsidiary, entity, fiscal year, and source period; "
+            "annual values were not summed across unknown periods.\n\n"
+            + "\n".join(comparison_lines)
+        )
+    else:
+        answer = (
+            f"Structured production-target records were checked for FY {fiscal_year}, "
+            "but no target/production pair with a persisted matching source period "
+            "was available. Achievement and target variance are therefore unavailable; "
+            "no annual values were fabricated or summed."
+        )
+
+    return {
+        "query": query_text,
+        "answer": answer,
+        "citations": [
+            {
+                "document_name": chunk["filename"],
+                "page_number": chunk["page_number"],
+                "citation_tag": chunk["citation_tag"],
+            }
+            for chunk in evidence_chunks
+        ],
+        "evidence_chunks": evidence_chunks,
+        "provider": "structured_analytics",
+        "degraded_mode": False,
+        "mode": "EVIDENCE_GROUNDED",
+    }
 
 
 def build_isolated_prompt(query: str, evidence_chunks: List[Dict[str, Any]]) -> str:
@@ -471,7 +633,8 @@ def handle_structured_analytical_query(
         query_base = (
             db.query(ExtractedMetric, Document)
             .join(Document, ExtractedMetric.document_id == Document.id)
-            .filter(ExtractedMetric.metric_name.ilike("%production%"))
+        .filter(ExtractedMetric.metric_name.ilike("%production%"))
+        .filter(~ExtractedMetric.metric_name.ilike("%cumulative%"))
             .filter(ExtractedMetric.subsidiary.isnot(None))
             .filter(ExtractedMetric.subsidiary != "")
         )
@@ -671,7 +834,8 @@ def execute_rag_query(
     db: Session,
     query_text: str,
     top_k: int = 5,
-    subsidiary_filter: str = None
+    subsidiary_filter: str = None,
+    question_type: Optional[str] = None,
 ) -> Dict[str, Any]:
     """
     Executes Dual-Mode Q&A Routing:
@@ -700,14 +864,25 @@ def execute_rag_query(
     # -------------------------------------------------------------
     # MODE B: Evidence-Grounded Mining Intelligence
     # -------------------------------------------------------------
-    # 1. Deterministic Structured Analytical Handling
+    # 1. Deterministic Production Targets handling. This intent must not
+    # initialize semantic retrieval when aligned PostgreSQL evidence is enough.
+    target_intent = (question_type or "").upper() == "TARGETS" or (
+        "target variance" in query_text.lower()
+        and "production" in query_text.lower()
+    )
+    if target_intent:
+        structured_targets = handle_production_targets_query(db, query_text)
+        if structured_targets:
+            return structured_targets
+
+    # 2. Deterministic Structured Analytical Handling
     structured_res = handle_structured_analytical_query(db, query_text)
     if structured_res:
         return structured_res
 
     norm_sub = normalize_subsidiary_scope(subsidiary_filter)
 
-    # 2. Execute Hybrid Retrieval
+    # 3. Execute Hybrid Retrieval
     evidence_chunks = execute_hybrid_search(db, query_text, top_k=top_k, subsidiary_filter=norm_sub)
 
     # Fallback if no evidence retrieved
@@ -853,5 +1028,3 @@ def execute_rag_query(
         "degraded_mode": is_degraded,
         "mode": "EVIDENCE_GROUNDED" if citations else "INSUFFICIENT_EVIDENCE"
     }
-
-

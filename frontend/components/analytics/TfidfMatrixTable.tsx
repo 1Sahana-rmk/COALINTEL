@@ -17,14 +17,14 @@ export const TfidfMatrixTable: React.FC<TfidfMatrixTableProps> = ({ topics }) =>
         <div className="flex items-center justify-between">
           <CardTitle className="text-sm font-bold text-[#E8ECEB] flex items-center gap-2">
             <BarChart3 className="h-4 w-4 text-[#C58B3A]" />
-            <span>TF-IDF Term Frequency Extraction Matrix</span>
+            <span>Corpus Term Frequency Matrix</span>
           </CardTitle>
           <Badge variant="amber" size="sm">
             {topics.length} Key Topics
           </Badge>
         </div>
         <CardDescription className="text-xs text-[#9BA5A8]">
-          Statistical Term Frequency-Inverse Document Frequency (TF-IDF) scores extracted across ingested mining documents.
+          Occurrence counts measured from persisted indexed evidence; no static topic list is used.
         </CardDescription>
       </CardHeader>
 
@@ -36,13 +36,13 @@ export const TfidfMatrixTable: React.FC<TfidfMatrixTableProps> = ({ topics }) =>
                 <th className="py-3 px-4">Mining Term / Keyword</th>
                 <th className="py-3 px-4">Operational Category</th>
                 <th className="py-3 px-4">Occurrences</th>
-                <th className="py-3 px-4 text-right">TF-IDF Score</th>
+                <th className="py-3 px-4 text-right">Frequency Score</th>
               </tr>
             </thead>
 
             <tbody className="divide-y divide-[#30383D] text-xs font-mono">
               {topics.map((t, idx) => {
-                const tfidfScore = (t.weight / 500).toFixed(3);
+                  const frequencyScore = (t.score ?? t.weight).toFixed(3);
 
                 return (
                   <tr key={idx} className="hover:bg-[#242C30]/50 transition-colors">
@@ -58,7 +58,7 @@ export const TfidfMatrixTable: React.FC<TfidfMatrixTableProps> = ({ topics }) =>
                       {t.weight} Count
                     </td>
                     <td className="py-3.5 px-4 text-right font-bold text-[#4F8A62]">
-                      {tfidfScore}
+                      {frequencyScore}
                     </td>
                   </tr>
                 );

@@ -6,6 +6,8 @@ import { X, FileText, Bookmark, ExternalLink, ShieldCheck, Sparkles } from 'luci
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { CitationItem, EvidenceChunkItem } from '@/lib/api/queryApi';
+import { apiClient } from '@/lib/api/client';
+import { buildOfficialSourceUrl } from '@/lib/officialSourceLink';
 
 interface CitationDrawerProps {
   citation: CitationItem | null;
@@ -28,8 +30,27 @@ export const CitationDrawer: React.FC<CitationDrawerProps> = ({
 
   if (!citation) return null;
 
-  const docId = chunk?.document_id || (citation as any)?.document_id || 1;
+  const docId = chunk?.document_id || citation.document_id || null;
   const pageNum = citation.page_number || 1;
+  const officialUrl = buildOfficialSourceUrl(
+    {
+      source_type: citation.source_type,
+      source_url: citation.source_url,
+      file_type: citation.file_type,
+    },
+    pageNum,
+  );
+
+  const downloadStoredSource = async () => {
+    if (!docId) return;
+    const response = await apiClient.get(`/documents/${docId}/source`, { responseType: 'blob' });
+    const objectUrl = URL.createObjectURL(response.data);
+    const anchor = document.createElement('a');
+    anchor.href = objectUrl;
+    anchor.download = citation.document_name || 'source-document';
+    anchor.click();
+    URL.revokeObjectURL(objectUrl);
+  };
 
   return (
     <div
@@ -79,6 +100,11 @@ export const CitationDrawer: React.FC<CitationDrawerProps> = ({
             <div className="text-[11px] font-mono text-[#9BA5A8]">
               Citation Tag: <code className="text-[#E8ECEB] font-semibold">{citation.citation_tag}</code>
             </div>
+            <div className="flex flex-wrap gap-2 text-[11px] text-[#9BA5A8]">
+              {citation.table_id != null && <span>Table #{citation.table_id}</span>}
+              {citation.evidence_type && <span>Evidence: {citation.evidence_type}</span>}
+              {citation.validation_state && <span>Validation: {citation.validation_state}</span>}
+            </div>
           </div>
 
           {/* RAG Retrieval Metrics Card */}
@@ -107,8 +133,13 @@ export const CitationDrawer: React.FC<CitationDrawerProps> = ({
             </span>
 
             <div className="p-4 rounded-lg bg-[#151A1D] border border-[#30383D] text-xs font-mono text-[#E8ECEB] leading-relaxed max-h-56 overflow-y-auto selection:bg-[#C58B3A]/30">
-              {chunk?.text || 'No raw chunk text snippet retrieved.'}
+              {citation.excerpt || chunk?.text || 'No raw evidence excerpt retrieved.'}
             </div>
+            {citation.locator && Object.keys(citation.locator).length > 0 && (
+              <div className="text-[11px] font-mono text-[#9BA5A8]">
+                Locator: {JSON.stringify(citation.locator)}
+              </div>
+            )}
           </div>
 
           <div className="p-3 rounded-lg bg-[#4F8A62]/10 border border-[#4F8A62]/30 text-[#4F8A62] text-xs flex items-center gap-2">
@@ -123,16 +154,25 @@ export const CitationDrawer: React.FC<CitationDrawerProps> = ({
             Close
           </Button>
 
-          <Link href={`/documents/${docId}?page=${pageNum}`} className="w-full">
-            <Button
-              variant="primary"
-              size="md"
-              rightIcon={<ExternalLink className="h-4 w-4" />}
-              className="w-full"
-            >
-              Open Canvas (Page {pageNum})
-            </Button>
-          </Link>
+          {officialUrl && (
+            <a href={officialUrl} target="_blank" rel="noreferrer" className="w-full">
+              <Button variant="outline" size="md" rightIcon={<ExternalLink className="h-4 w-4" />} className="w-full">
+                Open Official Source
+              </Button>
+            </a>
+          )}
+          {docId && (
+            <>
+              <Button variant="outline" size="md" onClick={downloadStoredSource} className="w-full">
+                Download Stored Copy
+              </Button>
+              <Link href={`/documents/${docId}?page=${pageNum}`} className="w-full">
+                <Button variant="primary" size="md" rightIcon={<ExternalLink className="h-4 w-4" />} className="w-full">
+                  Open Canvas (Page {pageNum})
+                </Button>
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </div>

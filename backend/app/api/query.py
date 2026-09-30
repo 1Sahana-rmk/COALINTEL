@@ -5,13 +5,44 @@ from database import get_db
 from app.models.user import User
 from app.models.document import Document
 from app.models.document_chunk import DocumentChunk
-from app.core.rbac import get_current_user, require_roles
+from app.core.rbac import INGESTION_ROLES, get_current_user, require_roles
 from app.schemas.query import QueryRequest, QueryResponse, CitationItem, EvidenceChunkItem
 from app.services.rag_service import execute_rag_query
+from app.services.assistant_service import execute_assistant_query
 from app.services.vector_store_service import add_chunks_to_vector_store
 from app.services.normalization_service import normalize_subsidiary_scope
 
 router = APIRouter(tags=["Q&A & Vector Retrieval"])
+
+
+def execute_step4a_or_legacy_query(
+    db: Session,
+    query_text: str,
+    *,
+    top_k: int = 5,
+    subsidiary_filter: str = None,
+):
+    """Use Step 4A on migrated knowledge stores, preserving legacy test stores."""
+    from sqlalchemy import inspect
+
+    try:
+        bind = db.get_bind()
+        has_step3_store = bind.dialect.name == "postgresql" and "knowledge_chunks" in inspect(bind).get_table_names()
+    except Exception:
+        has_step3_store = False
+    if has_step3_store:
+        return execute_assistant_query(
+            db,
+            query_text,
+            top_k=top_k,
+            subsidiary_filter=subsidiary_filter,
+        )
+    return execute_rag_query(
+        db,
+        query_text,
+        top_k=top_k,
+        subsidiary_filter=subsidiary_filter,
+    )
 
 
 @router.post("/query/ask", response_model=QueryResponse)
@@ -49,7 +80,7 @@ def ask_question(
         # Subsidiary-scoped user: restrict to user's assigned subsidiary
         effective_subsidiary = current_user.subsidiary
 
-    result = execute_rag_query(
+    result = execute_step4a_or_legacy_query(
         db=db,
         query_text=payload.query,
         top_k=payload.top_k or 5,
@@ -95,7 +126,7 @@ def ask_question(
 def index_document_vectors(
     id: int,
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_roles(["Admin", "Analyst"]))
+    current_user: User = Depends(require_roles(INGESTION_ROLES))
 ):
     """
     Indexes or re-indexes an existing document's 500-token chunks into persistent ChromaDB.

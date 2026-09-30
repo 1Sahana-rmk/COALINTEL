@@ -2,7 +2,9 @@ version: '3.8'
 
 services:
   postgres:
-    image: postgres:15-alpine
+    # Step 3 requires the PostgreSQL vector extension. Native/local PostgreSQL
+    # installations must install pgvector separately before migration 005.
+    image: pgvector/pgvector:pg15
     container_name: coalintel_postgres
     restart: always
     environment:

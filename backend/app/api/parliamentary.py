@@ -2,18 +2,20 @@ import os
 import io
 import time
 import logging
+from concurrent.futures import ThreadPoolExecutor
+from xml.sax.saxutils import escape as escape_xml
 from typing import Optional, List, Dict, Any
 from datetime import datetime
 from fastapi import APIRouter, Depends, HTTPException, status, Response
-from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
 from sqlalchemy import func, or_
 
-from database import get_db
+from database import get_db, SessionLocal
 from app.models.user import User
 from app.models.document import Document
 from app.models.extracted_metric import ExtractedMetric
 from app.models.data_conflict import DataConflict
+from app.models.report import Report
 from app.core.rbac import get_current_user
 from app.schemas.parliamentary import (
     ParliamentaryBriefingRequest,
@@ -21,6 +23,7 @@ from app.schemas.parliamentary import (
     SubsidiaryMetricItem,
     FlaggedDiscrepancyItem,
     BriefingEvidenceItem,
+    ParliamentaryBriefingJobResponse,
 )
 from app.services.rag_service import execute_rag_query
 from app.services.hybrid_search_service import detect_query_entities
@@ -41,7 +44,76 @@ from app.services.conflict_service import (
 
 logger = logging.getLogger(__name__)
 
+MAX_EXPORT_DISCREPANCIES = 250
+
+
+def _pdf_text(value: Any) -> str:
+    """Escape untrusted briefing text for ReportLab Paragraph markup."""
+    text = "" if value is None else str(value)
+    return escape_xml(text).replace("\n", "<br/>")
+
 router = APIRouter(tags=["Parliamentary & Executive Briefing Intelligence"])
+
+_BRIEFING_EXECUTOR = ThreadPoolExecutor(max_workers=2, thread_name_prefix="parliamentary-briefing")
+_ACTIVE_BRIEFING_STATES = {"QUEUED", "RETRIEVING", "GENERATING", "VALIDATING", "RENDERING"}
+
+
+def _briefing_job_status(report: Report) -> str:
+    return str((report.content_json or {}).get("job_status") or "QUEUED")
+
+
+def _run_briefing_job(report_id: int, payload_data: Dict[str, Any], user_id: int) -> None:
+    db = SessionLocal()
+    report = None
+    try:
+        report = db.query(Report).filter(Report.id == report_id).first()
+        if not report:
+            return
+        content = dict(report.content_json or {})
+        content["job_status"] = "RETRIEVING"
+        report.content_json = content
+        db.commit()
+        payload = ParliamentaryBriefingRequest.model_validate(payload_data)
+        user = db.query(User).filter(User.id == user_id).first()
+        if not user:
+            raise RuntimeError("Requesting user no longer exists.")
+        content["job_status"] = "GENERATING"
+        report.content_json = content
+        db.commit()
+        result = generate_parliamentary_briefing(payload=payload, db=db, current_user=user)
+        content = dict(report.content_json or {})
+        content["job_status"] = "VALIDATING"
+        report.content_json = content
+        db.commit()
+        content.update({"job_status": "COMPLETED", "briefing": result.model_dump()})
+        content["job_status"] = "RENDERING"
+        report.content_json = content
+        db.commit()
+        pdf_response = export_parliamentary_pdf(payload=result, current_user=user)
+        from app.services.storage_service import save_report_binary
+        filename = f"Parliamentary_Briefing_{report.id}.pdf"
+        report.file_path = save_report_binary(
+            file_bytes=pdf_response.body,
+            report_id=report.id,
+            filename=filename,
+            content_type="application/pdf",
+        )
+        content["job_status"] = "COMPLETED"
+        report.content_json = content
+        db.commit()
+    except Exception as exc:
+        logger.exception("PARLIAMENTARY_BRIEFING_JOB_FAILED report_id=%s", report_id)
+        try:
+            report = db.query(Report).filter(Report.id == report_id).first()
+            if report:
+                content = dict(report.content_json or {})
+                content.update({"job_status": "FAILED", "error": str(exc)[:1000]})
+                report.content_json = content
+                db.commit()
+        except Exception:
+            db.rollback()
+    finally:
+        db.close()
 
 
 # Try importing ReportLab for PDF generation
@@ -55,6 +127,84 @@ except ImportError:
     HAS_REPORTLAB = False
 
 
+@router.post("/parliamentary/briefing/jobs", response_model=ParliamentaryBriefingJobResponse, status_code=status.HTTP_202_ACCEPTED)
+def start_parliamentary_briefing_job(
+    payload: ParliamentaryBriefingRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """Queue one bounded briefing generation and return without holding HTTP open."""
+    payload_data = payload.model_dump()
+    requested_key = repr(sorted(payload_data.items()))
+    for existing in db.query(Report).filter(
+        Report.report_type == "PARLIAMENTARY_BRIEFING",
+        Report.created_by == current_user.id,
+    ).order_by(Report.id.desc()).limit(20).all():
+        content = existing.content_json or {}
+        if _briefing_job_status(existing) in _ACTIVE_BRIEFING_STATES and content.get("request_key") == requested_key:
+            return ParliamentaryBriefingJobResponse(job_id=existing.id, status=_briefing_job_status(existing))
+
+    report = Report(
+        title=f"Parliamentary Briefing — {payload.question_text[:180]}",
+        report_type="PARLIAMENTARY_BRIEFING",
+        subsidiary=payload.subsidiary_filter or "ALL CIL",
+        fiscal_year=payload.fiscal_year or "ALL",
+        file_path=None,
+        approval_status="DRAFT",
+        created_by=current_user.id,
+        content_json={"job_status": "QUEUED", "payload": payload_data, "request_key": requested_key},
+    )
+    db.add(report)
+    db.commit()
+    db.refresh(report)
+    _BRIEFING_EXECUTOR.submit(_run_briefing_job, report.id, payload_data, current_user.id)
+    return ParliamentaryBriefingJobResponse(job_id=report.id, status="QUEUED")
+
+
+@router.get("/parliamentary/briefing/jobs/{job_id}", response_model=ParliamentaryBriefingJobResponse)
+def get_parliamentary_briefing_job(
+    job_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    report = db.query(Report).filter(Report.id == job_id, Report.report_type == "PARLIAMENTARY_BRIEFING").first()
+    if not report or (report.created_by != current_user.id and current_user.role != "Admin"):
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Briefing job not found.")
+    content = report.content_json or {}
+    briefing = None
+    if content.get("briefing"):
+        briefing = ParliamentaryBriefingResponse.model_validate(content["briefing"])
+    return ParliamentaryBriefingJobResponse(
+        job_id=report.id,
+        status=_briefing_job_status(report),
+        validation_state=(briefing.validation_state if briefing else None),
+        error=content.get("error"),
+        briefing=briefing,
+    )
+
+
+@router.get("/parliamentary/briefing/jobs/{job_id}/export-pdf")
+def export_parliamentary_briefing_job(
+    job_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    report = db.query(Report).filter(Report.id == job_id, Report.report_type == "PARLIAMENTARY_BRIEFING").first()
+    if not report or (report.created_by != current_user.id and current_user.role != "Admin"):
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Briefing job not found.")
+    briefing_data = (report.content_json or {}).get("briefing")
+    if _briefing_job_status(report) != "COMPLETED" or not briefing_data:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Briefing is not ready for export.")
+    if report.file_path:
+        from app.services.storage_service import read_report_binary, report_binary_exists
+        if report_binary_exists(report.file_path):
+            filename = f"Parliamentary_Briefing_{report.id}.pdf"
+            return Response(content=read_report_binary(report.file_path), media_type="application/pdf",
+                            headers={"Content-Disposition": f'attachment; filename="{filename}"'})
+    briefing = ParliamentaryBriefingResponse.model_validate(briefing_data)
+    return export_parliamentary_pdf(payload=briefing, current_user=current_user)
+
+
 @router.post("/parliamentary/briefing", response_model=ParliamentaryBriefingResponse)
 def generate_parliamentary_briefing(
     payload: ParliamentaryBriefingRequest,
@@ -66,6 +216,7 @@ def generate_parliamentary_briefing(
     Orchestrates query-aware RAG retrieval, structured metric extractions, deterministic validation,
     and cross-document conflict detection into an auditable institutional briefing.
     """
+    request_started = time.perf_counter()
     question_text = payload.question_text.strip()
     if not question_text:
         raise HTTPException(
@@ -108,6 +259,10 @@ def generate_parliamentary_briefing(
         resolved_selected_scope in ["ALL", "ALL CIL"]
         and not target_mines
         and not (detected_sub and detected_sub.upper() not in ["CIL", "CIL HQ", "ALL", "ALL CIL"])
+    )
+    logger.info(
+        "PARLIAMENTARY_REQUEST_ENTER question_type=%s fiscal_year=%s scope=%s",
+        q_type, effective_fy, effective_sub,
     )
 
     def rank_parliamentary_metric(rec) -> tuple:
@@ -206,6 +361,11 @@ def generate_parliamentary_briefing(
             b_candidates = broad_query.order_by(ExtractedMetric.id.desc()).limit(60).all()
             b_candidates.sort(key=rank_parliamentary_metric, reverse=True)
             extracted_records = b_candidates[:20]
+        logger.info(
+            "PARLIAMENTARY_STRUCTURED_LOOKUP_DONE elapsed_ms=%.2f records=%d",
+            (time.perf_counter() - request_started) * 1000,
+            len(extracted_records),
+        )
     except Exception as db_err:
         logger.error(f"Database query or schema integrity error in parliamentary briefing: {db_err}", exc_info=True)
         raise HTTPException(
@@ -214,11 +374,32 @@ def generate_parliamentary_briefing(
         )
 
     # 3. Execute Hybrid RAG Search for context & citations
-    rag_result = execute_rag_query(
-        db=db,
-        query_text=question_text,
-        top_k=6,
-        subsidiary_filter=effective_sub if effective_sub.upper() not in ["ALL", "ALL CIL"] else None
+    rag_started = time.perf_counter()
+    try:
+        rag_result = execute_rag_query(
+            db=db,
+            query_text=question_text,
+            top_k=6,
+            subsidiary_filter=effective_sub if effective_sub.upper() not in ["ALL", "ALL CIL"] else None,
+            question_type=q_type,
+        )
+    except Exception as rag_error:
+        # Structured evidence must remain usable when semantic retrieval or
+        # the narrative provider is unavailable.  Do not fabricate semantic
+        # context or fail an otherwise inspectable evidence packet.
+        logger.warning("PARLIAMENTARY_SEMANTIC_DEGRADED error_type=%s", type(rag_error).__name__)
+        rag_result = {
+            "answer": "Semantic evidence retrieval is currently unavailable; structured evidence is shown for review.",
+            "evidence_chunks": [],
+            "provider": "UNAVAILABLE",
+            "mode": "STRUCTURED_ONLY",
+        }
+    logger.info(
+        "PARLIAMENTARY_RETRIEVAL_DONE elapsed_ms=%.2f provider=%s mode=%s evidence=%d",
+        (time.perf_counter() - rag_started) * 1000,
+        rag_result.get("provider", "unknown"),
+        rag_result.get("mode", "unknown"),
+        len(rag_result.get("evidence_chunks", [])),
     )
 
     evidence_chunks = rag_result.get("evidence_chunks", [])
@@ -248,7 +429,9 @@ def generate_parliamentary_briefing(
                 f"Zero source documents available in repository for '{scope}'.",
                 "Cannot generate synthetic answers without verified source backing."
             ],
-            generated_at=datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
+            generated_at=datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC"),
+            validation_state="INSUFFICIENT_EVIDENCE",
+            warnings=["No persisted evidence matched the briefing specification."],
         )
 
     # 5. Format Subsidiary Metrics
@@ -285,6 +468,11 @@ def generate_parliamentary_briefing(
     try:
         conflicts_query = db.query(DataConflict).filter(DataConflict.status.in_(["ACTIVE", "OPEN"]))
         active_conflicts = conflicts_query.order_by(DataConflict.id.desc()).all()
+        logger.info(
+            "PARLIAMENTARY_CONFLICT_LOOKUP_DONE elapsed_ms=%.2f records=%d",
+            (time.perf_counter() - request_started) * 1000,
+            len(active_conflicts),
+        )
     except Exception as conflict_err:
         logger.error(f"Database conflict query error in parliamentary briefing: {conflict_err}", exc_info=True)
         raise HTTPException(
@@ -356,6 +544,11 @@ def generate_parliamentary_briefing(
                 provenance_label=prov_label
             )
         )
+    logger.info(
+        "PARLIAMENTARY_CONFLICT_FILTER_DONE elapsed_ms=%.2f returned=%d",
+        (time.perf_counter() - request_started) * 1000,
+        len(discrepancies),
+    )
 
     # 7. Format Evidence Lineage Items
     evidence_list: List[BriefingEvidenceItem] = []
@@ -491,6 +684,17 @@ def generate_parliamentary_briefing(
         "Deterministic arithmetic validation threshold set at >5.0%; conflict threshold set at >1.0%."
     ]
 
+    logger.info(
+        "PARLIAMENTARY_RESPONSE_READY total_elapsed_ms=%.2f metrics=%d discrepancies=%d evidence=%d",
+        (time.perf_counter() - request_started) * 1000,
+        len(subsidiary_metrics), len(discrepancies), len(evidence_list),
+    )
+    briefing_warnings = [
+        "Briefing metrics originate from the legacy extracted-metric compatibility surface; verify canonical Step 2C evidence before approval.",
+    ] if subsidiary_metrics else []
+    if rag_result.get("provider") == "UNAVAILABLE":
+        briefing_warnings.append("Semantic evidence retrieval is unavailable; no semantic claims were generated.")
+
     return ParliamentaryBriefingResponse(
         question=question_text,
         question_type=q_type,
@@ -505,7 +709,9 @@ def generate_parliamentary_briefing(
         confidence_rating=confidence_rating,
         has_sufficient_evidence=True,
         limitations=limitations,
-        generated_at=datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
+        generated_at=datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC"),
+        validation_state="REVIEW_REQUIRED",
+        warnings=briefing_warnings,
     )
 
 
@@ -518,150 +724,215 @@ def export_parliamentary_pdf(
     Generates and streams an official-styled Parliamentary Briefing Note PDF document.
     Disclaims explicitly: "AI-generated evidence-backed Parliamentary Briefing Note (Not an official Ministry issued document)".
     """
+    export_started = time.perf_counter()
+    logger.info(
+        "PARLIAMENTARY_EXPORT_ENTER metrics=%d evidence=%d discrepancies=%d",
+        len(payload.subsidiary_metrics), len(payload.evidence), len(payload.discrepancies),
+    )
     pdf_buffer = io.BytesIO()
 
-    if HAS_REPORTLAB:
-        doc = SimpleDocTemplate(pdf_buffer, pagesize=letter)
-        styles = getSampleStyleSheet()
+    try:
+        if HAS_REPORTLAB:
+            doc = SimpleDocTemplate(pdf_buffer, pagesize=letter)
+            styles = getSampleStyleSheet()
 
-        title_style = ParagraphStyle(
-            'HeaderTitle',
-            parent=styles['Heading1'],
-            fontSize=16,
-            textColor=colors.HexColor('#20262B'),
-            spaceAfter=4
-        )
-        sub_style = ParagraphStyle(
-            'HeaderSub',
-            parent=styles['Normal'],
-            fontSize=9,
-            textColor=colors.HexColor('#5E6B73'),
-            spaceAfter=12
-        )
-        heading2_style = ParagraphStyle(
-            'SectionHead',
-            parent=styles['Heading2'],
-            fontSize=12,
-            textColor=colors.HexColor('#171A1F'),
-            spaceBefore=10,
-            spaceAfter=6
-        )
-        body_style = ParagraphStyle(
-            'Body',
-            parent=styles['Normal'],
-            fontSize=9,
-            textColor=colors.HexColor('#20262B'),
-            leading=13
-        )
+            title_style = ParagraphStyle(
+                'HeaderTitle', parent=styles['Heading1'], fontSize=16,
+                textColor=colors.HexColor('#20262B'), spaceAfter=4
+            )
+            sub_style = ParagraphStyle(
+                'HeaderSub', parent=styles['Normal'], fontSize=9,
+                textColor=colors.HexColor('#5E6B73'), spaceAfter=12
+            )
+            heading2_style = ParagraphStyle(
+                'SectionHead', parent=styles['Heading2'], fontSize=12,
+                textColor=colors.HexColor('#171A1F'), spaceBefore=10, spaceAfter=6
+            )
+            body_style = ParagraphStyle(
+                'Body', parent=styles['Normal'], fontSize=9,
+                textColor=colors.HexColor('#20262B'), leading=13
+            )
 
-        story = []
+            def para(value: Any, style=body_style) -> Paragraph:
+                return Paragraph(_pdf_text(value), style)
 
-        # Document Header
-        story.append(Paragraph("<b>COALINTEL — Parliamentary Briefing Note</b>", title_style))
-        story.append(Paragraph("<i>AI-generated evidence-backed Parliamentary Briefing Note (Not an official Ministry issued document)</i>", sub_style))
-        story.append(HRFlowable(width="100%", thickness=1, color=colors.HexColor('#CBD3D8'), spaceAfter=10))
+            def table_cell(value: Any) -> Paragraph:
+                return para(value, body_style)
 
-        # Metadata Table
-        meta_data = [
-            ["Question:", payload.question],
-            ["Target Scope:", payload.selected_scope],
-            ["Fiscal Year:", payload.fiscal_year],
-            ["Confidence Rating:", f"{payload.confidence_rating} ({payload.confidence * 100:.0f}%)"],
-            ["Generated Timestamp:", payload.generated_at]
-        ]
-        meta_table = Table(meta_data, colWidths=[120, 400])
-        meta_table.setStyle(TableStyle([
-            ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
-            ('FONTSIZE', (0, 0), (-1, -1), 9),
-            ('TEXTCOLOR', (0, 0), (-1, -1), colors.HexColor('#20262B')),
-            ('VALIGN', (0, 0), (-1, -1), 'TOP'),
-            ('BOTTOMPADDING', (0, 0), (-1, -1), 4),
-        ]))
-        story.append(meta_table)
-        story.append(Spacer(1, 10))
+            story = [
+                Paragraph("<b>COALINTEL — Parliamentary Briefing Note</b>", title_style),
+                Paragraph(
+                    "<i>AI-generated evidence-backed Parliamentary Briefing Note "
+                    "(Not an official Ministry issued document)</i>", sub_style
+                ),
+                HRFlowable(width="100%", thickness=1, color=colors.HexColor('#CBD3D8'), spaceAfter=10),
+            ]
 
-        # Executive Summary
-        story.append(Paragraph("<b>Executive Summary</b>", heading2_style))
-        story.append(Paragraph(payload.executive_summary, body_style))
-        story.append(Spacer(1, 10))
-
-        # Key Findings
-        story.append(Paragraph("<b>Key Findings & Operational Highlights</b>", heading2_style))
-        for finding in payload.key_findings:
-            story.append(Paragraph(f"• {finding}", body_style))
-        story.append(Spacer(1, 10))
-
-        # Subsidiary Metrics Table
-        if payload.subsidiary_metrics:
-            story.append(Paragraph("<b>Verified Operational Metrics</b>", heading2_style))
-            m_table_data = [["Mine Entity", "Subsidiary", "Metric Name", "Value", "Unit", "FY"]]
-            for m in payload.subsidiary_metrics:
-                m_table_data.append([
-                    m.mine_name,
-                    m.subsidiary,
-                    m.metric_name,
-                    f"{m.standard_value:.2f}",
-                    m.standard_unit,
-                    m.fiscal_year
-                ])
-            m_table = Table(m_table_data, colWidths=[100, 70, 150, 60, 50, 60])
-            m_table.setStyle(TableStyle([
-                ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#171A1F')),
-                ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-                ('FONTSIZE', (0, 0), (-1, -1), 8),
-                ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor('#CBD3D8')),
+            meta_data = [
+                [table_cell("Question:"), table_cell(payload.question)],
+                [table_cell("Target Scope:"), table_cell(payload.selected_scope)],
+                [table_cell("Fiscal Year:"), table_cell(payload.fiscal_year)],
+                [table_cell("Confidence Rating:"), table_cell(
+                    f"{payload.confidence_rating} ({payload.confidence * 100:.0f}%)"
+                )],
+                [table_cell("Validation State:"), table_cell(payload.validation_state)],
+                [table_cell("Generated Timestamp:"), table_cell(payload.generated_at)],
+            ]
+            meta_table = Table(meta_data, colWidths=[120, 400])
+            meta_table.setStyle(TableStyle([
+                ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
+                ('FONTSIZE', (0, 0), (-1, -1), 9),
+                ('TEXTCOLOR', (0, 0), (-1, -1), colors.HexColor('#20262B')),
+                ('VALIGN', (0, 0), (-1, -1), 'TOP'),
                 ('BOTTOMPADDING', (0, 0), (-1, -1), 4),
             ]))
-            story.append(m_table)
+            story.extend([meta_table, Spacer(1, 10)])
+
+            story.extend([
+                Paragraph("<b>Executive Summary</b>", heading2_style),
+                para(payload.executive_summary),
+                Spacer(1, 10),
+                Paragraph("<b>Key Findings &amp; Operational Highlights</b>", heading2_style),
+            ])
+            story.extend(para(f"• {finding}") for finding in payload.key_findings)
             story.append(Spacer(1, 10))
 
-        # Discrepancies Section
-        if payload.discrepancies:
-            story.append(Paragraph("<b>Flagged Cross-Document Discrepancies</b>", heading2_style))
-            d_table_data = [["Entity", "Metric", "Doc A (Val)", "Doc B (Val)", "Variance", "Provenance Status"]]
-            for d in payload.discrepancies:
-                d_table_data.append([
-                    d.entity,
-                    d.metric_name,
-                    f"{d.doc_a_filename} ({d.doc_a_value:.2f})",
-                    f"{d.doc_b_filename} ({d.doc_b_value:.2f})",
-                    f"{d.variance_percentage}%",
-                    d.provenance_label
-                ])
-            d_table = Table(d_table_data, colWidths=[90, 80, 130, 130, 50, 100])
-            d_table.setStyle(TableStyle([
-                ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#C2413B')),
-                ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-                ('FONTSIZE', (0, 0), (-1, -1), 8),
-                ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor('#CBD3D8')),
-                ('BOTTOMPADDING', (0, 0), (-1, -1), 4),
-            ]))
-            story.append(d_table)
-            story.append(Spacer(1, 10))
+            if payload.subsidiary_metrics:
+                story.append(Paragraph("<b>Verified Operational Metrics</b>", heading2_style))
+                m_table_data = [[
+                    table_cell("Mine Entity"), table_cell("Subsidiary"), table_cell("Metric Name"),
+                    table_cell("Value"), table_cell("Unit"), table_cell("FY"),
+                    table_cell("Source"), table_cell("Page"),
+                ]]
+                for metric in payload.subsidiary_metrics:
+                    value = (
+                        f"{metric.standard_value:.2f}"
+                        if metric.standard_value is not None else "Unavailable"
+                    )
+                    source = metric.document_filename or "Unavailable"
+                    page = str(metric.page_number) if metric.page_number is not None else "Unavailable"
+                    m_table_data.append([
+                        table_cell(metric.mine_name), table_cell(metric.subsidiary),
+                        table_cell(metric.metric_name), table_cell(value),
+                        table_cell(metric.standard_unit or metric.unit), table_cell(metric.fiscal_year),
+                        table_cell(source), table_cell(page),
+                    ])
+                m_table = Table(m_table_data, colWidths=[78, 58, 105, 48, 45, 42, 105, 35], repeatRows=1)
+                m_table.setStyle(TableStyle([
+                    ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#171A1F')),
+                    ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                    ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                    ('FONTSIZE', (0, 0), (-1, -1), 7),
+                    ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor('#CBD3D8')),
+                    ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+                    ('BOTTOMPADDING', (0, 0), (-1, -1), 4),
+                ]))
+                story.extend([m_table, Spacer(1, 10)])
 
-        # Limitations Footer
-        story.append(HRFlowable(width="100%", thickness=0.5, color=colors.HexColor('#CBD3D8'), spaceBefore=10, spaceAfter=8))
-        story.append(Paragraph("<b>Limitations & System Disclaimers:</b>", body_style))
-        for lim in payload.limitations:
-            story.append(Paragraph(f"• {lim}", sub_style))
+            if payload.discrepancies:
+                shown_discrepancies = payload.discrepancies[:MAX_EXPORT_DISCREPANCIES]
+                story.append(Paragraph("<b>Flagged Cross-Document Discrepancies</b>", heading2_style))
+                if len(payload.discrepancies) > len(shown_discrepancies):
+                    story.append(para(
+                        f"Showing the first {len(shown_discrepancies)} of "
+                        f"{len(payload.discrepancies)} persisted discrepancies. "
+                        "No discrepancies were recomputed during export; the complete "
+                        "accepted result remains available in COALINTEL."
+                    ))
+                    story.append(Spacer(1, 4))
+                d_table_data = [[
+                    table_cell("Entity"), table_cell("Metric"), table_cell("Doc A (Val)"),
+                    table_cell("Doc B (Val)"), table_cell("Variance"), table_cell("Provenance Status"),
+                ]]
+                for discrepancy in shown_discrepancies:
+                    d_table_data.append([
+                        table_cell(discrepancy.entity), table_cell(discrepancy.metric_name),
+                        table_cell(f"{discrepancy.doc_a_filename} ({discrepancy.doc_a_value:.2f})"),
+                        table_cell(f"{discrepancy.doc_b_filename} ({discrepancy.doc_b_value:.2f})"),
+                        table_cell(f"{discrepancy.variance_percentage}%"),
+                        table_cell(discrepancy.provenance_label),
+                    ])
+                d_table = Table(d_table_data, colWidths=[90, 80, 130, 130, 50, 100], repeatRows=1)
+                d_table.setStyle(TableStyle([
+                    ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#C2413B')),
+                    ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                    ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                    ('FONTSIZE', (0, 0), (-1, -1), 8),
+                    ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor('#CBD3D8')),
+                    ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+                    ('BOTTOMPADDING', (0, 0), (-1, -1), 4),
+                ]))
+                story.extend([d_table, Spacer(1, 10)])
 
-        doc.build(story)
-        pdf_bytes = pdf_buffer.getvalue()
-    else:
-        # Fallback PDF writer if reportlab missing
-        text_content = (
-            f"%PDF-1.4\nCOALINTEL Parliamentary Briefing Note\n"
-            f"Question: {payload.question}\nScope: {payload.selected_scope}\n"
-            f"Summary: {payload.executive_summary}\n"
+            if payload.evidence:
+                story.append(Paragraph("<b>Evidence Lineage</b>", heading2_style))
+                e_table_data = [[
+                    table_cell("Document"), table_cell("Page"), table_cell("Subsidiary"), table_cell("Evidence"),
+                ]]
+                for evidence in payload.evidence[:100]:
+                    e_table_data.append([
+                        table_cell(evidence.document_name), table_cell(evidence.page_number),
+                        table_cell(evidence.subsidiary), table_cell(evidence.text_snippet),
+                    ])
+                e_table = Table(e_table_data, colWidths=[120, 38, 75, 347], repeatRows=1)
+                e_table.setStyle(TableStyle([
+                    ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#2D5F73')),
+                    ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                    ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                    ('FONTSIZE', (0, 0), (-1, -1), 7),
+                    ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor('#CBD3D8')),
+                    ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+                    ('BOTTOMPADDING', (0, 0), (-1, -1), 4),
+                ]))
+                story.extend([e_table, Spacer(1, 10)])
+
+            story.extend([
+                HRFlowable(width="100%", thickness=0.5, color=colors.HexColor('#CBD3D8'), spaceBefore=10, spaceAfter=8),
+                Paragraph("<b>Limitations &amp; System Disclaimers:</b>", body_style),
+            ])
+            story.extend(para(f"• {lim}", sub_style) for lim in payload.limitations)
+            if payload.warnings:
+                story.append(Spacer(1, 6))
+                story.append(Paragraph("<b>Evidence Warnings:</b>", body_style))
+                story.extend(para(f"• {warning}", sub_style) for warning in payload.warnings)
+
+            doc.build(story)
+            pdf_bytes = pdf_buffer.getvalue()
+        else:
+            text_content = (
+                "%PDF-1.4\nCOALINTEL Parliamentary Briefing Note\n"
+                f"Question: {payload.question}\nScope: {payload.selected_scope}\n"
+                f"Summary: {payload.executive_summary}\n"
+            )
+            pdf_bytes = text_content.encode("utf-8")
+
+        render_elapsed_ms = (time.perf_counter() - export_started) * 1000
+        logger.info(
+            "PARLIAMENTARY_EXPORT_RENDER_DONE elapsed_ms=%.2f bytes=%d",
+            render_elapsed_ms, len(pdf_bytes),
         )
-        pdf_bytes = text_content.encode("utf-8")
+    except Exception as exc:
+        logger.exception("PARLIAMENTARY_EXPORT_FAILED error_type=%s", type(exc).__name__)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Parliamentary briefing PDF generation failed.",
+        ) from exc
 
-    filename = f"Parliamentary_Briefing_{payload.selected_scope}_{payload.fiscal_year}.pdf"
+    def filename_part(value: Any) -> str:
+        safe = "".join(char if char.isalnum() or char in "-_ ." else "_" for char in str(value))
+        return safe.strip() or "unknown"
 
-    return StreamingResponse(
-        io.BytesIO(pdf_bytes),
-        media_type="application/pdf",
-        headers={"Content-Disposition": f"attachment; filename={filename}"}
+    filename = (
+        f"Parliamentary_Briefing_{filename_part(payload.selected_scope)}_"
+        f"{filename_part(payload.fiscal_year)}.pdf"
     )
+    response = Response(
+        content=pdf_bytes,
+        media_type="application/pdf",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+    )
+    logger.info(
+        "PARLIAMENTARY_EXPORT_RESPONSE_READY total_elapsed_ms=%.2f bytes=%d",
+        (time.perf_counter() - export_started) * 1000, len(pdf_bytes),
+    )
+    return response
