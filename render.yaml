@@ -127,6 +127,9 @@ services:
     startCommand: next start -p $PORT
 
     envVars:
+      - key: NODE_VERSION
+        value: "20.20.2"
+
       - key: NODE_ENV
         value: production
 
