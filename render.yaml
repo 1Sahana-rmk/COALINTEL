@@ -5,14 +5,13 @@ services:
   - type: web
     name: coalintel-backend
     runtime: docker
-    # Local uploads, Chroma data and generated reports are configured under
-    # /storage. A persistent disk requires a paid web-service plan.
-    plan: starter
+    plan: free
     branch: Main_1
 
     dockerfilePath: ./backend/Dockerfile
     dockerContext: ./backend
 
+    healthCheckPath: /health
 
     envVars:
       - key: ENVIRONMENT
@@ -59,13 +58,14 @@ services:
       - key: DOCUMENT_AI_ENABLED
         value: "true"
 
-      # Render's private-service hostport reference is normalized to http://
-      # by DocumentAIClient. This avoids hard-coding a public URL or port.
+      # Render supplies the public HTTPS URL of the Document AI web service.
+      # This is intentionally public because Free services cannot use the
+      # paid private-service tier.
       - key: DOCUMENT_AI_URL
         fromService:
           name: coalintel-document-ai
-          type: pserv
-          property: hostport
+          type: web
+          envVarKey: RENDER_EXTERNAL_URL
 
       - key: DOCUMENT_AI_DEVICE
         value: cpu
@@ -73,26 +73,22 @@ services:
       - key: DOCUMENT_AI_FALLBACK_TO_TESSERACT
         value: "true"
 
-    disk:
-      name: coalintel-backend-storage
-      mountPath: /storage
-      sizeGB: 10
-
-
   # =========================
   # ISOLATED DOCUMENT AI
   # =========================
-  # A private service keeps PaddleOCR/PaddleX out of the Python 3.14 backend
-  # and exposes only the internal HTTP contract to the backend service.
-  - type: pserv
+  # This must remain a separate service so PaddleOCR/PaddleX are not merged
+  # into the Python 3.14 backend. Free Render has no private-service compute,
+  # so this demo deployment exposes the narrow HTTP service publicly.
+  - type: web
     name: coalintel-document-ai
     runtime: docker
-    plan: starter
+    plan: free
     branch: Main_1
 
     dockerfilePath: ./document_ai_service/Dockerfile
     dockerContext: .
 
+    healthCheckPath: /health
 
     envVars:
       - key: DOCUMENT_AI_HOST
